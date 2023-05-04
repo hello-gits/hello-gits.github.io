@@ -1,0 +1,1709 @@
+<!DOCTYPE HTML>
+<html lang="zh-CN">
+
+
+<head><meta name="generator" content="Hexo 3.9.0">
+    <meta charset="utf-8">
+    <meta name="keywords" content="Spark 数据倾斜分析与解决思路, hnbian">
+    <meta name="description" content="调优概述有的时候，我们可能会遇到大数据 计算中一个最棘手的问题——数据倾斜，此时Spark作业的性能会比期望差很多。数据倾斜调优，就是使用各种技术方案解决不同类型的数据倾斜问题，以保证Spark作业的性能。
+数据倾斜发生时的现象绝大多数ta">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=no">
+    <meta name="renderer" content="webkit|ie-stand|ie-comp">
+    <meta name="mobile-web-app-capable" content="yes">
+    <meta name="format-detection" content="telephone=no">
+    <meta name="apple-mobile-web-app-capable" content="yes">
+    <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+    <title>Spark 数据倾斜分析与解决思路 | hnbian</title>
+    <link rel="icon" type="image/png" href="https://images.hnbian.cn/FvNSAGx7xljxALFh8Fa2DPNFP-JB">
+
+    <link rel="stylesheet" type="text/css" href="https://images.hnbian.cn/all.css">
+    <link rel="stylesheet" type="text/css" href="https://images.hnbian.cn/materialize.min.css">
+    <link rel="stylesheet" type="text/css" href="https://images.hnbian.cn/aos.css">
+    <link rel="stylesheet" type="text/css" href="https://images.hnbian.cn/animate.min.css">
+    <link rel="stylesheet" type="text/css" href="https://images.hnbian.cn/lightgallery.min.css">
+    <link rel="stylesheet" type="text/css" href="/css/matery.css">
+    <link rel="stylesheet" type="text/css" href="/css/my.css">
+    
+    <script src="https://images.hnbian.cn/jquery.min.mind.js"></script>
+    <script data-ad-client="ca-pub-5756598031349071" async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js"></script>
+    <meta name="google-site-verification" content="GrFMoauFrf8T4o0YL7D2b8YqhXQwVruyJKGw57gZ8J4">
+<link rel="alternate" href="/atom.xml" title="hnbian" type="application/atom+xml">
+<link rel="stylesheet" href="/css/prism-tomorrow.css" type="text/css"></head>
+
+
+<body>
+    <header class="navbar-fixed">
+    <nav id="headNav" class="bg-color nav-transparent">
+        <div id="navContainer" class="nav-wrapper head-container">
+            <div class="brand-logo">
+                <a href="/" class="waves-effect waves-light">
+                    
+                    <img src="https://images.hnbian.cn/FvNSAGx7xljxALFh8Fa2DPNFP-JB" class="logo-img" alt="LOGO">
+                    
+                    <span class="logo-span">hnbian</span>
+                </a>
+            </div>
+            
+
+<a href="#" data-target="mobile-nav" class="sidenav-trigger button-collapse"><i class="fas fa-bars"></i></a>
+<ul class="right nav-menu">
+  
+  <li class="hide-on-med-and-down nav-item">
+    
+    <a href="/" class="waves-effect waves-light">
+      
+      <i class="fas fa-home" style="zoom: 0.6;"></i>
+      
+      <span>首页</span>
+    </a>
+    
+  </li>
+  
+  <li class="hide-on-med-and-down nav-item">
+    
+    <a href="/tags" class="waves-effect waves-light">
+      
+      <i class="fas fa-tags" style="zoom: 0.6;"></i>
+      
+      <span>标签</span>
+    </a>
+    
+  </li>
+  
+  <li class="hide-on-med-and-down nav-item">
+    
+    <a href="/categories" class="waves-effect waves-light">
+      
+      <i class="fas fa-bookmark" style="zoom: 0.6;"></i>
+      
+      <span>分类</span>
+    </a>
+    
+  </li>
+  
+  <li class="hide-on-med-and-down nav-item">
+    
+    <a href="/archives" class="waves-effect waves-light">
+      
+      <i class="fas fa-archive" style="zoom: 0.6;"></i>
+      
+      <span>归档</span>
+    </a>
+    
+  </li>
+  
+  <li class="hide-on-med-and-down nav-item">
+    
+    <a href="/graph" class="waves-effect waves-light">
+      
+      <i class="fa fa-graduation-cap" style="zoom: 0.6;"></i>
+      
+      <span>知识图谱</span>
+    </a>
+    
+  </li>
+  
+  <li class="hide-on-med-and-down nav-item">
+    
+    <a href="/about" class="waves-effect waves-light">
+      
+      <i class="fas fa-comments" style="zoom: 0.6;"></i>
+      
+      <span>关于</span>
+    </a>
+    
+  </li>
+  
+  <li>
+    <a href="#searchModal" class="modal-trigger waves-effect waves-light">
+      <i id="searchIcon" class="fas fa-search" title="搜索" style="zoom: 0.85;"></i>
+    </a>
+  </li>
+</ul>
+
+<div id="mobile-nav" class="side-nav sidenav">
+
+    <div class="mobile-head bg-color">
+        
+        <img src="https://images.hnbian.cn/FvNSAGx7xljxALFh8Fa2DPNFP-JB" class="logo-img circle responsive-img">
+        
+        <div class="logo-name">hnbian</div>
+        <div class="logo-desc">
+            
+            Never really desperate, only the lost of the soul.
+            
+        </div>
+    </div>
+
+    
+
+    <ul class="menu-list mobile-menu-list">
+        
+        <li class="m-nav-item">
+	  
+		<a href="/" class="waves-effect waves-light">
+			
+			    <i class="fa-fw fas fa-home"></i>
+			
+			首页
+		</a>
+          
+        </li>
+        
+        <li class="m-nav-item">
+	  
+		<a href="/tags" class="waves-effect waves-light">
+			
+			    <i class="fa-fw fas fa-tags"></i>
+			
+			标签
+		</a>
+          
+        </li>
+        
+        <li class="m-nav-item">
+	  
+		<a href="/categories" class="waves-effect waves-light">
+			
+			    <i class="fa-fw fas fa-bookmark"></i>
+			
+			分类
+		</a>
+          
+        </li>
+        
+        <li class="m-nav-item">
+	  
+		<a href="/archives" class="waves-effect waves-light">
+			
+			    <i class="fa-fw fas fa-archive"></i>
+			
+			归档
+		</a>
+          
+        </li>
+        
+        <li class="m-nav-item">
+	  
+		<a href="/graph" class="waves-effect waves-light">
+			
+			    <i class="fa-fw fa fa-graduation-cap"></i>
+			
+			知识图谱
+		</a>
+          
+        </li>
+        
+        <li class="m-nav-item">
+	  
+		<a href="/about" class="waves-effect waves-light">
+			
+			    <i class="fa-fw fas fa-comments"></i>
+			
+			关于
+		</a>
+          
+        </li>
+        
+        
+        <li><div class="divider"></div></li>
+        <li>
+            <a href="https://github.com/hnbian" class="waves-effect waves-light" target="_blank">
+                <i class="fab fa-github-square fa-fw"></i>Fork Me
+            </a>
+        </li>
+        
+    </ul>
+</div>
+
+        </div>
+
+        
+            <style>
+    .nav-transparent .github-corner {
+        display: none !important;
+    }
+
+    .github-corner {
+        position: absolute;
+        z-index: 10;
+        top: 0;
+        right: 0;
+        border: 0;
+        transform: scale(1.1);
+    }
+
+    .github-corner svg {
+        color: #0f9d58;
+        fill: #fff;
+        height: 64px;
+        width: 64px;
+    }
+
+    .github-corner:hover .octo-arm {
+        animation: a 0.56s ease-in-out;
+    }
+
+    .github-corner .octo-arm {
+        animation: none;
+    }
+
+    @keyframes a {
+        0%,
+        to {
+            transform: rotate(0);
+        }
+        20%,
+        60% {
+            transform: rotate(-25deg);
+        }
+        40%,
+        80% {
+            transform: rotate(10deg);
+        }
+    }
+</style>
+
+<a href="https://github.com/hnbian" class="github-corner tooltipped hide-on-med-and-down" target="_blank"
+   data-tooltip="Fork Me" data-position="left" data-delay="50">
+    <svg viewBox="0 0 250 250" aria-hidden="true">
+        <path d="M0,0 L115,115 L130,115 L142,142 L250,250 L250,0 Z"></path>
+        <path d="M128.3,109.0 C113.8,99.7 119.0,89.6 119.0,89.6 C122.0,82.7 120.5,78.6 120.5,78.6 C119.2,72.0 123.4,76.3 123.4,76.3 C127.3,80.9 125.5,87.3 125.5,87.3 C122.9,97.6 130.6,101.9 134.4,103.2"
+              fill="currentColor" style="transform-origin: 130px 106px;" class="octo-arm"></path>
+        <path d="M115.0,115.0 C114.9,115.1 118.7,116.5 119.8,115.4 L133.7,101.6 C136.9,99.2 139.9,98.4 142.2,98.6 C133.8,88.0 127.5,74.4 143.8,58.0 C148.5,53.4 154.0,51.2 159.7,51.0 C160.3,49.4 163.2,43.6 171.4,40.1 C171.4,40.1 176.1,42.5 178.8,56.2 C183.1,58.6 187.2,61.8 190.9,65.4 C194.5,69.0 197.7,73.2 200.1,77.6 C213.8,80.2 216.3,84.9 216.3,84.9 C212.7,93.1 206.9,96.0 205.4,96.6 C205.1,102.4 203.0,107.8 198.3,112.5 C181.9,128.9 168.3,122.5 157.7,114.1 C157.9,116.9 156.7,120.9 152.7,124.9 L141.0,136.5 C139.8,137.7 141.6,141.9 141.8,141.8 Z"
+              fill="currentColor" class="octo-body"></path>
+    </svg>
+</a>
+        
+    </nav>
+
+</header>
+
+    
+
+
+
+<div class="bg-cover pd-header post-cover" style="background-image: url('https://images.hnbian.cn/FmYAX6cP7IMdDACZG15u6PXdGNek')">
+    <div class="container" style="right: 0px;left: 0px;">
+        <div class="row">
+            <div class="col s12 m12 l12">
+                <div class="brand">
+                    <h1 class="description center-align post-title">Spark 数据倾斜分析与解决思路</h1>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+
+
+
+<main class="post-container content">
+
+    
+    <link rel="stylesheet" href="https://images.hnbian.cn/tocbot.css">
+<style>
+    #articleContent h1::before,
+    #articleContent h2::before,
+    #articleContent h3::before,
+    #articleContent h4::before,
+    #articleContent h5::before,
+    #articleContent h6::before {
+        display: block;
+        content: " ";
+        height: 100px;
+        margin-top: -100px;
+        visibility: hidden;
+    }
+
+    #articleContent :focus {
+        outline: none;
+    }
+
+    .toc-fixed {
+        position: fixed;
+        top: 64px;
+    }
+
+    .toc-widget {
+        width: 345px;
+        padding-left: 20px;
+    }
+
+    .toc-widget .toc-title {
+        margin: 35px 0 15px 0;
+        padding-left: 17px;
+        font-size: 1.5rem;
+        font-weight: bold;
+        line-height: 1.5rem;
+    }
+
+    .toc-widget ol {
+        padding: 0;
+        list-style: none;
+    }
+
+    #toc-content {
+        height: calc(100vh - 250px);
+        overflow: auto;
+    }
+
+    #toc-content ol {
+        padding-left: 10px;
+    }
+
+    #toc-content ol li {
+        padding-left: 10px;
+    }
+
+    #toc-content .toc-link:hover {
+        color: #42b983;
+        font-weight: 700;
+        text-decoration: underline;
+    }
+
+    #toc-content .toc-link::before {
+        background-color: transparent;
+        max-height: 25px;
+    }
+
+    #toc-content .is-active-link {
+        color: #42b983;
+    }
+
+    #toc-content .is-active-link::before {
+        background-color: #42b983;
+    }
+
+    #floating-toc-btn {
+        position: fixed;
+        right: 15px;
+        bottom: 76px;
+        padding-top: 15px;
+        margin-bottom: 0;
+        z-index: 998;
+    }
+
+    #floating-toc-btn .btn-floating {
+        width: 48px;
+        height: 48px;
+    }
+
+    #floating-toc-btn .btn-floating i {
+        line-height: 48px;
+        font-size: 1.4rem;
+    }
+</style>
+<div class="row">
+    <div id="main-content" class="col s12 m12 l9">
+        <!-- 文章内容详情 -->
+<div id="artDetail">
+    <div class="card">
+        <div class="card-content article-info">
+            <div class="row tag-cate">
+                <div class="col s7">
+                    
+                    <div class="article-tag">
+                        
+                            <a href="/tags/exception/">
+                                <span class="chip bg-color">exception</span>
+                            </a>
+                        
+                            <a href="/tags/spark/">
+                                <span class="chip bg-color">spark</span>
+                            </a>
+                        
+                    </div>
+                    
+                </div>
+                <div class="col s5 right-align">
+                    
+                    <div class="post-cate">
+                        <i class="fas fa-bookmark fa-fw icon-category"></i>
+                        
+                            <a href="/categories/spark/" class="post-category">
+                                spark
+                            </a>
+                        
+                    </div>
+                    
+                </div>
+            </div>
+
+            <div class="post-info">
+                
+                <div class="post-date info-break-policy">
+                    <i class="far fa-calendar-minus fa-fw"></i>发布日期:&nbsp;&nbsp;
+                    2022-08-08
+                </div>
+                
+
+                
+
+                
+                <div class="info-break-policy">
+                    <i class="far fa-file-word fa-fw"></i>文章字数:&nbsp;&nbsp;
+                    8.3k
+                </div>
+                
+
+                
+                <div class="info-break-policy">
+                    <i class="far fa-clock fa-fw"></i>阅读时长:&nbsp;&nbsp;
+                    31 分
+                </div>
+                
+				
+                
+                    <div id="busuanzi_container_page_pv" class="info-break-policy">
+                        <i class="far fa-eye fa-fw"></i>阅读次数:&nbsp;&nbsp;
+                        <span id="busuanzi_value_page_pv"></span>
+                    </div>
+				
+            </div>
+            
+        </div>
+        <hr class="clearfix">
+        <div class="card-content article-card-content">
+            <div id="articleContent">
+                <h2 id="调优概述"><a href="#调优概述" class="headerlink" title="调优概述"></a>调优概述</h2><p>有的时候，我们可能会遇到大数据 计算中一个最棘手的问题——数据倾斜，此时Spark作业的性能会比期望差很多。数据倾斜调优，就是使用各种技术方案解决不同类型的数据倾斜问题，以保证Spark作业的性能。</p>
+<h2 id="数据倾斜发生时的现象"><a href="#数据倾斜发生时的现象" class="headerlink" title="数据倾斜发生时的现象"></a>数据倾斜发生时的现象</h2><p>绝大多数task执行得都非常快，但个别task执行极慢。比如，总共有1000个task，997个task都在1分钟之内执行完了，但是剩余两三个task却要一两个小时。这种情况很常见。原本能够正常执行的Spark作业，某天突然报出OOM（内存溢出）异常，观察异常栈，是我们写的业务代码造成的。这种情况比较少见。</p>
+<h2 id="数据倾斜发生的原理"><a href="#数据倾斜发生的原理" class="headerlink" title="数据倾斜发生的原理"></a>数据倾斜发生的原理</h2><p><strong>数据倾斜的原理很简单</strong>：在进行shuffle的时候，必须将各个节点上相同的key拉取到某个节点上的一个task来进行处理，比如按照key进行聚合或join等操作。此时如果某个key对应的数据量特别大的话，就会发生数据倾斜。比如大部分key对应10条数据，但是个别key却对应了100万条数据，那么大部分task可能就只会分配到10条数据，然后1秒钟就运行完了；但是个别task可能分配到了100万数据，要运行一两个小时。因此，整个Spark作业的运行进度是由运行时间最长的那个task决定的。</p>
+<p>因此出现数据倾斜的时候，Spark作业看起来会运行得非常缓慢，甚至可能因为某个task处理的数据量过大导致内存溢出。</p>
+<p>下图就是一个很清晰的例子：hello这个key，在三个节点上对应了总共7条数据，这些数据都会被拉取到同一个task中进行处理；而world和you这两个key分别才对应1条数据，所以另外两个task只要分别处理1条数据即可。此时第一个task的运行时间可能是另外两个task的7倍，而整个stage的运行速度也由运行最慢的那个task所决定。</p>
+<p><img src="https://ask.qcloudimg.com/http-save/yehe-2039230/c4683e2c96108a6330d036276ba98c73.png?imageView2/2/w/2560/h/7000" alt></p>
+<h2 id="如何定位导致数据倾斜的代码"><a href="#如何定位导致数据倾斜的代码" class="headerlink" title="如何定位导致数据倾斜的代码"></a>如何定位导致数据倾斜的代码</h2><p>数据倾斜只会发生在shuffle过程中。这里给大家罗列一些常用的并且可能会触发shuffle操作的算子：distinct、groupByKey、reduceByKey、aggregateByKey、join、cogroup、repartition等。出现数据倾斜时，可能就是你的代码中使用了这些算子中的某一个所导致的。</p>
+<h2 id="某个task执行特别慢的情况"><a href="#某个task执行特别慢的情况" class="headerlink" title="某个task执行特别慢的情况"></a>某个task执行特别慢的情况</h2><p>首先要看的，就是数据倾斜发生在第几个stage中。如果是用yarn-client模式提交，那么本地是直接可以看到log的，可以在log中找到当前运行到了第几个stage，可以看下之前写的Hive数据倾斜：<a href="https://mp.weixin.qq.com/s?__biz=Mzg2MzU2MDYzOA==&mid=2247486526&idx=1&sn=07064ff7fc3520e5578e92fea24d5be6&scene=21#wechat_redirect" target="_blank" rel="noopener"><strong>Hive 数据倾斜问题定位排查及解决</strong></a></p>
+<p>如果是用yarn-cluster模式提交，则可以通过Spark Web UI来查看当前运行到了第几个stage。</p>
+<p>此外，无论是使用yarn-client模式还是yarn-cluster模式，我们都可以在Spark Web UI上深入看一下当前这个stage各个task分配的数据量，从而进一步确定是不是task分配的数据不均匀导致了数据倾斜。</p>
+<p>比如下图中，倒数第三列显示了每个task的运行时间。明显可以看到，有的task运行特别快，只需要几秒钟就可以运行完；而有的task运行特别慢，需要几分钟才能运行完，此时单从运行时间上看就已经能够确定发生数据倾斜了。此外，倒数第一列显示了每个task处理的数据量，明显可以看到，运行时间特别短的task只需要处理几百KB的数据即可，而运行时间特别长的task需要处理几千KB的数据，处理的数据量差了10倍。此时更加能够确定是发生了数据倾斜。</p>
+<p><img src="https://ask.qcloudimg.com/http-save/yehe-2039230/1b373eba076d06d002d1194a456408fd.png?imageView2/2/w/2560/h/7000" alt></p>
+<p>知道数据倾斜发生在哪一个stage之后，接着我们就需要根据stage划分原理，推算出来发生倾斜的那个stage对应代码中的哪一部分，这部分代码中肯定会有一个shuffle类算子。</p>
+<p>精准推算stage与代码的对应关系，需要对Spark的源码有深入的理解，这里我们可以介绍一个相对简单实用的推算方法：<strong>只要看到Spark代码中出现了一个shuffle类算子或者是Spark SQL的SQL语句中出现了会导致shuffle的语句（比如group by语句），那么就可以判定，以那个地方为界限划分出了前后两个stage</strong>。这里我们就以Spark最基础的入门程序——单词计数来举例，如何用最简单的方法大致推算出一个stage对应的代码。如下示例，在整个代码中，只有一个reduceByKey是会发生shuffle的算子，因此就可以认为，以这个算子为界限，会划分出前后两个stage。</p>
+<ul>
+<li><strong>stage0</strong>，主要是执行从textFile到map操作，以及执行shuffle write操作。shuffle write操作，我们可以简单理解为对pairs RDD中的数据进行分区操作，每个task处理的数据中，相同的key会写入同一个磁盘文件内。</li>
+<li><strong>stage1</strong>，主要是执行从reduceByKey到collect操作，stage1的各个task一开始运行，就会首先执行shuffle read操作。执行shuffle read操作的task，会从stage0的各个task所在节点拉取属于自己处理的那些key，然后对同一个key进行全局性的聚合或join等操作，在这里就是对key的value值进行累加。stage1在执行完reduceByKey算子之后，就计算出了最终的wordCounts RDD，然后会执行collect算子，将所有数据拉取到Driver上，供我们遍历和打印输出。</li>
+</ul>
+<pre class=" language-scala"><code class="language-scala"><span class="token keyword">val</span> conf <span class="token operator">=</span> <span class="token keyword">new</span> SparkConf<span class="token punctuation">(</span><span class="token punctuation">)</span>
+<span class="token keyword">val</span> sc <span class="token operator">=</span> <span class="token keyword">new</span> SparkContext<span class="token punctuation">(</span>conf<span class="token punctuation">)</span>
+
+<span class="token keyword">val</span> lines <span class="token operator">=</span> sc<span class="token punctuation">.</span>textFile<span class="token punctuation">(</span><span class="token string">"hdfs://..."</span><span class="token punctuation">)</span>
+<span class="token keyword">val</span> words <span class="token operator">=</span> lines<span class="token punctuation">.</span>flatMap<span class="token punctuation">(</span>_<span class="token punctuation">.</span>split<span class="token punctuation">(</span><span class="token string">" "</span><span class="token punctuation">)</span><span class="token punctuation">)</span>
+<span class="token keyword">val</span> pairs <span class="token operator">=</span> words<span class="token punctuation">.</span>map<span class="token punctuation">(</span><span class="token punctuation">(</span>_<span class="token punctuation">,</span> <span class="token number">1</span><span class="token punctuation">)</span><span class="token punctuation">)</span>
+<span class="token keyword">val</span> wordCounts <span class="token operator">=</span> pairs<span class="token punctuation">.</span>reduceByKey<span class="token punctuation">(</span>_ <span class="token operator">+</span> _<span class="token punctuation">)</span>
+
+wordCounts<span class="token punctuation">.</span>collect<span class="token punctuation">(</span><span class="token punctuation">)</span><span class="token punctuation">.</span>foreach<span class="token punctuation">(</span>println<span class="token punctuation">(</span>_<span class="token punctuation">)</span><span class="token punctuation">)</span></code></pre>
+<p>通过对单词计数程序的分析，希望能够让大家了解最基本的stage划分的原理，以及stage划分后shuffle操作是如何在两个stage的边界处执行的。然后我们就知道如何快速定位出发生数据倾斜的stage对应代码的哪一个部分了。比如我们在Spark Web UI或者本地log中发现，stage1的某几个task执行得特别慢，判定stage1出现了数据倾斜，那么就可以回到代码中定位出stage1主要包括了reduceByKey这个shuffle类算子，此时基本就可以确定是由educeByKey算子导致的数据倾斜问题。比如某个单词出现了100万次，其他单词才出现10次，那么stage1的某个task就要处理100万数据，整个stage的速度就会被这个task拖慢。</p>
+<h2 id="某个task莫名其妙内存溢出的情况"><a href="#某个task莫名其妙内存溢出的情况" class="headerlink" title="某个task莫名其妙内存溢出的情况"></a>某个task莫名其妙内存溢出的情况</h2><p>这种情况下去定位出问题的代码就比较容易了。我们建议直接看yarn-client模式下本地log的异常栈，或者是通过YARN查看yarn-cluster模式下的log中的异常栈。一般来说，通过异常栈信息就可以定位到你的代码中哪一行发生了内存溢出。然后在那行代码附近找找，一般也会有shuffle类算子，此时很可能就是这个算子导致了数据倾斜。但是大家要注意的是，不能单纯靠偶然的内存溢出就判定发生了数据倾斜。因为自己编写的代码的bug，以及偶然出现的数据异常，也可能会导致内存溢出。因此还是要按照上面所讲的方法，通过Spark Web UI查看报错的那个stage的各个task的运行时间以及分配的数据量，才能确定是否是由于数据倾斜才导致了这次内存溢出。</p>
+<h2 id="查看导致数据倾斜的key的数据分布情况"><a href="#查看导致数据倾斜的key的数据分布情况" class="headerlink" title="查看导致数据倾斜的key的数据分布情况"></a>查看导致数据倾斜的key的数据分布情况</h2><p>知道了数据倾斜发生在哪里之后，通常需要分析一下那个执行了shuffle操作并且导致了数据倾斜的RDD/Hive表，查看一下其中key的分布情况。这主要是为之后选择哪一种技术方案提供依据。针对不同的key分布与不同的shuffle算子组合起来的各种情况，可能需要选择不同的技术方案来解决。此时根据你执行操作的情况不同，可以有很多种查看key分布的方式：</p>
+<ul>
+<li>如果是Spark SQL中的group by、join语句导致的数据倾斜，那么就查询一下SQL中使用的表的key分布情况。</li>
+<li>如果是对Spark RDD执行shuffle算子导致的数据倾斜，那么可以在Spark作业中加入查看key分布的代码，比如RDD.countByKey()。然后对统计出来的各个key出现的次数，collect/take到客户端打印一下，就可以看到key的分布情况。</li>
+</ul>
+<p>举例来说，对于上面所说的单词计数程序，如果确定了是stage1的reduceByKey算子导致了数据倾斜，那么就应该看看进行reduceByKey操作的RDD中的key分布情况，在这个例子中指的就是pairs RDD。如下示例，我们可以先对pairs采样10%的样本数据，然后使用countByKey算子统计出每个key出现的次数，最后在客户端遍历和打印样本数据中各个key的出现次数。</p>
+<pre class=" language-scala"><code class="language-scala"><span class="token keyword">val</span> sampledPairs <span class="token operator">=</span> pairs<span class="token punctuation">.</span>sample<span class="token punctuation">(</span><span class="token boolean">false</span><span class="token punctuation">,</span> <span class="token number">0.1</span><span class="token punctuation">)</span>
+<span class="token keyword">val</span> sampledWordCounts <span class="token operator">=</span> sampledPairs<span class="token punctuation">.</span>countByKey<span class="token punctuation">(</span><span class="token punctuation">)</span>
+sampledWordCounts<span class="token punctuation">.</span>foreach<span class="token punctuation">(</span>println<span class="token punctuation">(</span>_<span class="token punctuation">)</span><span class="token punctuation">)</span></code></pre>
+<h2 id="数据倾斜的解决方案"><a href="#数据倾斜的解决方案" class="headerlink" title="数据倾斜的解决方案"></a>数据倾斜的解决方案</h2><h3 id="使用-Hive-ETL-预处理数据"><a href="#使用-Hive-ETL-预处理数据" class="headerlink" title="使用 Hive ETL 预处理数据"></a>使用 Hive ETL 预处理数据</h3><p><strong>方案适用场景</strong>：导致数据倾斜的是Hive表。如果该Hive表中的数据本身很不均匀（比如某个key对应了100万数据，其他key才对应了10条数据），而且业务场景需要频繁使用Spark对Hive表执行某个分析操作，那么比较适合使用这种技术方案。</p>
+<p><strong>方案实现思路</strong>：此时可以评估一下，是否可以通过Hive来进行数据预处理（即通过Hive ETL预先对数据按照key进行聚合，或者是预先和其他表进行join），然后在Spark作业中针对的数据源就不是原来的Hive表了，而是预处理后的Hive表。此时由于数据已经预先进行过聚合或join操作了，那么在Spark作业中也就不需要使用原先的shuffle类算子执行这类操作了。</p>
+<p><strong>方案实现原理</strong>：这种方案从根源上解决了数据倾斜，因为彻底避免了在Spark中执行shuffle类算子，那么肯定就不会有数据倾斜的问题了。但是这里也要提醒一下大家，这种方式属于治标不治本。因为毕竟数据本身就存在分布不均匀的问题，所以Hive ETL中进行group by或者join等shuffle操作时，还是会出现数据倾斜，导致Hive ETL的速度很慢。我们只是把数据倾斜的发生提前到了Hive ETL中，避免Spark程序发生数据倾斜而已。</p>
+<p><strong>方案优点</strong>：实现起来简单便捷，效果还非常好，完全规避掉了数据倾斜，Spark作业的性能会大幅度提升。</p>
+<p><strong>方案缺点</strong>：治标不治本，Hive ETL中还是会发生数据倾斜。</p>
+<p><strong>方案实践经验</strong>：在一些Java系统与Spark结合使用的项目中，会出现Java代码频繁调用Spark作业的场景，而且对Spark作业的执行性能要求很高，就比较适合使用这种方案。将数据倾斜提前到上游的Hive ETL，每天仅执行一次，只有那一次是比较慢的，而之后每次Java调用Spark作业时，执行速度都会很快，能够提供更好的用户体验。</p>
+<p><strong>项目实践经验</strong>：在美团·点评的交互式用户行为分析系统中使用了这种方案，该系统主要是允许用户通过Java Web系统提交数据分析统计任务，后端通过Java提交Spark作业进行数据分析统计。要求Spark作业速度必须要快，尽量在10分钟以内，否则速度太慢，用户体验会很差。所以我们将有些Spark作业的shuffle操作提前到了Hive ETL中，从而让Spark直接使用预处理的Hive中间表，尽可能地减少Spark的shuffle操作，大幅度提升了性能，将部分作业的性能提升了6倍以上。</p>
+<h3 id="过滤少数导致倾斜的key"><a href="#过滤少数导致倾斜的key" class="headerlink" title="过滤少数导致倾斜的key"></a>过滤少数导致倾斜的key</h3><p><strong>方案适用场景</strong>：如果发现导致倾斜的key就少数几个，而且对计算本身的影响并不大的话，那么很适合使用这种方案。比如99%的key就对应10条数据，但是只有一个key对应了100万数据，从而导致了数据倾斜。</p>
+<p><strong>方案实现思路</strong>：如果我们判断那少数几个数据量特别多的key，对作业的执行和计算结果不是特别重要的话，那么干脆就直接过滤掉那少数几个key。比如，在Spark SQL中可以使用where子句过滤掉这些key或者在Spark Core中对RDD执行filter算子过滤掉这些key。如果需要每次作业执行时，动态判定哪些key的数据量最多然后再进行过滤，那么可以使用sample算子对RDD进行采样，然后计算出每个key的数量，取数据量最多的key过滤掉即可。</p>
+<p><strong>方案实现原理</strong>：将导致数据倾斜的key给过滤掉之后，这些key就不会参与计算了，自然不可能产生数据倾斜。</p>
+<p><strong>方案优点</strong>：实现简单，而且效果也很好，可以完全规避掉数据倾斜。</p>
+<p><strong>方案缺点</strong>：适用场景不多，大多数情况下，导致倾斜的key还是很多的，并不是只有少数几个。</p>
+<p><strong>方案实践经验</strong>：在项目中我们也采用过这种方案解决数据倾斜。有一次发现某一天Spark作业在运行的时候突然OOM了，追查之后发现，是Hive表中的某一个key在那天数据异常，导致数据量暴增。因此就采取每次执行前先进行采样，计算出样本中数据量最大的几个key之后，直接在程序中将那些key给过滤掉。</p>
+<h3 id="提高shuffle操作的并行度"><a href="#提高shuffle操作的并行度" class="headerlink" title="提高shuffle操作的并行度"></a>提高shuffle操作的并行度</h3><p><strong>方案适用场景</strong>：如果我们必须要对数据倾斜迎难而上，那么建议优先使用这种方案，因为这是处理数据倾斜最简单的一种方案。</p>
+<p><strong>方案实现思路</strong>：在对RDD执行shuffle算子时，给shuffle算子传入一个参数，比如reduceByKey(1000)，该参数就设置了这个shuffle算子执行时shuffle read task的数量。对于Spark SQL中的shuffle类语句，比如group by、join等，需要设置一个参数，即spark.sql.shuffle.partitions，该参数代表了shuffle read task的并行度，该值默认是200，对于很多场景来说都有点过小。</p>
+<p><strong>方案实现原理</strong>：增加shuffle read task的数量，可以让原本分配给一个task的多个key分配给多个task，从而让每个task处理比原来更少的数据。举例来说，如果原本有5个key，每个key对应10条数据，这5个key都是分配给一个task的，那么这个task就要处理50条数据。而增加了shuffle read task以后，每个task就分配到一个key，即每个task就处理10条数据，那么自然每个task的执行时间都会变短了。具体原理如下图所示。</p>
+<p><strong>方案优点</strong>：实现起来比较简单，可以有效缓解和减轻数据倾斜的影响。</p>
+<p><strong>方案缺点</strong>：只是缓解了数据倾斜而已，没有彻底根除问题，根据实践经验来看，其效果有限。</p>
+<p><strong>方案实践经验</strong>：该方案通常无法彻底解决数据倾斜，因为如果出现一些极端情况，比如某个key对应的数据量有100万，那么无论你的task数量增加到多少，这个对应着100万数据的key肯定还是会分配到一个task中去处理，因此注定还是会发生数据倾斜的。所以这种方案只能说是在发现数据倾斜时尝试使用的第一种手段，尝试去用嘴简单的方法缓解数据倾斜而已，或者是和其他方案结合起来使用。</p>
+<p><img src="https://ask.qcloudimg.com/http-save/yehe-2039230/fc251aec0a18ad466f82882af898cd86.png?imageView2/2/w/2560/h/7000" alt></p>
+<h3 id="两阶段聚合（局部聚合-全局聚合）"><a href="#两阶段聚合（局部聚合-全局聚合）" class="headerlink" title="两阶段聚合（局部聚合+全局聚合）"></a>两阶段聚合（局部聚合+全局聚合）</h3><p><strong>方案适用场景</strong>：对RDD执行reduceByKey等聚合类shuffle算子或者在Spark SQL中使用group by语句进行分组聚合时，比较适用这种方案。</p>
+<p><strong>方案实现思路</strong>：这个方案的核心实现思路就是进行两阶段聚合。第一次是局部聚合，先给每个key都打上一个随机数，比如10以内的随机数，此时原先一样的key就变成不一样的了，比如(hello, 1) (hello, 1) (hello, 1) (hello, 1)，就会变成(1_hello, 1) (1_hello, 1) (2_hello, 1) (2_hello, 1)。接着对打上随机数后的数据，执行reduceByKey等聚合操作，进行局部聚合，那么局部聚合结果，就会变成了(1_hello, 2) (2_hello, 2)。然后将各个key的前缀给去掉，就会变成(hello,2)(hello,2)，再次进行全局聚合操作，就可以得到最终结果了，比如(hello, 4)。</p>
+<p><strong>方案实现原理</strong>：将原本相同的key通过附加随机前缀的方式，变成多个不同的key，就可以让原本被一个task处理的数据分散到多个task上去做局部聚合，进而解决单个task处理数据量过多的问题。接着去除掉随机前缀，再次进行全局聚合，就可以得到最终的结果。具体原理见下图。</p>
+<p><strong>方案优点</strong>：对于聚合类的shuffle操作导致的数据倾斜，效果是非常不错的。通常都可以解决掉数据倾斜，或者至少是大幅度缓解数据倾斜，将Spark作业的性能提升数倍以上。</p>
+<p><strong>方案缺点</strong>：仅仅适用于聚合类的shuffle操作，适用范围相对较窄。如果是join类的shuffle操作，还得用其他的解决方案。</p>
+<p><img src="https://ask.qcloudimg.com/http-save/yehe-2039230/a0a200f93ea2211ef6904bd9e3d0fa80.png?imageView2/2/w/2560/h/7000" alt></p>
+<pre class=" language-scala"><code class="language-scala"><span class="token comment" spellcheck="true">// 第一步，给RDD中的每个key都打上一个随机前缀。</span>
+JavaPairRDD<span class="token operator">&lt;</span><span class="token builtin">String</span><span class="token punctuation">,</span> <span class="token builtin">Long</span><span class="token operator">></span> randomPrefixRdd <span class="token operator">=</span> rdd<span class="token punctuation">.</span>mapToPair<span class="token punctuation">(</span>
+        <span class="token keyword">new</span> PairFunction<span class="token operator">&lt;</span>Tuple2<span class="token operator">&lt;</span><span class="token builtin">Long</span><span class="token punctuation">,</span><span class="token builtin">Long</span><span class="token operator">></span><span class="token punctuation">,</span> <span class="token builtin">String</span><span class="token punctuation">,</span> <span class="token builtin">Long</span><span class="token operator">></span><span class="token punctuation">(</span><span class="token punctuation">)</span> <span class="token punctuation">{</span>
+            <span class="token keyword">private</span> static <span class="token keyword">final</span> long serialVersionUID <span class="token operator">=</span> <span class="token number">1L</span><span class="token punctuation">;</span>
+            <span class="token annotation punctuation">@Override</span>
+            public Tuple2<span class="token operator">&lt;</span><span class="token builtin">String</span><span class="token punctuation">,</span> <span class="token builtin">Long</span><span class="token operator">></span> call<span class="token punctuation">(</span>Tuple2<span class="token operator">&lt;</span><span class="token builtin">Long</span><span class="token punctuation">,</span> <span class="token builtin">Long</span><span class="token operator">></span> tuple<span class="token punctuation">)</span>
+                    throws Exception <span class="token punctuation">{</span>
+                Random random <span class="token operator">=</span> <span class="token keyword">new</span> Random<span class="token punctuation">(</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+                int prefix <span class="token operator">=</span> random<span class="token punctuation">.</span>nextInt<span class="token punctuation">(</span><span class="token number">10</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+                <span class="token keyword">return</span> <span class="token keyword">new</span> Tuple2<span class="token operator">&lt;</span><span class="token builtin">String</span><span class="token punctuation">,</span> <span class="token builtin">Long</span><span class="token operator">></span><span class="token punctuation">(</span>prefix <span class="token operator">+</span> <span class="token string">"_"</span> <span class="token operator">+</span> tuple<span class="token punctuation">.</span>_1<span class="token punctuation">,</span> tuple<span class="token punctuation">.</span>_2<span class="token punctuation">)</span><span class="token punctuation">;</span>
+            <span class="token punctuation">}</span>
+        <span class="token punctuation">}</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+
+<span class="token comment" spellcheck="true">// 第二步，对打上随机前缀的key进行局部聚合。</span>
+JavaPairRDD<span class="token operator">&lt;</span><span class="token builtin">String</span><span class="token punctuation">,</span> <span class="token builtin">Long</span><span class="token operator">></span> localAggrRdd <span class="token operator">=</span> randomPrefixRdd<span class="token punctuation">.</span>reduceByKey<span class="token punctuation">(</span>
+        <span class="token keyword">new</span> Function2<span class="token operator">&lt;</span><span class="token builtin">Long</span><span class="token punctuation">,</span> <span class="token builtin">Long</span><span class="token punctuation">,</span> <span class="token builtin">Long</span><span class="token operator">></span><span class="token punctuation">(</span><span class="token punctuation">)</span> <span class="token punctuation">{</span>
+            <span class="token keyword">private</span> static <span class="token keyword">final</span> long serialVersionUID <span class="token operator">=</span> <span class="token number">1L</span><span class="token punctuation">;</span>
+            <span class="token annotation punctuation">@Override</span>
+            public <span class="token builtin">Long</span> call<span class="token punctuation">(</span><span class="token builtin">Long</span> v1<span class="token punctuation">,</span> <span class="token builtin">Long</span> v2<span class="token punctuation">)</span> throws Exception <span class="token punctuation">{</span>
+                <span class="token keyword">return</span> v1 <span class="token operator">+</span> v2<span class="token punctuation">;</span>
+            <span class="token punctuation">}</span>
+        <span class="token punctuation">}</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+
+<span class="token comment" spellcheck="true">// 第三步，去除RDD中每个key的随机前缀。</span>
+JavaPairRDD<span class="token operator">&lt;</span><span class="token builtin">Long</span><span class="token punctuation">,</span> <span class="token builtin">Long</span><span class="token operator">></span> removedRandomPrefixRdd <span class="token operator">=</span> localAggrRdd<span class="token punctuation">.</span>mapToPair<span class="token punctuation">(</span>
+        <span class="token keyword">new</span> PairFunction<span class="token operator">&lt;</span>Tuple2<span class="token operator">&lt;</span><span class="token builtin">String</span><span class="token punctuation">,</span><span class="token builtin">Long</span><span class="token operator">></span><span class="token punctuation">,</span> <span class="token builtin">Long</span><span class="token punctuation">,</span> <span class="token builtin">Long</span><span class="token operator">></span><span class="token punctuation">(</span><span class="token punctuation">)</span> <span class="token punctuation">{</span>
+            <span class="token keyword">private</span> static <span class="token keyword">final</span> long serialVersionUID <span class="token operator">=</span> <span class="token number">1L</span><span class="token punctuation">;</span>
+            <span class="token annotation punctuation">@Override</span>
+            public Tuple2<span class="token operator">&lt;</span><span class="token builtin">Long</span><span class="token punctuation">,</span> <span class="token builtin">Long</span><span class="token operator">></span> call<span class="token punctuation">(</span>Tuple2<span class="token operator">&lt;</span><span class="token builtin">String</span><span class="token punctuation">,</span> <span class="token builtin">Long</span><span class="token operator">></span> tuple<span class="token punctuation">)</span>
+                    throws Exception <span class="token punctuation">{</span>
+                long originalKey <span class="token operator">=</span> <span class="token builtin">Long</span><span class="token punctuation">.</span>valueOf<span class="token punctuation">(</span>tuple<span class="token punctuation">.</span>_1<span class="token punctuation">.</span>split<span class="token punctuation">(</span><span class="token string">"_"</span><span class="token punctuation">)</span><span class="token punctuation">[</span><span class="token number">1</span><span class="token punctuation">]</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+                <span class="token keyword">return</span> <span class="token keyword">new</span> Tuple2<span class="token operator">&lt;</span><span class="token builtin">Long</span><span class="token punctuation">,</span> <span class="token builtin">Long</span><span class="token operator">></span><span class="token punctuation">(</span>originalKey<span class="token punctuation">,</span> tuple<span class="token punctuation">.</span>_2<span class="token punctuation">)</span><span class="token punctuation">;</span>
+            <span class="token punctuation">}</span>
+        <span class="token punctuation">}</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+
+<span class="token comment" spellcheck="true">// 第四步，对去除了随机前缀的RDD进行全局聚合。</span>
+JavaPairRDD<span class="token operator">&lt;</span><span class="token builtin">Long</span><span class="token punctuation">,</span> <span class="token builtin">Long</span><span class="token operator">></span> globalAggrRdd <span class="token operator">=</span> removedRandomPrefixRdd<span class="token punctuation">.</span>reduceByKey<span class="token punctuation">(</span>
+        <span class="token keyword">new</span> Function2<span class="token operator">&lt;</span><span class="token builtin">Long</span><span class="token punctuation">,</span> <span class="token builtin">Long</span><span class="token punctuation">,</span> <span class="token builtin">Long</span><span class="token operator">></span><span class="token punctuation">(</span><span class="token punctuation">)</span> <span class="token punctuation">{</span>
+            <span class="token keyword">private</span> static <span class="token keyword">final</span> long serialVersionUID <span class="token operator">=</span> <span class="token number">1L</span><span class="token punctuation">;</span>
+            <span class="token annotation punctuation">@Override</span>
+            public <span class="token builtin">Long</span> call<span class="token punctuation">(</span><span class="token builtin">Long</span> v1<span class="token punctuation">,</span> <span class="token builtin">Long</span> v2<span class="token punctuation">)</span> throws Exception <span class="token punctuation">{</span>
+                <span class="token keyword">return</span> v1 <span class="token operator">+</span> v2<span class="token punctuation">;</span>
+            <span class="token punctuation">}</span>
+        <span class="token punctuation">}</span><span class="token punctuation">)</span><span class="token punctuation">;</span></code></pre>
+<h3 id="将reduce-join转为map-join"><a href="#将reduce-join转为map-join" class="headerlink" title="将reduce join转为map join"></a>将reduce join转为map join</h3><p><strong>方案适用场景</strong>：在对RDD使用join类操作，或者是在Spark SQL中使用join语句时，而且join操作中的一个RDD或表的数据量比较小（比如几百M或者一两G），比较适用此方案。</p>
+<p><strong>方案实现思路</strong>：不使用join算子进行连接操作，而使用Broadcast变量与map类算子实现join操作，进而完全规避掉shuffle类的操作，彻底避免数据倾斜的发生和出现。将较小RDD中的数据直接通过collect算子拉取到Driver端的内存中来，然后对其创建一个Broadcast变量；接着对另外一个RDD执行map类算子，在算子函数内，从Broadcast变量中获取较小RDD的全量数据，与当前RDD的每一条数据按照连接key进行比对，如果连接key相同的话，那么就将两个RDD的数据用你需要的方式连接起来。</p>
+<p><strong>方案实现原理</strong>：普通的join是会走shuffle过程的，而一旦shuffle，就相当于会将相同key的数据拉取到一个shuffle read task中再进行join，此时就是reduce join。但是如果一个RDD是比较小的，则可以采用广播小RDD全量数据+map算子来实现与join同样的效果，也就是map join，此时就不会发生shuffle操作，也就不会发生数据倾斜。具体原理如下图所示。<strong>方案优点</strong>：对join操作导致的数据倾斜，效果非常好，因为根本就不会发生shuffle，也就根本不会发生数据倾斜。<strong>方案缺点</strong>：适用场景较少，因为这个方案只适用于一个大表和一个小表的情况。毕竟我们需要将小表进行广播，此时会比较消耗内存资源，driver和每个Executor内存中都会驻留一份小RDD的全量数据。如果我们广播出去的RDD数据比较大，比如10G以上，那么就可能发生内存溢出了。因此并不适合两个都是大表的情况。</p>
+<p><img src="https://ask.qcloudimg.com/http-save/yehe-2039230/68cf70a775b51c2fe644911f2f008008.png?imageView2/2/w/2560/h/7000" alt></p>
+<pre class=" language-scala"><code class="language-scala"><span class="token comment" spellcheck="true">// 首先将数据量比较小的RDD的数据，collect到Driver中来。</span>
+List<span class="token operator">&lt;</span>Tuple2<span class="token operator">&lt;</span><span class="token builtin">Long</span><span class="token punctuation">,</span> Row<span class="token operator">>></span> rdd1Data <span class="token operator">=</span> rdd1<span class="token punctuation">.</span>collect<span class="token punctuation">(</span><span class="token punctuation">)</span>
+<span class="token comment" spellcheck="true">// 然后使用Spark的广播功能，将小RDD的数据转换成广播变量，这样每个Executor就只有一份RDD的数据。</span>
+<span class="token comment" spellcheck="true">// 可以尽可能节省内存空间，并且减少网络传输性能开销。</span>
+<span class="token keyword">final</span> Broadcast<span class="token operator">&lt;</span>List<span class="token operator">&lt;</span>Tuple2<span class="token operator">&lt;</span><span class="token builtin">Long</span><span class="token punctuation">,</span> Row<span class="token operator">>>></span> rdd1DataBroadcast <span class="token operator">=</span> sc<span class="token punctuation">.</span>broadcast<span class="token punctuation">(</span>rdd1Data<span class="token punctuation">)</span><span class="token punctuation">;</span>
+
+<span class="token comment" spellcheck="true">// 对另外一个RDD执行map类操作，而不再是join类操作。</span>
+JavaPairRDD<span class="token operator">&lt;</span><span class="token builtin">String</span><span class="token punctuation">,</span> Tuple2<span class="token operator">&lt;</span><span class="token builtin">String</span><span class="token punctuation">,</span> Row<span class="token operator">>></span> joinedRdd <span class="token operator">=</span> rdd2<span class="token punctuation">.</span>mapToPair<span class="token punctuation">(</span>
+        <span class="token keyword">new</span> PairFunction<span class="token operator">&lt;</span>Tuple2<span class="token operator">&lt;</span><span class="token builtin">Long</span><span class="token punctuation">,</span><span class="token builtin">String</span><span class="token operator">></span><span class="token punctuation">,</span> <span class="token builtin">String</span><span class="token punctuation">,</span> Tuple2<span class="token operator">&lt;</span><span class="token builtin">String</span><span class="token punctuation">,</span> Row<span class="token operator">>></span><span class="token punctuation">(</span><span class="token punctuation">)</span> <span class="token punctuation">{</span>
+            <span class="token keyword">private</span> static <span class="token keyword">final</span> long serialVersionUID <span class="token operator">=</span> <span class="token number">1L</span><span class="token punctuation">;</span>
+            <span class="token annotation punctuation">@Override</span>
+            public Tuple2<span class="token operator">&lt;</span><span class="token builtin">String</span><span class="token punctuation">,</span> Tuple2<span class="token operator">&lt;</span><span class="token builtin">String</span><span class="token punctuation">,</span> Row<span class="token operator">>></span> call<span class="token punctuation">(</span>Tuple2<span class="token operator">&lt;</span><span class="token builtin">Long</span><span class="token punctuation">,</span> <span class="token builtin">String</span><span class="token operator">></span> tuple<span class="token punctuation">)</span>
+                    throws Exception <span class="token punctuation">{</span>
+                <span class="token comment" spellcheck="true">// 在算子函数中，通过广播变量，获取到本地Executor中的rdd1数据。</span>
+                List<span class="token operator">&lt;</span>Tuple2<span class="token operator">&lt;</span><span class="token builtin">Long</span><span class="token punctuation">,</span> Row<span class="token operator">>></span> rdd1Data <span class="token operator">=</span> rdd1DataBroadcast<span class="token punctuation">.</span>value<span class="token punctuation">(</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+                <span class="token comment" spellcheck="true">// 可以将rdd1的数据转换为一个Map，便于后面进行join操作。</span>
+                Map<span class="token operator">&lt;</span><span class="token builtin">Long</span><span class="token punctuation">,</span> Row<span class="token operator">></span> rdd1DataMap <span class="token operator">=</span> <span class="token keyword">new</span> HashMap<span class="token operator">&lt;</span><span class="token builtin">Long</span><span class="token punctuation">,</span> Row<span class="token operator">></span><span class="token punctuation">(</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+                <span class="token keyword">for</span><span class="token punctuation">(</span>Tuple2<span class="token operator">&lt;</span><span class="token builtin">Long</span><span class="token punctuation">,</span> Row<span class="token operator">></span> data <span class="token operator">:</span> rdd1Data<span class="token punctuation">)</span> <span class="token punctuation">{</span>
+                    rdd1DataMap<span class="token punctuation">.</span>put<span class="token punctuation">(</span>data<span class="token punctuation">.</span>_1<span class="token punctuation">,</span> data<span class="token punctuation">.</span>_2<span class="token punctuation">)</span><span class="token punctuation">;</span>
+                <span class="token punctuation">}</span>
+                <span class="token comment" spellcheck="true">// 获取当前RDD数据的key以及value。</span>
+                <span class="token builtin">String</span> key <span class="token operator">=</span> tuple<span class="token punctuation">.</span>_1<span class="token punctuation">;</span>
+                <span class="token builtin">String</span> value <span class="token operator">=</span> tuple<span class="token punctuation">.</span>_2<span class="token punctuation">;</span>
+                <span class="token comment" spellcheck="true">// 从rdd1数据Map中，根据key获取到可以join到的数据。</span>
+                Row rdd1Value <span class="token operator">=</span> rdd1DataMap<span class="token punctuation">.</span>get<span class="token punctuation">(</span>key<span class="token punctuation">)</span><span class="token punctuation">;</span>
+                <span class="token keyword">return</span> <span class="token keyword">new</span> Tuple2<span class="token operator">&lt;</span><span class="token builtin">String</span><span class="token punctuation">,</span> <span class="token builtin">String</span><span class="token operator">></span><span class="token punctuation">(</span>key<span class="token punctuation">,</span> <span class="token keyword">new</span> Tuple2<span class="token operator">&lt;</span><span class="token builtin">String</span><span class="token punctuation">,</span> Row<span class="token operator">></span><span class="token punctuation">(</span>value<span class="token punctuation">,</span> rdd1Value<span class="token punctuation">)</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+            <span class="token punctuation">}</span>
+        <span class="token punctuation">}</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+
+<span class="token comment" spellcheck="true">// 这里得提示一下。</span>
+<span class="token comment" spellcheck="true">// 上面的做法，仅仅适用于rdd1中的key没有重复，全部是唯一的场景。</span>
+<span class="token comment" spellcheck="true">// 如果rdd1中有多个相同的key，那么就得用flatMap类的操作，在进行join的时候不能用map，而是得遍历rdd1所有数据进行join。</span>
+<span class="token comment" spellcheck="true">// rdd2中每条数据都可能会返回多条join后的数据。</span></code></pre>
+<h3 id="采样倾斜key并分拆join操作"><a href="#采样倾斜key并分拆join操作" class="headerlink" title="采样倾斜key并分拆join操作"></a>采样倾斜key并分拆join操作</h3><p><strong>方案适用场景</strong>：两个RDD/Hive表进行join的时候，如果数据量都比较大，无法采用“解决方案五”，那么此时可以看一下两个RDD/Hive表中的key分布情况。如果出现数据倾斜，是因为其中某一个RDD/Hive表中的少数几个key的数据量过大，而另一个RDD/Hive表中的所有key都分布比较均匀，那么采用这个解决方案是比较合适的。</p>
+<p><strong>方案实现思路</strong>：</p>
+<ul>
+<li>对包含少数几个数据量过大的key的那个RDD，通过sample算子采样出一份样本来，然后统计一下每个key的数量，计算出来数据量最大的是哪几个key。</li>
+<li>然后将这几个key对应的数据从原来的RDD中拆分出来，形成一个单独的RDD，并给每个key都打上n以内的随机数作为前缀，而不会导致倾斜的大部分key形成另外一个RDD。</li>
+<li>接着将需要join的另一个RDD，也过滤出来那几个倾斜key对应的数据并形成一个单独的RDD，将每条数据膨胀成n条数据，这n条数据都按顺序附加一个0~n的前缀，不会导致倾斜的大部分key也形成另外一个RDD。</li>
+<li>再将附加了随机前缀的独立RDD与另一个膨胀n倍的独立RDD进行join，此时就可以将原先相同的key打散成n份，分散到多个task中去进行join了。</li>
+<li>而另外两个普通的RDD就照常join即可。</li>
+<li>最后将两次join的结果使用union算子合并起来即可，就是最终的join结果。</li>
+</ul>
+<p><strong>方案实现原理</strong>：对于join导致的数据倾斜，如果只是某几个key导致了倾斜，可以将少数几个key分拆成独立RDD，并附加随机前缀打散成n份去进行join，此时这几个key对应的数据就不会集中在少数几个task上，而是分散到多个task进行join了。具体原理见下图。</p>
+<p><strong>方案优点</strong>：对于join导致的数据倾斜，如果只是某几个key导致了倾斜，采用该方式可以用最有效的方式打散key进行join。而且只需要针对少数倾斜key对应的数据进行扩容n倍，不需要对全量数据进行扩容。避免了占用过多内存。</p>
+<p><strong>方案缺点</strong>：如果导致倾斜的key特别多的话，比如成千上万个key都导致数据倾斜，那么这种方式也不适合。</p>
+<p><img src="https://ask.qcloudimg.com/http-save/yehe-2039230/0990fc3e779564f5d9ed2f60e19cdbfe.png?imageView2/2/w/2560/h/7000" alt></p>
+<pre class=" language-scala"><code class="language-scala"><span class="token comment" spellcheck="true">// 首先从包含了少数几个导致数据倾斜key的rdd1中，采样10%的样本数据。</span>
+JavaPairRDD<span class="token operator">&lt;</span><span class="token builtin">Long</span><span class="token punctuation">,</span> <span class="token builtin">String</span><span class="token operator">></span> sampledRDD <span class="token operator">=</span> rdd1<span class="token punctuation">.</span>sample<span class="token punctuation">(</span><span class="token boolean">false</span><span class="token punctuation">,</span> <span class="token number">0.1</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+
+<span class="token comment" spellcheck="true">// 对样本数据RDD统计出每个key的出现次数，并按出现次数降序排序。</span>
+<span class="token comment" spellcheck="true">// 对降序排序后的数据，取出top 1或者top 100的数据，也就是key最多的前n个数据。</span>
+<span class="token comment" spellcheck="true">// 具体取出多少个数据量最多的key，由大家自己决定，我们这里就取1个作为示范。</span>
+JavaPairRDD<span class="token operator">&lt;</span><span class="token builtin">Long</span><span class="token punctuation">,</span> <span class="token builtin">Long</span><span class="token operator">></span> mappedSampledRDD <span class="token operator">=</span> sampledRDD<span class="token punctuation">.</span>mapToPair<span class="token punctuation">(</span>
+        <span class="token keyword">new</span> PairFunction<span class="token operator">&lt;</span>Tuple2<span class="token operator">&lt;</span><span class="token builtin">Long</span><span class="token punctuation">,</span><span class="token builtin">String</span><span class="token operator">></span><span class="token punctuation">,</span> <span class="token builtin">Long</span><span class="token punctuation">,</span> <span class="token builtin">Long</span><span class="token operator">></span><span class="token punctuation">(</span><span class="token punctuation">)</span> <span class="token punctuation">{</span>
+            <span class="token keyword">private</span> static <span class="token keyword">final</span> long serialVersionUID <span class="token operator">=</span> <span class="token number">1L</span><span class="token punctuation">;</span>
+            <span class="token annotation punctuation">@Override</span>
+            public Tuple2<span class="token operator">&lt;</span><span class="token builtin">Long</span><span class="token punctuation">,</span> <span class="token builtin">Long</span><span class="token operator">></span> call<span class="token punctuation">(</span>Tuple2<span class="token operator">&lt;</span><span class="token builtin">Long</span><span class="token punctuation">,</span> <span class="token builtin">String</span><span class="token operator">></span> tuple<span class="token punctuation">)</span>
+                    throws Exception <span class="token punctuation">{</span>
+                <span class="token keyword">return</span> <span class="token keyword">new</span> Tuple2<span class="token operator">&lt;</span><span class="token builtin">Long</span><span class="token punctuation">,</span> <span class="token builtin">Long</span><span class="token operator">></span><span class="token punctuation">(</span>tuple<span class="token punctuation">.</span>_1<span class="token punctuation">,</span> <span class="token number">1L</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+            <span class="token punctuation">}</span>     
+        <span class="token punctuation">}</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+JavaPairRDD<span class="token operator">&lt;</span><span class="token builtin">Long</span><span class="token punctuation">,</span> <span class="token builtin">Long</span><span class="token operator">></span> countedSampledRDD <span class="token operator">=</span> mappedSampledRDD<span class="token punctuation">.</span>reduceByKey<span class="token punctuation">(</span>
+        <span class="token keyword">new</span> Function2<span class="token operator">&lt;</span><span class="token builtin">Long</span><span class="token punctuation">,</span> <span class="token builtin">Long</span><span class="token punctuation">,</span> <span class="token builtin">Long</span><span class="token operator">></span><span class="token punctuation">(</span><span class="token punctuation">)</span> <span class="token punctuation">{</span>
+            <span class="token keyword">private</span> static <span class="token keyword">final</span> long serialVersionUID <span class="token operator">=</span> <span class="token number">1L</span><span class="token punctuation">;</span>
+            <span class="token annotation punctuation">@Override</span>
+            public <span class="token builtin">Long</span> call<span class="token punctuation">(</span><span class="token builtin">Long</span> v1<span class="token punctuation">,</span> <span class="token builtin">Long</span> v2<span class="token punctuation">)</span> throws Exception <span class="token punctuation">{</span>
+                <span class="token keyword">return</span> v1 <span class="token operator">+</span> v2<span class="token punctuation">;</span>
+            <span class="token punctuation">}</span>
+        <span class="token punctuation">}</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+JavaPairRDD<span class="token operator">&lt;</span><span class="token builtin">Long</span><span class="token punctuation">,</span> <span class="token builtin">Long</span><span class="token operator">></span> reversedSampledRDD <span class="token operator">=</span> countedSampledRDD<span class="token punctuation">.</span>mapToPair<span class="token punctuation">(</span> 
+        <span class="token keyword">new</span> PairFunction<span class="token operator">&lt;</span>Tuple2<span class="token operator">&lt;</span><span class="token builtin">Long</span><span class="token punctuation">,</span><span class="token builtin">Long</span><span class="token operator">></span><span class="token punctuation">,</span> <span class="token builtin">Long</span><span class="token punctuation">,</span> <span class="token builtin">Long</span><span class="token operator">></span><span class="token punctuation">(</span><span class="token punctuation">)</span> <span class="token punctuation">{</span>
+            <span class="token keyword">private</span> static <span class="token keyword">final</span> long serialVersionUID <span class="token operator">=</span> <span class="token number">1L</span><span class="token punctuation">;</span>
+            <span class="token annotation punctuation">@Override</span>
+            public Tuple2<span class="token operator">&lt;</span><span class="token builtin">Long</span><span class="token punctuation">,</span> <span class="token builtin">Long</span><span class="token operator">></span> call<span class="token punctuation">(</span>Tuple2<span class="token operator">&lt;</span><span class="token builtin">Long</span><span class="token punctuation">,</span> <span class="token builtin">Long</span><span class="token operator">></span> tuple<span class="token punctuation">)</span>
+                    throws Exception <span class="token punctuation">{</span>
+                <span class="token keyword">return</span> <span class="token keyword">new</span> Tuple2<span class="token operator">&lt;</span><span class="token builtin">Long</span><span class="token punctuation">,</span> <span class="token builtin">Long</span><span class="token operator">></span><span class="token punctuation">(</span>tuple<span class="token punctuation">.</span>_2<span class="token punctuation">,</span> tuple<span class="token punctuation">.</span>_1<span class="token punctuation">)</span><span class="token punctuation">;</span>
+            <span class="token punctuation">}</span>
+        <span class="token punctuation">}</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+<span class="token keyword">final</span> <span class="token builtin">Long</span> skewedUserid <span class="token operator">=</span> reversedSampledRDD<span class="token punctuation">.</span>sortByKey<span class="token punctuation">(</span><span class="token boolean">false</span><span class="token punctuation">)</span><span class="token punctuation">.</span>take<span class="token punctuation">(</span><span class="token number">1</span><span class="token punctuation">)</span><span class="token punctuation">.</span>get<span class="token punctuation">(</span><span class="token number">0</span><span class="token punctuation">)</span><span class="token punctuation">.</span>_2<span class="token punctuation">;</span>
+
+<span class="token comment" spellcheck="true">// 从rdd1中分拆出导致数据倾斜的key，形成独立的RDD。</span>
+JavaPairRDD<span class="token operator">&lt;</span><span class="token builtin">Long</span><span class="token punctuation">,</span> <span class="token builtin">String</span><span class="token operator">></span> skewedRDD <span class="token operator">=</span> rdd1<span class="token punctuation">.</span>filter<span class="token punctuation">(</span>
+        <span class="token keyword">new</span> Function<span class="token operator">&lt;</span>Tuple2<span class="token operator">&lt;</span><span class="token builtin">Long</span><span class="token punctuation">,</span><span class="token builtin">String</span><span class="token operator">></span><span class="token punctuation">,</span> <span class="token builtin">Boolean</span><span class="token operator">></span><span class="token punctuation">(</span><span class="token punctuation">)</span> <span class="token punctuation">{</span>
+            <span class="token keyword">private</span> static <span class="token keyword">final</span> long serialVersionUID <span class="token operator">=</span> <span class="token number">1L</span><span class="token punctuation">;</span>
+            <span class="token annotation punctuation">@Override</span>
+            public <span class="token builtin">Boolean</span> call<span class="token punctuation">(</span>Tuple2<span class="token operator">&lt;</span><span class="token builtin">Long</span><span class="token punctuation">,</span> <span class="token builtin">String</span><span class="token operator">></span> tuple<span class="token punctuation">)</span> throws Exception <span class="token punctuation">{</span>
+                <span class="token keyword">return</span> tuple<span class="token punctuation">.</span>_1<span class="token punctuation">.</span>equals<span class="token punctuation">(</span>skewedUserid<span class="token punctuation">)</span><span class="token punctuation">;</span>
+            <span class="token punctuation">}</span>
+        <span class="token punctuation">}</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+<span class="token comment" spellcheck="true">// 从rdd1中分拆出不导致数据倾斜的普通key，形成独立的RDD。</span>
+JavaPairRDD<span class="token operator">&lt;</span><span class="token builtin">Long</span><span class="token punctuation">,</span> <span class="token builtin">String</span><span class="token operator">></span> commonRDD <span class="token operator">=</span> rdd1<span class="token punctuation">.</span>filter<span class="token punctuation">(</span>
+        <span class="token keyword">new</span> Function<span class="token operator">&lt;</span>Tuple2<span class="token operator">&lt;</span><span class="token builtin">Long</span><span class="token punctuation">,</span><span class="token builtin">String</span><span class="token operator">></span><span class="token punctuation">,</span> <span class="token builtin">Boolean</span><span class="token operator">></span><span class="token punctuation">(</span><span class="token punctuation">)</span> <span class="token punctuation">{</span>
+            <span class="token keyword">private</span> static <span class="token keyword">final</span> long serialVersionUID <span class="token operator">=</span> <span class="token number">1L</span><span class="token punctuation">;</span>
+            <span class="token annotation punctuation">@Override</span>
+            public <span class="token builtin">Boolean</span> call<span class="token punctuation">(</span>Tuple2<span class="token operator">&lt;</span><span class="token builtin">Long</span><span class="token punctuation">,</span> <span class="token builtin">String</span><span class="token operator">></span> tuple<span class="token punctuation">)</span> throws Exception <span class="token punctuation">{</span>
+                <span class="token keyword">return</span> <span class="token operator">!</span>tuple<span class="token punctuation">.</span>_1<span class="token punctuation">.</span>equals<span class="token punctuation">(</span>skewedUserid<span class="token punctuation">)</span><span class="token punctuation">;</span>
+            <span class="token punctuation">}</span> 
+        <span class="token punctuation">}</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+
+<span class="token comment" spellcheck="true">// rdd2，就是那个所有key的分布相对较为均匀的rdd。</span>
+<span class="token comment" spellcheck="true">// 这里将rdd2中，前面获取到的key对应的数据，过滤出来，分拆成单独的rdd，并对rdd中的数据使用flatMap算子都扩容100倍。</span>
+<span class="token comment" spellcheck="true">// 对扩容的每条数据，都打上0～100的前缀。</span>
+JavaPairRDD<span class="token operator">&lt;</span><span class="token builtin">String</span><span class="token punctuation">,</span> Row<span class="token operator">></span> skewedRdd2 <span class="token operator">=</span> rdd2<span class="token punctuation">.</span>filter<span class="token punctuation">(</span>
+         <span class="token keyword">new</span> Function<span class="token operator">&lt;</span>Tuple2<span class="token operator">&lt;</span><span class="token builtin">Long</span><span class="token punctuation">,</span>Row<span class="token operator">></span><span class="token punctuation">,</span> <span class="token builtin">Boolean</span><span class="token operator">></span><span class="token punctuation">(</span><span class="token punctuation">)</span> <span class="token punctuation">{</span>
+            <span class="token keyword">private</span> static <span class="token keyword">final</span> long serialVersionUID <span class="token operator">=</span> <span class="token number">1L</span><span class="token punctuation">;</span>
+            <span class="token annotation punctuation">@Override</span>
+            public <span class="token builtin">Boolean</span> call<span class="token punctuation">(</span>Tuple2<span class="token operator">&lt;</span><span class="token builtin">Long</span><span class="token punctuation">,</span> Row<span class="token operator">></span> tuple<span class="token punctuation">)</span> throws Exception <span class="token punctuation">{</span>
+                <span class="token keyword">return</span> tuple<span class="token punctuation">.</span>_1<span class="token punctuation">.</span>equals<span class="token punctuation">(</span>skewedUserid<span class="token punctuation">)</span><span class="token punctuation">;</span>
+            <span class="token punctuation">}</span>
+        <span class="token punctuation">}</span><span class="token punctuation">)</span><span class="token punctuation">.</span>flatMapToPair<span class="token punctuation">(</span><span class="token keyword">new</span> PairFlatMapFunction<span class="token operator">&lt;</span>Tuple2<span class="token operator">&lt;</span><span class="token builtin">Long</span><span class="token punctuation">,</span>Row<span class="token operator">></span><span class="token punctuation">,</span> <span class="token builtin">String</span><span class="token punctuation">,</span> Row<span class="token operator">></span><span class="token punctuation">(</span><span class="token punctuation">)</span> <span class="token punctuation">{</span>
+            <span class="token keyword">private</span> static <span class="token keyword">final</span> long serialVersionUID <span class="token operator">=</span> <span class="token number">1L</span><span class="token punctuation">;</span>
+            <span class="token annotation punctuation">@Override</span>
+            public Iterable<span class="token operator">&lt;</span>Tuple2<span class="token operator">&lt;</span><span class="token builtin">String</span><span class="token punctuation">,</span> Row<span class="token operator">>></span> call<span class="token punctuation">(</span>
+                    Tuple2<span class="token operator">&lt;</span><span class="token builtin">Long</span><span class="token punctuation">,</span> Row<span class="token operator">></span> tuple<span class="token punctuation">)</span> throws Exception <span class="token punctuation">{</span>
+                Random random <span class="token operator">=</span> <span class="token keyword">new</span> Random<span class="token punctuation">(</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+                List<span class="token operator">&lt;</span>Tuple2<span class="token operator">&lt;</span><span class="token builtin">String</span><span class="token punctuation">,</span> Row<span class="token operator">>></span> list <span class="token operator">=</span> <span class="token keyword">new</span> ArrayList<span class="token operator">&lt;</span>Tuple2<span class="token operator">&lt;</span><span class="token builtin">String</span><span class="token punctuation">,</span> Row<span class="token operator">>></span><span class="token punctuation">(</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+                <span class="token keyword">for</span><span class="token punctuation">(</span>int i <span class="token operator">=</span> <span class="token number">0</span><span class="token punctuation">;</span> i <span class="token operator">&lt;</span> <span class="token number">100</span><span class="token punctuation">;</span> i<span class="token operator">++</span><span class="token punctuation">)</span> <span class="token punctuation">{</span>
+                    list<span class="token punctuation">.</span>add<span class="token punctuation">(</span><span class="token keyword">new</span> Tuple2<span class="token operator">&lt;</span><span class="token builtin">String</span><span class="token punctuation">,</span> Row<span class="token operator">></span><span class="token punctuation">(</span>i <span class="token operator">+</span> <span class="token string">"_"</span> <span class="token operator">+</span> tuple<span class="token punctuation">.</span>_1<span class="token punctuation">,</span> tuple<span class="token punctuation">.</span>_2<span class="token punctuation">)</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+                <span class="token punctuation">}</span>
+                <span class="token keyword">return</span> list<span class="token punctuation">;</span>
+            <span class="token punctuation">}</span>
+
+        <span class="token punctuation">}</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+
+<span class="token comment" spellcheck="true">// 将rdd1中分拆出来的导致倾斜的key的独立rdd，每条数据都打上100以内的随机前缀。</span>
+<span class="token comment" spellcheck="true">// 然后将这个rdd1中分拆出来的独立rdd，与上面rdd2中分拆出来的独立rdd，进行join。</span>
+JavaPairRDD<span class="token operator">&lt;</span><span class="token builtin">Long</span><span class="token punctuation">,</span> Tuple2<span class="token operator">&lt;</span><span class="token builtin">String</span><span class="token punctuation">,</span> Row<span class="token operator">>></span> joinedRDD1 <span class="token operator">=</span> skewedRDD<span class="token punctuation">.</span>mapToPair<span class="token punctuation">(</span>
+        <span class="token keyword">new</span> PairFunction<span class="token operator">&lt;</span>Tuple2<span class="token operator">&lt;</span><span class="token builtin">Long</span><span class="token punctuation">,</span><span class="token builtin">String</span><span class="token operator">></span><span class="token punctuation">,</span> <span class="token builtin">String</span><span class="token punctuation">,</span> <span class="token builtin">String</span><span class="token operator">></span><span class="token punctuation">(</span><span class="token punctuation">)</span> <span class="token punctuation">{</span>
+            <span class="token keyword">private</span> static <span class="token keyword">final</span> long serialVersionUID <span class="token operator">=</span> <span class="token number">1L</span><span class="token punctuation">;</span>
+            <span class="token annotation punctuation">@Override</span>
+            public Tuple2<span class="token operator">&lt;</span><span class="token builtin">String</span><span class="token punctuation">,</span> <span class="token builtin">String</span><span class="token operator">></span> call<span class="token punctuation">(</span>Tuple2<span class="token operator">&lt;</span><span class="token builtin">Long</span><span class="token punctuation">,</span> <span class="token builtin">String</span><span class="token operator">></span> tuple<span class="token punctuation">)</span>
+                    throws Exception <span class="token punctuation">{</span>
+                Random random <span class="token operator">=</span> <span class="token keyword">new</span> Random<span class="token punctuation">(</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+                int prefix <span class="token operator">=</span> random<span class="token punctuation">.</span>nextInt<span class="token punctuation">(</span><span class="token number">100</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+                <span class="token keyword">return</span> <span class="token keyword">new</span> Tuple2<span class="token operator">&lt;</span><span class="token builtin">String</span><span class="token punctuation">,</span> <span class="token builtin">String</span><span class="token operator">></span><span class="token punctuation">(</span>prefix <span class="token operator">+</span> <span class="token string">"_"</span> <span class="token operator">+</span> tuple<span class="token punctuation">.</span>_1<span class="token punctuation">,</span> tuple<span class="token punctuation">.</span>_2<span class="token punctuation">)</span><span class="token punctuation">;</span>
+            <span class="token punctuation">}</span>
+        <span class="token punctuation">}</span><span class="token punctuation">)</span>
+        <span class="token punctuation">.</span>join<span class="token punctuation">(</span>skewedUserid2infoRDD<span class="token punctuation">)</span>
+        <span class="token punctuation">.</span>mapToPair<span class="token punctuation">(</span><span class="token keyword">new</span> PairFunction<span class="token operator">&lt;</span>Tuple2<span class="token operator">&lt;</span><span class="token builtin">String</span><span class="token punctuation">,</span>Tuple2<span class="token operator">&lt;</span><span class="token builtin">String</span><span class="token punctuation">,</span>Row<span class="token operator">>></span><span class="token punctuation">,</span> <span class="token builtin">Long</span><span class="token punctuation">,</span> Tuple2<span class="token operator">&lt;</span><span class="token builtin">String</span><span class="token punctuation">,</span> Row<span class="token operator">>></span><span class="token punctuation">(</span><span class="token punctuation">)</span> <span class="token punctuation">{</span>
+                        <span class="token keyword">private</span> static <span class="token keyword">final</span> long serialVersionUID <span class="token operator">=</span> <span class="token number">1L</span><span class="token punctuation">;</span>
+                        <span class="token annotation punctuation">@Override</span>
+                        public Tuple2<span class="token operator">&lt;</span><span class="token builtin">Long</span><span class="token punctuation">,</span> Tuple2<span class="token operator">&lt;</span><span class="token builtin">String</span><span class="token punctuation">,</span> Row<span class="token operator">>></span> call<span class="token punctuation">(</span>
+                            Tuple2<span class="token operator">&lt;</span><span class="token builtin">String</span><span class="token punctuation">,</span> Tuple2<span class="token operator">&lt;</span><span class="token builtin">String</span><span class="token punctuation">,</span> Row<span class="token operator">>></span> tuple<span class="token punctuation">)</span>
+                            throws Exception <span class="token punctuation">{</span>
+                            long key <span class="token operator">=</span> <span class="token builtin">Long</span><span class="token punctuation">.</span>valueOf<span class="token punctuation">(</span>tuple<span class="token punctuation">.</span>_1<span class="token punctuation">.</span>split<span class="token punctuation">(</span><span class="token string">"_"</span><span class="token punctuation">)</span><span class="token punctuation">[</span><span class="token number">1</span><span class="token punctuation">]</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+                            <span class="token keyword">return</span> <span class="token keyword">new</span> Tuple2<span class="token operator">&lt;</span><span class="token builtin">Long</span><span class="token punctuation">,</span> Tuple2<span class="token operator">&lt;</span><span class="token builtin">String</span><span class="token punctuation">,</span> Row<span class="token operator">>></span><span class="token punctuation">(</span>key<span class="token punctuation">,</span> tuple<span class="token punctuation">.</span>_2<span class="token punctuation">)</span><span class="token punctuation">;</span>
+                        <span class="token punctuation">}</span>
+                    <span class="token punctuation">}</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+
+<span class="token comment" spellcheck="true">// 将rdd1中分拆出来的包含普通key的独立rdd，直接与rdd2进行join。</span>
+JavaPairRDD<span class="token operator">&lt;</span><span class="token builtin">Long</span><span class="token punctuation">,</span> Tuple2<span class="token operator">&lt;</span><span class="token builtin">String</span><span class="token punctuation">,</span> Row<span class="token operator">>></span> joinedRDD2 <span class="token operator">=</span> commonRDD<span class="token punctuation">.</span>join<span class="token punctuation">(</span>rdd2<span class="token punctuation">)</span><span class="token punctuation">;</span>
+
+<span class="token comment" spellcheck="true">// 将倾斜key join后的结果与普通key join后的结果，uinon起来。</span>
+<span class="token comment" spellcheck="true">// 就是最终的join结果。</span>
+JavaPairRDD<span class="token operator">&lt;</span><span class="token builtin">Long</span><span class="token punctuation">,</span> Tuple2<span class="token operator">&lt;</span><span class="token builtin">String</span><span class="token punctuation">,</span> Row<span class="token operator">>></span> joinedRDD <span class="token operator">=</span> joinedRDD1<span class="token punctuation">.</span>union<span class="token punctuation">(</span>joinedRDD2<span class="token punctuation">)</span><span class="token punctuation">;</span></code></pre>
+<h3 id="使用随机前缀和扩容RDD进行join"><a href="#使用随机前缀和扩容RDD进行join" class="headerlink" title="使用随机前缀和扩容RDD进行join"></a>使用随机前缀和扩容RDD进行join</h3><p><strong>方案适用场景</strong>：如果在进行join操作时，RDD中有大量的key导致数据倾斜，那么进行分拆key也没什么意义，此时就只能使用最后一种方案来解决问题了。</p>
+<p><strong>方案实现思路</strong>：</p>
+<ul>
+<li>该方案的实现思路基本和“解决方案六”类似，首先查看RDD/Hive表中的数据分布情况，找到那个造成数据倾斜的RDD/Hive表，比如有多个key都对应了超过1万条数据。</li>
+<li>然后将该RDD的每条数据都打上一个n以内的随机前缀。</li>
+<li>同时对另外一个正常的RDD进行扩容，将每条数据都扩容成n条数据，扩容出来的每条-数据都依次打上一个0~n的前缀。</li>
+<li>最后将两个处理后的RDD进行join即可。</li>
+</ul>
+<p><strong>方案实现原理</strong>：将原先一样的key通过附加随机前缀变成不一样的key，然后就可以将这些处理后的“不同key”分散到多个task中去处理，而不是让一个task处理大量的相同key。该方案与“解决方案六”的不同之处就在于，上一种方案是尽量只对少数倾斜key对应的数据进行特殊处理，由于处理过程需要扩容RDD，因此上一种方案扩容RDD后对内存的占用并不大；而这一种方案是针对有大量倾斜key的情况，没法将部分key拆分出来进行单独处理，因此只能对整个RDD进行数据扩容，对内存资源要求很高。</p>
+<p><strong>方案优点</strong>：对join类型的数据倾斜基本都可以处理，而且效果也相对比较显著，性能提升效果非常不错。</p>
+<p><strong>方案缺点</strong>：该方案更多的是缓解数据倾斜，而不是彻底避免数据倾斜。而且需要对整个RDD进行扩容，对内存资源要求很高。</p>
+<p><strong>方案实践经验</strong>：曾经开发一个数据需求的时候，发现一个join导致了数据倾斜。优化之前，作业的执行时间大约是60分钟左右；使用该方案优化之后，执行时间缩短到10分钟左右，性能提升了6倍。</p>
+<pre class=" language-scala"><code class="language-scala"><span class="token comment" spellcheck="true">// 首先将其中一个key分布相对较为均匀的RDD膨胀100倍。</span>
+JavaPairRDD<span class="token operator">&lt;</span><span class="token builtin">String</span><span class="token punctuation">,</span> Row<span class="token operator">></span> expandedRDD <span class="token operator">=</span> rdd1<span class="token punctuation">.</span>flatMapToPair<span class="token punctuation">(</span>
+        <span class="token keyword">new</span> PairFlatMapFunction<span class="token operator">&lt;</span>Tuple2<span class="token operator">&lt;</span><span class="token builtin">Long</span><span class="token punctuation">,</span>Row<span class="token operator">></span><span class="token punctuation">,</span> <span class="token builtin">String</span><span class="token punctuation">,</span> Row<span class="token operator">></span><span class="token punctuation">(</span><span class="token punctuation">)</span> <span class="token punctuation">{</span>
+            <span class="token keyword">private</span> static <span class="token keyword">final</span> long serialVersionUID <span class="token operator">=</span> <span class="token number">1L</span><span class="token punctuation">;</span>
+            <span class="token annotation punctuation">@Override</span>
+            public Iterable<span class="token operator">&lt;</span>Tuple2<span class="token operator">&lt;</span><span class="token builtin">String</span><span class="token punctuation">,</span> Row<span class="token operator">>></span> call<span class="token punctuation">(</span>Tuple2<span class="token operator">&lt;</span><span class="token builtin">Long</span><span class="token punctuation">,</span> Row<span class="token operator">></span> tuple<span class="token punctuation">)</span>
+                    throws Exception <span class="token punctuation">{</span>
+                List<span class="token operator">&lt;</span>Tuple2<span class="token operator">&lt;</span><span class="token builtin">String</span><span class="token punctuation">,</span> Row<span class="token operator">>></span> list <span class="token operator">=</span> <span class="token keyword">new</span> ArrayList<span class="token operator">&lt;</span>Tuple2<span class="token operator">&lt;</span><span class="token builtin">String</span><span class="token punctuation">,</span> Row<span class="token operator">>></span><span class="token punctuation">(</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+                <span class="token keyword">for</span><span class="token punctuation">(</span>int i <span class="token operator">=</span> <span class="token number">0</span><span class="token punctuation">;</span> i <span class="token operator">&lt;</span> <span class="token number">100</span><span class="token punctuation">;</span> i<span class="token operator">++</span><span class="token punctuation">)</span> <span class="token punctuation">{</span>
+                    list<span class="token punctuation">.</span>add<span class="token punctuation">(</span><span class="token keyword">new</span> Tuple2<span class="token operator">&lt;</span><span class="token builtin">String</span><span class="token punctuation">,</span> Row<span class="token operator">></span><span class="token punctuation">(</span><span class="token number">0</span> <span class="token operator">+</span> <span class="token string">"_"</span> <span class="token operator">+</span> tuple<span class="token punctuation">.</span>_1<span class="token punctuation">,</span> tuple<span class="token punctuation">.</span>_2<span class="token punctuation">)</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+                <span class="token punctuation">}</span>
+                <span class="token keyword">return</span> list<span class="token punctuation">;</span>
+            <span class="token punctuation">}</span>
+        <span class="token punctuation">}</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+
+<span class="token comment" spellcheck="true">// 其次，将另一个有数据倾斜key的RDD，每条数据都打上100以内的随机前缀。</span>
+JavaPairRDD<span class="token operator">&lt;</span><span class="token builtin">String</span><span class="token punctuation">,</span> <span class="token builtin">String</span><span class="token operator">></span> mappedRDD <span class="token operator">=</span> rdd2<span class="token punctuation">.</span>mapToPair<span class="token punctuation">(</span>
+        <span class="token keyword">new</span> PairFunction<span class="token operator">&lt;</span>Tuple2<span class="token operator">&lt;</span><span class="token builtin">Long</span><span class="token punctuation">,</span><span class="token builtin">String</span><span class="token operator">></span><span class="token punctuation">,</span> <span class="token builtin">String</span><span class="token punctuation">,</span> <span class="token builtin">String</span><span class="token operator">></span><span class="token punctuation">(</span><span class="token punctuation">)</span> <span class="token punctuation">{</span>
+            <span class="token keyword">private</span> static <span class="token keyword">final</span> long serialVersionUID <span class="token operator">=</span> <span class="token number">1L</span><span class="token punctuation">;</span>
+            <span class="token annotation punctuation">@Override</span>
+            public Tuple2<span class="token operator">&lt;</span><span class="token builtin">String</span><span class="token punctuation">,</span> <span class="token builtin">String</span><span class="token operator">></span> call<span class="token punctuation">(</span>Tuple2<span class="token operator">&lt;</span><span class="token builtin">Long</span><span class="token punctuation">,</span> <span class="token builtin">String</span><span class="token operator">></span> tuple<span class="token punctuation">)</span>
+                    throws Exception <span class="token punctuation">{</span>
+                Random random <span class="token operator">=</span> <span class="token keyword">new</span> Random<span class="token punctuation">(</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+                int prefix <span class="token operator">=</span> random<span class="token punctuation">.</span>nextInt<span class="token punctuation">(</span><span class="token number">100</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+                <span class="token keyword">return</span> <span class="token keyword">new</span> Tuple2<span class="token operator">&lt;</span><span class="token builtin">String</span><span class="token punctuation">,</span> <span class="token builtin">String</span><span class="token operator">></span><span class="token punctuation">(</span>prefix <span class="token operator">+</span> <span class="token string">"_"</span> <span class="token operator">+</span> tuple<span class="token punctuation">.</span>_1<span class="token punctuation">,</span> tuple<span class="token punctuation">.</span>_2<span class="token punctuation">)</span><span class="token punctuation">;</span>
+            <span class="token punctuation">}</span>
+        <span class="token punctuation">}</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+
+<span class="token comment" spellcheck="true">// 将两个处理后的RDD进行join即可。</span>
+JavaPairRDD<span class="token operator">&lt;</span><span class="token builtin">String</span><span class="token punctuation">,</span> Tuple2<span class="token operator">&lt;</span><span class="token builtin">String</span><span class="token punctuation">,</span> Row<span class="token operator">>></span> joinedRDD <span class="token operator">=</span> mappedRDD<span class="token punctuation">.</span>join<span class="token punctuation">(</span>expandedRDD<span class="token punctuation">)</span><span class="token punctuation">;</span></code></pre>
+<h3 id="多种方案组合使用"><a href="#多种方案组合使用" class="headerlink" title="多种方案组合使用"></a>多种方案组合使用</h3><p>在实践中发现，很多情况下，如果只是处理较为简单的数据倾斜场景，那么使用上述方案中的某一种基本就可以解决。但是如果要处理一个较为复杂的数据倾斜场景，那么可能需要将多种方案组合起来使用。比如说，我们针对出现了多个数据倾斜环节的Spark作业，可以先运用解决方案一和二，预处理一部分数据，并过滤一部分数据来缓解；其次可以对某些shuffle操作提升并行度，优化其性能；最后还可以针对不同的聚合或join操作，选择一种方案来优化其性能。大家需要对这些方案的思路和原理都透彻理解之后，在实践中根据各种不同的情况，灵活运用多种方案，来解决自己的数据倾斜问题。</p>
+<script type="text/javascript" src="https://cdn.jsdelivr.net/npm/kity@2.0.4/dist/kity.min.js"></script><script type="text/javascript" src="https://cdn.jsdelivr.net/npm/kityminder-core@1.4.50/dist/kityminder.core.min.js"></script><script defer="true" type="text/javascript" src="https://cdn.jsdelivr.net/npm/hexo-simple-mindmap@0.2.0/dist/mindmap.min.js"></script><link rel="stylesheet" type="text/css" href="https://cdn.jsdelivr.net/npm/hexo-simple-mindmap@0.2.0/dist/mindmap.min.css">
+            </div>
+            <hr/>
+
+            
+
+    <div class="reprint" id="reprint-statement">
+        
+            <div class="reprint__author">
+                <span class="reprint-meta" style="font-weight: bold;">
+                    <i class="fas fa-user">
+                        文章作者:
+                    </i>
+                </span>
+                <span class="reprint-info">
+                    <a href="https://www.hnbian.cn" rel="external nofollow noreferrer">hnbian</a>
+                </span>
+            </div>
+            <div class="reprint__type">
+                <span class="reprint-meta" style="font-weight: bold;">
+                    <i class="fas fa-link">
+                        文章链接:
+                    </i>
+                </span>
+                <span class="reprint-info">
+                    <a href="https://www.hnbian.cn/posts/d8fad075.html">https://www.hnbian.cn/posts/d8fad075.html</a>
+                </span>
+            </div>
+            <div class="reprint__notice">
+                <span class="reprint-meta" style="font-weight: bold;">
+                    <i class="fas fa-copyright">
+                        版权声明:
+                    </i>
+                </span>
+                <span class="reprint-info">
+                    本博客所有文章除特別声明外，均采用
+                    <a href="https://creativecommons.org/licenses/by/4.0/deed.zh" rel="external nofollow noreferrer" target="_blank">CC BY 4.0</a>
+                    许可协议。转载请注明来源
+                    <a href="https://www.hnbian.cn" target="_blank">hnbian</a>
+                    !
+                </span>
+            </div>
+        
+    </div>
+
+    <script async defer>
+      document.addEventListener("copy", function (e) {
+        let toastHTML = '<span>复制成功，请遵循本文的转载规则</span><button class="btn-flat toast-action" onclick="navToReprintStatement()" style="font-size: smaller">查看</a>';
+        M.toast({html: toastHTML})
+      });
+
+      function navToReprintStatement() {
+        $("html, body").animate({scrollTop: $("#reprint-statement").offset().top - 80}, 800);
+      }
+    </script>
+
+
+
+            <div class="tag_share" style="display: block;">
+                <div class="post-meta__tag-list" style="display: inline-block;">
+                    
+                        <div class="article-tag">
+                            
+                                <a href="/tags/exception/">
+                                    <span class="chip bg-color">exception</span>
+                                </a>
+                            
+                                <a href="/tags/spark/">
+                                    <span class="chip bg-color">spark</span>
+                                </a>
+                            
+                        </div>
+                    
+                </div>
+                <div class="post_share" style="zoom: 80%; width: fit-content; display: inline-block; float: right; margin: -0.15rem 0;">
+                    <link rel="stylesheet" type="text/css" href="/libs/share/css/share.min.css">
+
+<div id="article-share">
+    
+    
+    <div class="social-share" data-sites="twitter,facebook,google,qq,qzone,wechat,weibo,douban,linkedin" data-wechat-qrcode-helper="<p>微信扫一扫即可分享！</p>"></div>
+    <script src="/libs/share/js/social-share.min.js"></script>
+    
+
+    
+
+</div>
+
+                </div>
+            </div>
+            
+                <style>
+    #reward {
+        margin: 40px 0;
+        text-align: center;
+    }
+
+    #reward .reward-link {
+        font-size: 1.4rem;
+        line-height: 38px;
+    }
+
+    #reward .btn-floating:hover {
+        box-shadow: 0 6px 12px rgba(0, 0, 0, 0.2), 0 5px 15px rgba(0, 0, 0, 0.2);
+    }
+
+    #rewardModal {
+        width: 320px;
+        height: 350px;
+    }
+
+    #rewardModal .reward-title {
+        margin: 15px auto;
+        padding-bottom: 5px;
+    }
+
+    #rewardModal .modal-content {
+        padding: 10px;
+    }
+
+    #rewardModal .close {
+        position: absolute;
+        right: 15px;
+        top: 15px;
+        color: rgba(0, 0, 0, 0.5);
+        font-size: 1.3rem;
+        line-height: 20px;
+        cursor: pointer;
+    }
+
+    #rewardModal .close:hover {
+        color: #ef5350;
+        transform: scale(1.3);
+        -moz-transform:scale(1.3);
+        -webkit-transform:scale(1.3);
+        -o-transform:scale(1.3);
+    }
+
+    #rewardModal .reward-tabs {
+        margin: 0 auto;
+        width: 210px;
+    }
+
+    .reward-tabs .tabs {
+        height: 38px;
+        margin: 10px auto;
+        padding-left: 0;
+    }
+
+    .reward-content ul {
+        padding-left: 0 !important;
+    }
+
+    .reward-tabs .tabs .tab {
+        height: 38px;
+        line-height: 38px;
+    }
+
+    .reward-tabs .tab a {
+        color: #fff;
+        background-color: #ccc;
+    }
+
+    .reward-tabs .tab a:hover {
+        background-color: #ccc;
+        color: #fff;
+    }
+
+    .reward-tabs .wechat-tab .active {
+        color: #fff !important;
+        background-color: #22AB38 !important;
+    }
+
+    .reward-tabs .alipay-tab .active {
+        color: #fff !important;
+        background-color: #019FE8 !important;
+    }
+
+    .reward-tabs .reward-img {
+        width: 210px;
+        height: 210px;
+    }
+</style>
+
+<div id="reward">
+    <a href="#rewardModal" class="reward-link modal-trigger btn-floating btn-medium waves-effect waves-light red">赏</a>
+
+    <!-- Modal Structure -->
+    <div id="rewardModal" class="modal">
+        <div class="modal-content">
+            <a class="close modal-close"><i class="fas fa-times"></i></a>
+            <h4 class="reward-title">你的赏识是我前进的动力</h4>
+            <div class="reward-content">
+                <div class="reward-tabs">
+                    <ul class="tabs row">
+                        <li class="tab col s6 alipay-tab waves-effect waves-light"><a href="#alipay">支付宝</a></li>
+                        <li class="tab col s6 wechat-tab waves-effect waves-light"><a href="#wechat">微 信</a></li>
+                    </ul>
+                    <div id="alipay">
+                        <img src="/medias/reward/alipay.jpg" class="reward-img" alt="支付宝打赏二维码">
+                    </div>
+                    <div id="wechat">
+                        <img src="/medias/reward/wechat.jpg" class="reward-img" alt="微信打赏二维码">
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<script>
+    $(function () {
+        $('.tabs').tabs();
+    });
+</script>
+            
+        </div>
+    </div>
+
+    
+
+    
+
+    
+
+    
+
+    
+        <style>
+    .valine-card {
+        margin: 1.5rem auto;
+    }
+
+    .valine-card .card-content {
+        padding: 20px 20px 5px 20px;
+    }
+
+    #vcomments textarea {
+        box-sizing: border-box;
+        background: url("/medias/comment_bg.png") 100% 100% no-repeat;
+    }
+
+    #vcomments p {
+        margin: 2px 2px 10px;
+        font-size: 1.05rem;
+        line-height: 1.78rem;
+    }
+
+    #vcomments blockquote p {
+        text-indent: 0.2rem;
+    }
+
+    #vcomments a {
+        padding: 0 2px;
+        color: #4cbf30;
+        font-weight: 500;
+        text-decoration: none;
+    }
+
+    #vcomments img {
+        max-width: 100%;
+        height: auto;
+        cursor: pointer;
+    }
+
+    #vcomments ol li {
+        list-style-type: decimal;
+    }
+
+    #vcomments ol,
+    ul {
+        display: block;
+        padding-left: 2em;
+        word-spacing: 0.05rem;
+    }
+
+    #vcomments ul li,
+    ol li {
+        display: list-item;
+        line-height: 1.8rem;
+        font-size: 1rem;
+    }
+
+    #vcomments ul li {
+        list-style-type: disc;
+    }
+
+    #vcomments ul ul li {
+        list-style-type: circle;
+    }
+
+    #vcomments table, th, td {
+        padding: 12px 13px;
+        border: 1px solid #dfe2e5;
+    }
+
+    #vcomments table, th, td {
+        border: 0;
+    }
+
+    table tr:nth-child(2n), thead {
+        background-color: #fafafa;
+    }
+
+    #vcomments table th {
+        background-color: #f2f2f2;
+        min-width: 80px;
+    }
+
+    #vcomments table td {
+        min-width: 80px;
+    }
+
+    #vcomments h1 {
+        font-size: 1.85rem;
+        font-weight: bold;
+        line-height: 2.2rem;
+    }
+
+    #vcomments h2 {
+        font-size: 1.65rem;
+        font-weight: bold;
+        line-height: 1.9rem;
+    }
+
+    #vcomments h3 {
+        font-size: 1.45rem;
+        font-weight: bold;
+        line-height: 1.7rem;
+    }
+
+    #vcomments h4 {
+        font-size: 1.25rem;
+        font-weight: bold;
+        line-height: 1.5rem;
+    }
+
+    #vcomments h5 {
+        font-size: 1.1rem;
+        font-weight: bold;
+        line-height: 1.4rem;
+    }
+
+    #vcomments h6 {
+        font-size: 1rem;
+        line-height: 1.3rem;
+    }
+
+    #vcomments p {
+        font-size: 1rem;
+        line-height: 1.5rem;
+    }
+
+    #vcomments hr {
+        margin: 12px 0;
+        border: 0;
+        border-top: 1px solid #ccc;
+    }
+
+    #vcomments blockquote {
+        margin: 15px 0;
+        border-left: 5px solid #42b983;
+        padding: 1rem 0.8rem 0.3rem 0.8rem;
+        color: #666;
+        background-color: rgba(66, 185, 131, .1);
+    }
+
+    #vcomments pre {
+        font-family: monospace, monospace;
+        padding: 1.2em;
+        margin: .5em 0;
+        background: #272822;
+        overflow: auto;
+        border-radius: 0.3em;
+        tab-size: 4;
+    }
+
+    #vcomments code {
+        font-family: monospace, monospace;
+        padding: 1px 3px;
+        font-size: 0.92rem;
+        color: #e96900;
+        background-color: #f8f8f8;
+        border-radius: 2px;
+    }
+
+    #vcomments pre code {
+        font-family: monospace, monospace;
+        padding: 0;
+        color: #e8eaf6;
+        background-color: #272822;
+    }
+
+    #vcomments pre[class*="language-"] {
+        padding: 1.2em;
+        margin: .5em 0;
+    }
+
+    #vcomments code[class*="language-"],
+    pre[class*="language-"] {
+        color: #e8eaf6;
+    }
+
+    #vcomments [type="checkbox"]:not(:checked), [type="checkbox"]:checked {
+        position: inherit;
+        margin-left: -1.3rem;
+        margin-right: 0.4rem;
+        margin-top: -1px;
+        vertical-align: middle;
+        left: unset;
+        visibility: visible;
+    }
+
+    #vcomments b,
+    strong {
+        font-weight: bold;
+    }
+
+    #vcomments dfn {
+        font-style: italic;
+    }
+
+    #vcomments small {
+        font-size: 85%;
+    }
+
+    #vcomments cite {
+        font-style: normal;
+    }
+
+    #vcomments mark {
+        background-color: #fcf8e3;
+        padding: .2em;
+    }
+
+    #vcomments table, th, td {
+        padding: 12px 13px;
+        border: 1px solid #dfe2e5;
+    }
+
+    table tr:nth-child(2n), thead {
+        background-color: #fafafa;
+    }
+
+    #vcomments table th {
+        background-color: #f2f2f2;
+        min-width: 80px;
+    }
+
+    #vcomments table td {
+        min-width: 80px;
+    }
+
+    #vcomments [type="checkbox"]:not(:checked), [type="checkbox"]:checked {
+        position: inherit;
+        margin-left: -1.3rem;
+        margin-right: 0.4rem;
+        margin-top: -1px;
+        vertical-align: middle;
+        left: unset;
+        visibility: visible;
+    }
+</style>
+
+<div class="card valine-card" data-aos="fade-up">
+    <div class="comment_headling" style="font-size: 20px; font-weight: 700; position: relative; left: 20px; top: 15px; padding-bottom: 5px;">
+        <i class="fas fa-comments fa-fw" aria-hidden="true"></i>
+        <span>评论</span>
+    </div>
+    <div id="vcomments" class="card-content" style="display: grid">
+    </div>
+</div>
+
+<script src="/libs/valine/av-min.js"></script>
+<script src="https://unpkg.com/valine/dist/Valine.min.js"></script>
+<script>
+    new Valine({
+        el: '#vcomments',
+        appId: 'h1rND3bHC0OqFwzm1UfPQpaY-gzGzoHsz',
+        appKey: 'd7uboDt2WLV2HJCEMHkkLuU4',
+        notify: 'true' === 'true',
+        verify: 'false' === 'true',
+        visitor: 'true' === 'true',
+        avatar: 'identicon',
+        pageSize: '10',
+        lang: 'zh-cn',
+        placeholder: ' 写点什么吧 . . .'
+    });
+</script>
+
+    
+
+    
+
+<article id="prenext-posts" class="prev-next articles">
+    <div class="row article-row">
+        
+        <div class="article col s12 m6" data-aos="fade-up">
+            <div class="article-badge left-badge text-color">
+                <i class="fas fa-chevron-left"></i>&nbsp;上一篇</div>
+            <div class="card">
+                <a href="/posts/e33b82cd.html">
+                    <div class="card-image">
+                        
+                        <img src="http://images.hnbian.cn//Fkd7u2yNU8geCwrErPBpPiMiXnCQ" class="responsive-img" alt="安装 Ambari 时遇到的异常记录">
+                        
+                        <span class="card-title">安装 Ambari 时遇到的异常记录</span>
+                    </div>
+                </a>
+                <div class="card-content article-content">
+                    <div class="summary block-with-text">
+                        
+                            1. 安装 unzipTraceback (most recent call last):
+  File "/var/lib/ambari-agent/cache/stack-hooks/before-INSTALL/scripts/hoo
+                        
+                    </div>
+                    <div class="publish-info">
+                        <span class="publish-date">
+                            <i class="far fa-clock fa-fw icon-date"></i>2023-03-08
+                        </span>
+                        <span class="publish-author">
+                            
+                            <i class="fas fa-bookmark fa-fw icon-category"></i>
+                            
+                            <a href="/categories/ambari/" class="post-category">
+                                    ambari
+                                </a>
+                            
+                            
+                        </span>
+                    </div>
+                </div>
+                
+                <div class="card-action article-tags">
+                    
+                    <a href="/tags/exception/">
+                        <span class="chip bg-color">exception</span>
+                    </a>
+                    
+                    <a href="/tags/ambari/">
+                        <span class="chip bg-color">ambari</span>
+                    </a>
+                    
+                </div>
+                
+            </div>
+        </div>
+        
+        
+        <div class="article col s12 m6" data-aos="fade-up">
+            <div class="article-badge right-badge text-color">
+                下一篇&nbsp;<i class="fas fa-chevron-right"></i>
+            </div>
+            <div class="card">
+                <a href="/posts/2a5ba89.html">
+                    <div class="card-image">
+                        
+                        <img src="http://images.hnbian.cn//Fi2-yAr9DrpsF7vW5GtjjoIMhWWT" class="responsive-img" alt="Ambari 启动异常 ambari_commons.exceptions.FatalException">
+                        
+                        <span class="card-title">Ambari 启动异常 ambari_commons.exceptions.FatalException</span>
+                    </div>
+                </a>
+                <div class="card-content article-content">
+                    <div class="summary block-with-text">
+                        
+                            背景昨天公司机房停电， 没来得及关服务器， 早上到公司发现Ambari环境无法启动了
+异常信息[root@node1 ~]# service ambari-server status
+Using python  /usr/bin/pytho
+                        
+                    </div>
+                    <div class="publish-info">
+                            <span class="publish-date">
+                                <i class="far fa-clock fa-fw icon-date"></i>2022-07-26
+                            </span>
+                        <span class="publish-author">
+                            
+                            <i class="fas fa-bookmark fa-fw icon-category"></i>
+                            
+                            <a href="/categories/ambari/" class="post-category">
+                                    ambari
+                                </a>
+                            
+                            
+                        </span>
+                    </div>
+                </div>
+                
+                <div class="card-action article-tags">
+                    
+                    <a href="/tags/exception/">
+                        <span class="chip bg-color">exception</span>
+                    </a>
+                    
+                    <a href="/tags/ambari/">
+                        <span class="chip bg-color">ambari</span>
+                    </a>
+                    
+                </div>
+                
+            </div>
+        </div>
+        
+    </div>
+</article>
+
+</div>
+
+
+
+<!-- 代码块功能依赖 -->
+<script type="text/javascript" src="/libs/codeBlock/codeBlockFuction.js"></script>
+
+<!-- 代码语言 -->
+
+<script type="text/javascript" src="/libs/codeBlock/codeLang.js"></script>
+
+    
+<!-- 代码块复制 -->
+
+
+<!-- 代码块收缩 -->
+
+
+<!-- 代码块折行 -->
+
+<style type="text/css">
+code[class*="language-"], pre[class*="language-"] { white-space: pre !important; }
+</style>
+
+    </div>
+    <div id="toc-aside" class="expanded col l3 hide-on-med-and-down">
+        <div class="toc-widget">
+            <div class="toc-title"><i class="far fa-list-alt"></i>&nbsp;&nbsp;目录</div>
+            <div id="toc-content"></div>
+        </div>
+    </div>
+</div>
+
+<!-- TOC 悬浮按钮. -->
+
+<div id="floating-toc-btn" class="hide-on-med-and-down">
+    <a class="btn-floating btn-large bg-color">
+        <i class="fas fa-list-ul"></i>
+    </a>
+</div>
+
+
+<script src="https://images.hnbian.cn/tocbot.min.js"></script>
+<script>
+    $(function () {
+        tocbot.init({
+            tocSelector: '#toc-content',
+            contentSelector: '#articleContent',
+            headingsOffset: -($(window).height() * 0.4 - 45),
+            collapseDepth: Number('0'),
+            headingSelector: 'h2, h3, h4, h5'
+        });
+
+        // modify the toc link href to support Chinese.
+        let i = 0;
+        let tocHeading = 'toc-heading-';
+        $('#toc-content a').each(function () {
+            $(this).attr('href', '#' + tocHeading + (++i));
+        });
+
+        // modify the heading title id to support Chinese.
+        i = 0;
+        $('#articleContent').children('h2, h3, h4, h5').each(function () {
+            $(this).attr('id', tocHeading + (++i));
+        });
+
+        // Set scroll toc fixed.
+        let tocHeight = parseInt($(window).height() * 0.4 - 64);
+        let $tocWidget = $('.toc-widget');
+        $(window).scroll(function () {
+            let scroll = $(window).scrollTop();
+            /* add post toc fixed. */
+            if (scroll > tocHeight) {
+                $tocWidget.addClass('toc-fixed');
+            } else {
+                $tocWidget.removeClass('toc-fixed');
+            }
+        });
+
+        
+        /* 修复文章卡片 div 的宽度. */
+        let fixPostCardWidth = function (srcId, targetId) {
+            let srcDiv = $('#' + srcId);
+            if (srcDiv.length === 0) {
+                return;
+            }
+
+            let w = srcDiv.width();
+            if (w >= 450) {
+                w = w + 21;
+            } else if (w >= 350 && w < 450) {
+                w = w + 18;
+            } else if (w >= 300 && w < 350) {
+                w = w + 16;
+            } else {
+                w = w + 14;
+            }
+            $('#' + targetId).width(w);
+        };
+
+        // 切换TOC目录展开收缩的相关操作.
+        const expandedClass = 'expanded';
+        let $tocAside = $('#toc-aside');
+        let $mainContent = $('#main-content');
+        $('#floating-toc-btn .btn-floating').click(function () {
+            if ($tocAside.hasClass(expandedClass)) {
+                $tocAside.removeClass(expandedClass).hide();
+                $mainContent.removeClass('l9');
+            } else {
+                $tocAside.addClass(expandedClass).show();
+                $mainContent.addClass('l9');
+            }
+            fixPostCardWidth('artDetail', 'prenext-posts');
+        });
+        
+    });
+</script>
+
+    
+
+</main>
+
+
+
+    <footer class="page-footer bg-color">
+    <div class="container row center-align" style="margin-bottom: 15px !important;">
+        <div class="col s12 m8 l8 copy-right">
+            Copyright&nbsp;&copy;
+            <span id="year">2019</span>
+            <a href="https://www.hnbian.cn" target="_blank">hnbian</a>
+            |&nbsp;Powered by&nbsp;<a href="https://hexo.io/" target="_blank">Hexo</a>
+            |&nbsp;Theme&nbsp;<a href="https://github.com/blinkfox/hexo-theme-matery" target="_blank">Matery</a>
+            <br>
+            
+            &nbsp;<i class="fas fa-chart-area"></i>&nbsp;站点总字数:&nbsp;<span
+                class="white-color">803.4k</span>&nbsp;字
+            
+            
+            
+            
+            
+            
+            <span id="busuanzi_container_site_pv">
+                |&nbsp;<i class="far fa-eye"></i>&nbsp;总访问量:&nbsp;<span id="busuanzi_value_site_pv"
+                    class="white-color"></span>&nbsp;次
+            </span>
+            
+            
+            <span id="busuanzi_container_site_uv">
+                |&nbsp;<i class="fas fa-users"></i>&nbsp;总访问人数:&nbsp;<span id="busuanzi_value_site_uv"
+                    class="white-color"></span>&nbsp;人
+            </span>
+            
+            <br>
+            
+            <span id="sitetime">载入运行时间...</span>
+            <script>
+                function siteTime() {
+                    var seconds = 1000;
+                    var minutes = seconds * 60;
+                    var hours = minutes * 60;
+                    var days = hours * 24;
+                    var years = days * 365;
+                    var today = new Date();
+                    var startYear = "2019";
+                    var startMonth = "6";
+                    var startDate = "28";
+                    var startHour = "0";
+                    var startMinute = "0";
+                    var startSecond = "0";
+                    var todayYear = today.getFullYear();
+                    var todayMonth = today.getMonth() + 1;
+                    var todayDate = today.getDate();
+                    var todayHour = today.getHours();
+                    var todayMinute = today.getMinutes();
+                    var todaySecond = today.getSeconds();
+                    var t1 = Date.UTC(startYear, startMonth, startDate, startHour, startMinute, startSecond);
+                    var t2 = Date.UTC(todayYear, todayMonth, todayDate, todayHour, todayMinute, todaySecond);
+                    var diff = t2 - t1;
+                    var diffYears = Math.floor(diff / years);
+                    var diffDays = Math.floor((diff / days) - diffYears * 365);
+                    var diffHours = Math.floor((diff - (diffYears * 365 + diffDays) * days) / hours);
+                    var diffMinutes = Math.floor((diff - (diffYears * 365 + diffDays) * days - diffHours * hours) /
+                        minutes);
+                    var diffSeconds = Math.floor((diff - (diffYears * 365 + diffDays) * days - diffHours * hours -
+                        diffMinutes * minutes) / seconds);
+                    if (startYear == todayYear) {
+                        document.getElementById("year").innerHTML = todayYear;
+                        document.getElementById("sitetime").innerHTML = "本站已安全运行 " + diffDays + " 天 " + diffHours +
+                            " 小时 " + diffMinutes + " 分钟 " + diffSeconds + " 秒";
+                    } else {
+                        document.getElementById("year").innerHTML = startYear + " - " + todayYear;
+                        document.getElementById("sitetime").innerHTML = "本站已安全运行 " + diffYears + " 年 " + diffDays +
+                            " 天 " + diffHours + " 小时 " + diffMinutes + " 分钟 " + diffSeconds + " 秒";
+                    }
+                }
+                setInterval(siteTime, 1000);
+            </script>
+            
+            <br>
+            
+            <span id="icp"><img src="/medias/icp.png" style="vertical-align: text-bottom;" />
+                <a href="https://beian.miit.gov.cn" target="_blank">粤ICP备18156920号-2</a>
+            </span>
+            
+        </div>
+        <div class="col s12 m4 l4 social-link social-statis">
+    <a href="https://github.com/hnbian" class="tooltipped" target="_blank" data-tooltip="访问我的GitHub" data-position="top" data-delay="50">
+        <i class="fab fa-github"></i>
+    </a>
+
+
+
+    <a href="mailto:hnbian@126.com" class="tooltipped" target="_blank" data-tooltip="邮件联系我" data-position="top" data-delay="50">
+        <i class="fas fa-envelope-open"></i>
+    </a>
+
+
+
+
+
+
+
+
+
+
+
+
+
+</div>
+    </div>
+</footer>
+
+<div class="progress-bar"></div>
+
+
+    <!-- 搜索遮罩框 -->
+<div id="searchModal" class="modal">
+    <div class="modal-content">
+        <div class="search-header">
+            <span class="title"><i class="fas fa-search"></i>&nbsp;&nbsp;搜索</span>
+            <input type="search" id="searchInput" name="s" placeholder="请输入搜索的关键字"
+                   class="search-input">
+        </div>
+        <div id="searchResult"></div>
+    </div>
+</div>
+
+<script src="/js/search.js"></script>
+<script type="text/javascript">
+$(function () {
+    searchFunc("/" + "search.xml", 'searchInput', 'searchResult');
+});
+</script>
+    <!-- 回到顶部按钮 -->
+<div id="backTop" class="top-scroll">
+    <a class="btn-floating btn-large waves-effect waves-light" href="#!">
+        <i class="fas fa-arrow-up"></i>
+    </a>
+</div>
+
+
+    <script src="https://images.hnbian.cn/materialize.min.js"></script>
+    <script src="https://images.hnbian.cn/masonry.pkgd.min.js"></script>
+    <script src="https://images.hnbian.cn/aos.js"></script>
+    <script src="https://images.hnbian.cn/scrollProgress.min.js"></script>
+    <script src="https://images.hnbian.cn/lightgallery-all.min.js"></script>
+    <script src="/js/matery.js"></script>
+
+    <!-- Global site tag (gtag.js) - Google Analytics -->
+
+    <script async src="https://www.googletagmanager.com/gtag/js?id=UA-155985521-1"></script>
+    <script>
+        window.dataLayer = window.dataLayer || [];
+        function gtag(){dataLayer.push(arguments);}
+        gtag('js', new Date());
+
+        gtag('config', 'UA-155985521-1');
+    </script>
+
+    <!-- Baidu Analytics -->
+
+    <!-- Baidu Push -->
+
+<script>
+    (function () {
+        var bp = document.createElement('script');
+        var curProtocol = window.location.protocol.split(':')[0];
+        if (curProtocol === 'https') {
+            bp.src = 'https://zz.bdstatic.com/linksubmit/push.js';
+        } else {
+            bp.src = 'http://push.zhanzhang.baidu.com/push.js';
+        }
+        var s = document.getElementsByTagName("script")[0];
+        s.parentNode.insertBefore(bp, s);
+    })();
+</script>
+
+    
+    <script src="https://images.hnbian.cn/clicklove.js" async="async"></script>
+    
+    
+    <script async src="https://busuanzi.ibruce.info/busuanzi/2.3/busuanzi.pure.mini.js"></script>
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+    <script type="text/javascript" src="https://images.hnbian.cn/ribbon-dynamic.js" async="async"></script>
+    
+    
+    
+    <script src="https://images.hnbian.cn/instantpage.js" type="module"></script>
+    
+
+</body>
+
+</html>

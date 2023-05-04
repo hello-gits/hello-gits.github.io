@@ -1,0 +1,2499 @@
+<!DOCTYPE HTML>
+<html lang="zh-CN">
+
+
+<head><meta name="generator" content="Hexo 3.9.0">
+    <meta charset="utf-8">
+    <meta name="keywords" content="ClickHouse元数据 2.执行动作相关元数据, hnbian">
+    <meta name="description" content="1. processes（查询操作记录）
+
+
+name
+type
+comment
+
+
+
+is_initial_query
+UInt8
+
+
+
+user
+String
+发起查询的用户
+
+
+query_id
+String
+查询 ID
+
+
+addr">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=no">
+    <meta name="renderer" content="webkit|ie-stand|ie-comp">
+    <meta name="mobile-web-app-capable" content="yes">
+    <meta name="format-detection" content="telephone=no">
+    <meta name="apple-mobile-web-app-capable" content="yes">
+    <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+    <title>ClickHouse元数据 2.执行动作相关元数据 | hnbian</title>
+    <link rel="icon" type="image/png" href="https://images.hnbian.cn/FvNSAGx7xljxALFh8Fa2DPNFP-JB">
+
+    <link rel="stylesheet" type="text/css" href="https://images.hnbian.cn/all.css">
+    <link rel="stylesheet" type="text/css" href="https://images.hnbian.cn/materialize.min.css">
+    <link rel="stylesheet" type="text/css" href="https://images.hnbian.cn/aos.css">
+    <link rel="stylesheet" type="text/css" href="https://images.hnbian.cn/animate.min.css">
+    <link rel="stylesheet" type="text/css" href="https://images.hnbian.cn/lightgallery.min.css">
+    <link rel="stylesheet" type="text/css" href="/css/matery.css">
+    <link rel="stylesheet" type="text/css" href="/css/my.css">
+    
+    <script src="https://images.hnbian.cn/jquery.min.mind.js"></script>
+    <script data-ad-client="ca-pub-5756598031349071" async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js"></script>
+    <meta name="google-site-verification" content="GrFMoauFrf8T4o0YL7D2b8YqhXQwVruyJKGw57gZ8J4">
+<link rel="alternate" href="/atom.xml" title="hnbian" type="application/atom+xml">
+<link rel="stylesheet" href="/css/prism-tomorrow.css" type="text/css"></head>
+
+
+<body>
+    <header class="navbar-fixed">
+    <nav id="headNav" class="bg-color nav-transparent">
+        <div id="navContainer" class="nav-wrapper head-container">
+            <div class="brand-logo">
+                <a href="/" class="waves-effect waves-light">
+                    
+                    <img src="https://images.hnbian.cn/FvNSAGx7xljxALFh8Fa2DPNFP-JB" class="logo-img" alt="LOGO">
+                    
+                    <span class="logo-span">hnbian</span>
+                </a>
+            </div>
+            
+
+<a href="#" data-target="mobile-nav" class="sidenav-trigger button-collapse"><i class="fas fa-bars"></i></a>
+<ul class="right nav-menu">
+  
+  <li class="hide-on-med-and-down nav-item">
+    
+    <a href="/" class="waves-effect waves-light">
+      
+      <i class="fas fa-home" style="zoom: 0.6;"></i>
+      
+      <span>首页</span>
+    </a>
+    
+  </li>
+  
+  <li class="hide-on-med-and-down nav-item">
+    
+    <a href="/tags" class="waves-effect waves-light">
+      
+      <i class="fas fa-tags" style="zoom: 0.6;"></i>
+      
+      <span>标签</span>
+    </a>
+    
+  </li>
+  
+  <li class="hide-on-med-and-down nav-item">
+    
+    <a href="/categories" class="waves-effect waves-light">
+      
+      <i class="fas fa-bookmark" style="zoom: 0.6;"></i>
+      
+      <span>分类</span>
+    </a>
+    
+  </li>
+  
+  <li class="hide-on-med-and-down nav-item">
+    
+    <a href="/archives" class="waves-effect waves-light">
+      
+      <i class="fas fa-archive" style="zoom: 0.6;"></i>
+      
+      <span>归档</span>
+    </a>
+    
+  </li>
+  
+  <li class="hide-on-med-and-down nav-item">
+    
+    <a href="/graph" class="waves-effect waves-light">
+      
+      <i class="fa fa-graduation-cap" style="zoom: 0.6;"></i>
+      
+      <span>知识图谱</span>
+    </a>
+    
+  </li>
+  
+  <li class="hide-on-med-and-down nav-item">
+    
+    <a href="/about" class="waves-effect waves-light">
+      
+      <i class="fas fa-comments" style="zoom: 0.6;"></i>
+      
+      <span>关于</span>
+    </a>
+    
+  </li>
+  
+  <li>
+    <a href="#searchModal" class="modal-trigger waves-effect waves-light">
+      <i id="searchIcon" class="fas fa-search" title="搜索" style="zoom: 0.85;"></i>
+    </a>
+  </li>
+</ul>
+
+<div id="mobile-nav" class="side-nav sidenav">
+
+    <div class="mobile-head bg-color">
+        
+        <img src="https://images.hnbian.cn/FvNSAGx7xljxALFh8Fa2DPNFP-JB" class="logo-img circle responsive-img">
+        
+        <div class="logo-name">hnbian</div>
+        <div class="logo-desc">
+            
+            Never really desperate, only the lost of the soul.
+            
+        </div>
+    </div>
+
+    
+
+    <ul class="menu-list mobile-menu-list">
+        
+        <li class="m-nav-item">
+	  
+		<a href="/" class="waves-effect waves-light">
+			
+			    <i class="fa-fw fas fa-home"></i>
+			
+			首页
+		</a>
+          
+        </li>
+        
+        <li class="m-nav-item">
+	  
+		<a href="/tags" class="waves-effect waves-light">
+			
+			    <i class="fa-fw fas fa-tags"></i>
+			
+			标签
+		</a>
+          
+        </li>
+        
+        <li class="m-nav-item">
+	  
+		<a href="/categories" class="waves-effect waves-light">
+			
+			    <i class="fa-fw fas fa-bookmark"></i>
+			
+			分类
+		</a>
+          
+        </li>
+        
+        <li class="m-nav-item">
+	  
+		<a href="/archives" class="waves-effect waves-light">
+			
+			    <i class="fa-fw fas fa-archive"></i>
+			
+			归档
+		</a>
+          
+        </li>
+        
+        <li class="m-nav-item">
+	  
+		<a href="/graph" class="waves-effect waves-light">
+			
+			    <i class="fa-fw fa fa-graduation-cap"></i>
+			
+			知识图谱
+		</a>
+          
+        </li>
+        
+        <li class="m-nav-item">
+	  
+		<a href="/about" class="waves-effect waves-light">
+			
+			    <i class="fa-fw fas fa-comments"></i>
+			
+			关于
+		</a>
+          
+        </li>
+        
+        
+        <li><div class="divider"></div></li>
+        <li>
+            <a href="https://github.com/hnbian" class="waves-effect waves-light" target="_blank">
+                <i class="fab fa-github-square fa-fw"></i>Fork Me
+            </a>
+        </li>
+        
+    </ul>
+</div>
+
+        </div>
+
+        
+            <style>
+    .nav-transparent .github-corner {
+        display: none !important;
+    }
+
+    .github-corner {
+        position: absolute;
+        z-index: 10;
+        top: 0;
+        right: 0;
+        border: 0;
+        transform: scale(1.1);
+    }
+
+    .github-corner svg {
+        color: #0f9d58;
+        fill: #fff;
+        height: 64px;
+        width: 64px;
+    }
+
+    .github-corner:hover .octo-arm {
+        animation: a 0.56s ease-in-out;
+    }
+
+    .github-corner .octo-arm {
+        animation: none;
+    }
+
+    @keyframes a {
+        0%,
+        to {
+            transform: rotate(0);
+        }
+        20%,
+        60% {
+            transform: rotate(-25deg);
+        }
+        40%,
+        80% {
+            transform: rotate(10deg);
+        }
+    }
+</style>
+
+<a href="https://github.com/hnbian" class="github-corner tooltipped hide-on-med-and-down" target="_blank"
+   data-tooltip="Fork Me" data-position="left" data-delay="50">
+    <svg viewBox="0 0 250 250" aria-hidden="true">
+        <path d="M0,0 L115,115 L130,115 L142,142 L250,250 L250,0 Z"></path>
+        <path d="M128.3,109.0 C113.8,99.7 119.0,89.6 119.0,89.6 C122.0,82.7 120.5,78.6 120.5,78.6 C119.2,72.0 123.4,76.3 123.4,76.3 C127.3,80.9 125.5,87.3 125.5,87.3 C122.9,97.6 130.6,101.9 134.4,103.2"
+              fill="currentColor" style="transform-origin: 130px 106px;" class="octo-arm"></path>
+        <path d="M115.0,115.0 C114.9,115.1 118.7,116.5 119.8,115.4 L133.7,101.6 C136.9,99.2 139.9,98.4 142.2,98.6 C133.8,88.0 127.5,74.4 143.8,58.0 C148.5,53.4 154.0,51.2 159.7,51.0 C160.3,49.4 163.2,43.6 171.4,40.1 C171.4,40.1 176.1,42.5 178.8,56.2 C183.1,58.6 187.2,61.8 190.9,65.4 C194.5,69.0 197.7,73.2 200.1,77.6 C213.8,80.2 216.3,84.9 216.3,84.9 C212.7,93.1 206.9,96.0 205.4,96.6 C205.1,102.4 203.0,107.8 198.3,112.5 C181.9,128.9 168.3,122.5 157.7,114.1 C157.9,116.9 156.7,120.9 152.7,124.9 L141.0,136.5 C139.8,137.7 141.6,141.9 141.8,141.8 Z"
+              fill="currentColor" class="octo-body"></path>
+    </svg>
+</a>
+        
+    </nav>
+
+</header>
+
+    
+
+
+
+<div class="bg-cover pd-header post-cover" style="background-image: url('https://images.hnbian.cn/FvFmiG5q0pYKZAAZqPD60ggbV3FW')">
+    <div class="container" style="right: 0px;left: 0px;">
+        <div class="row">
+            <div class="col s12 m12 l12">
+                <div class="brand">
+                    <h1 class="description center-align post-title">ClickHouse元数据 2.执行动作相关元数据</h1>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+
+
+
+<main class="post-container content">
+
+    
+    <link rel="stylesheet" href="https://images.hnbian.cn/tocbot.css">
+<style>
+    #articleContent h1::before,
+    #articleContent h2::before,
+    #articleContent h3::before,
+    #articleContent h4::before,
+    #articleContent h5::before,
+    #articleContent h6::before {
+        display: block;
+        content: " ";
+        height: 100px;
+        margin-top: -100px;
+        visibility: hidden;
+    }
+
+    #articleContent :focus {
+        outline: none;
+    }
+
+    .toc-fixed {
+        position: fixed;
+        top: 64px;
+    }
+
+    .toc-widget {
+        width: 345px;
+        padding-left: 20px;
+    }
+
+    .toc-widget .toc-title {
+        margin: 35px 0 15px 0;
+        padding-left: 17px;
+        font-size: 1.5rem;
+        font-weight: bold;
+        line-height: 1.5rem;
+    }
+
+    .toc-widget ol {
+        padding: 0;
+        list-style: none;
+    }
+
+    #toc-content {
+        height: calc(100vh - 250px);
+        overflow: auto;
+    }
+
+    #toc-content ol {
+        padding-left: 10px;
+    }
+
+    #toc-content ol li {
+        padding-left: 10px;
+    }
+
+    #toc-content .toc-link:hover {
+        color: #42b983;
+        font-weight: 700;
+        text-decoration: underline;
+    }
+
+    #toc-content .toc-link::before {
+        background-color: transparent;
+        max-height: 25px;
+    }
+
+    #toc-content .is-active-link {
+        color: #42b983;
+    }
+
+    #toc-content .is-active-link::before {
+        background-color: #42b983;
+    }
+
+    #floating-toc-btn {
+        position: fixed;
+        right: 15px;
+        bottom: 76px;
+        padding-top: 15px;
+        margin-bottom: 0;
+        z-index: 998;
+    }
+
+    #floating-toc-btn .btn-floating {
+        width: 48px;
+        height: 48px;
+    }
+
+    #floating-toc-btn .btn-floating i {
+        line-height: 48px;
+        font-size: 1.4rem;
+    }
+</style>
+<div class="row">
+    <div id="main-content" class="col s12 m12 l9">
+        <!-- 文章内容详情 -->
+<div id="artDetail">
+    <div class="card">
+        <div class="card-content article-info">
+            <div class="row tag-cate">
+                <div class="col s7">
+                    
+                    <div class="article-tag">
+                        
+                            <a href="/tags/clickhouse/">
+                                <span class="chip bg-color">clickhouse</span>
+                            </a>
+                        
+                            <a href="/tags/olap/">
+                                <span class="chip bg-color">olap</span>
+                            </a>
+                        
+                    </div>
+                    
+                </div>
+                <div class="col s5 right-align">
+                    
+                    <div class="post-cate">
+                        <i class="fas fa-bookmark fa-fw icon-category"></i>
+                        
+                            <a href="/categories/clickhouse/" class="post-category">
+                                clickhouse
+                            </a>
+                        
+                    </div>
+                    
+                </div>
+            </div>
+
+            <div class="post-info">
+                
+                <div class="post-date info-break-policy">
+                    <i class="far fa-calendar-minus fa-fw"></i>发布日期:&nbsp;&nbsp;
+                    2021-08-02
+                </div>
+                
+
+                
+
+                
+                <div class="info-break-policy">
+                    <i class="far fa-file-word fa-fw"></i>文章字数:&nbsp;&nbsp;
+                    3.6k
+                </div>
+                
+
+                
+                <div class="info-break-policy">
+                    <i class="far fa-clock fa-fw"></i>阅读时长:&nbsp;&nbsp;
+                    14 分
+                </div>
+                
+				
+                
+                    <div id="busuanzi_container_page_pv" class="info-break-policy">
+                        <i class="far fa-eye fa-fw"></i>阅读次数:&nbsp;&nbsp;
+                        <span id="busuanzi_value_page_pv"></span>
+                    </div>
+				
+            </div>
+            
+        </div>
+        <hr class="clearfix">
+        <div class="card-content article-card-content">
+            <div id="articleContent">
+                <h3 id="1-processes（查询操作记录）"><a href="#1-processes（查询操作记录）" class="headerlink" title="1. processes（查询操作记录）"></a>1. processes（查询操作记录）</h3><table>
+<thead>
+<tr>
+<th>name</th>
+<th>type</th>
+<th>comment</th>
+</tr>
+</thead>
+<tbody><tr>
+<td>is_initial_query</td>
+<td>UInt8</td>
+<td></td>
+</tr>
+<tr>
+<td>user</td>
+<td>String</td>
+<td>发起查询的用户</td>
+</tr>
+<tr>
+<td>query_id</td>
+<td>String</td>
+<td>查询 ID</td>
+</tr>
+<tr>
+<td>address</td>
+<td>IPv6</td>
+<td>请求发起的 IP 地址</td>
+</tr>
+<tr>
+<td>port</td>
+<td>UInt16</td>
+<td>端口号</td>
+</tr>
+<tr>
+<td>initial_user</td>
+<td>String</td>
+<td>运行初始查询的用户名（用于分布式查询执行）</td>
+</tr>
+<tr>
+<td>initial_query_id</td>
+<td>String</td>
+<td>初始查询的 ID（用于分布式查询执行）</td>
+</tr>
+<tr>
+<td>initial_address</td>
+<td>IPv6</td>
+<td>启动父查询的 IP 地址</td>
+</tr>
+<tr>
+<td>initial_port</td>
+<td>UInt16</td>
+<td>用于进行父查询的客户端端口</td>
+</tr>
+<tr>
+<td>interface</td>
+<td>UInt8</td>
+<td>发起查询的接口。可能的值：<br>1 — TCP。<br>2 - HTTP。</td>
+</tr>
+<tr>
+<td>os_user</td>
+<td>String</td>
+<td>运行 clickhouse-client 的操作系统用户名。</td>
+</tr>
+<tr>
+<td>client_hostname</td>
+<td>String</td>
+<td>运行 clickhouse-client 或其他 TCP 客户端的客户端机器的主机名。</td>
+</tr>
+<tr>
+<td>client_name</td>
+<td>String</td>
+<td>clickhouse-client 或其他 TCP 客户端名称。</td>
+</tr>
+<tr>
+<td>client_revision</td>
+<td>UInt64</td>
+<td>clickhouse-client 或另一个 TCP 客户端的修订版</td>
+</tr>
+<tr>
+<td>client_version_major</td>
+<td>UInt64</td>
+<td>clickhouse-client 或其他 TCP 客户端的主要版本</td>
+</tr>
+<tr>
+<td>client_version_minor</td>
+<td>UInt64</td>
+<td>clickhouse-client 或其他 TCP 客户端的次要版本</td>
+</tr>
+<tr>
+<td>client_version_patch</td>
+<td>UInt64</td>
+<td>clickhouse-client 或其他 TCP 客户端版本的补丁组件</td>
+</tr>
+<tr>
+<td>http_method</td>
+<td>UInt8</td>
+<td>发起查询的 HTTP 方法<br>0 — 查询是从 TCP 接口启动的。<br>1 — 使用了 GET 方法。<br>2 — 使用了 POST 方法。</td>
+</tr>
+<tr>
+<td>http_user_agent</td>
+<td>String</td>
+<td>在 HTTP 查询中传递的 HTTP 标头 UserAgent</td>
+</tr>
+<tr>
+<td>http_referer</td>
+<td>String</td>
+<td>在 HTTP 查询中传递的 HTTP 标头 Referer（包含进行查询的页面的绝对或部分地址）</td>
+</tr>
+<tr>
+<td>forwarded_for</td>
+<td>String</td>
+<td>在 HTTP 查询中传递的 HTTP 标头 X-Forwarded-For</td>
+</tr>
+<tr>
+<td>quota_key</td>
+<td>String</td>
+<td>在配额设置中指定的配额键</td>
+</tr>
+<tr>
+<td>elapsed</td>
+<td>Float64</td>
+<td>请求执行开始后的时间，秒</td>
+</tr>
+<tr>
+<td>is_cancelled</td>
+<td>UInt8</td>
+<td></td>
+</tr>
+<tr>
+<td>read_rows</td>
+<td>UInt64</td>
+<td>从表中读取的行数</td>
+</tr>
+<tr>
+<td>read_bytes</td>
+<td>UInt64</td>
+<td>从表中读取的未压缩字节数</td>
+</tr>
+<tr>
+<td>total_rows_approx</td>
+<td>UInt64</td>
+<td>应该读取的总行数的近似值</td>
+</tr>
+<tr>
+<td>written_rows</td>
+<td>UInt64</td>
+<td>写入行数</td>
+</tr>
+<tr>
+<td>written_bytes</td>
+<td>UInt64</td>
+<td>写入字节数</td>
+</tr>
+<tr>
+<td>memory_usage</td>
+<td>Int64</td>
+<td>消耗内存数量</td>
+</tr>
+<tr>
+<td>peak_memory_usage</td>
+<td>Int64</td>
+<td>此线程上下文中已分配和已释放内存量之间的最大差异</td>
+</tr>
+<tr>
+<td>query</td>
+<td>String</td>
+<td>查询文本，如果是 insert ,不包含数据</td>
+</tr>
+<tr>
+<td>thread_ids</td>
+<td>Array(UInt64)</td>
+<td>线程 ID 数组</td>
+</tr>
+<tr>
+<td>ProfileEvents.Names</td>
+<td>Array(String)</td>
+<td>衡量该线程不同指标的计数器。它们的描述可以在表 system.events 中找到</td>
+</tr>
+<tr>
+<td>ProfileEvents.Values</td>
+<td>Array(UInt64)</td>
+<td>ProfileEvents.Names 列中列出的此线程的指标值</td>
+</tr>
+<tr>
+<td>Settings.Names</td>
+<td>Array(String)</td>
+<td>设置名称</td>
+</tr>
+<tr>
+<td>Settings.Values</td>
+<td>Array(String)</td>
+<td>设置值</td>
+</tr>
+<tr>
+<td>current_database</td>
+<td>String</td>
+<td>当前数据库的名称</td>
+</tr>
+</tbody></table>
+<h3 id="2-query-log（执行信息）"><a href="#2-query-log（执行信息）" class="headerlink" title="2. query_log（执行信息）"></a>2. query_log（执行信息）</h3><p>包含已执行查询的信息，例如开始时间、处理持续时间、错误消息。不包含 INSERT 语句，可以在config.xml里设置query_log，可以通过setting log_queries = 0关闭，不会自动删除记录，可以设置ttl属性的表。通过SYSTEM FLUSH LOGS可以强制刷写。每个查询在 query_log 表中创建1~2行，具体取决于查询的状态：</p>
+<ol>
+<li>查询执行成功，则会创建 QueryStart 和 QueryFinish 类型的事件。</li>
+<li>查询期间发生错误，则会创建QueryStart 和 ExceptionWhileProcessing 类型的事件。</li>
+<li>查询之前发生错误，则会创建一个具有 ExceptionBeforeStart 类型的事件。</li>
+</ol>
+<table>
+<thead>
+<tr>
+<th>name</th>
+<th>type</th>
+<th>comment</th>
+</tr>
+</thead>
+<tbody><tr>
+<td>type</td>
+<td>Enum8(<br>‘QueryStart’ = 1, <br>‘QueryFinish’ = 2, <br>‘ExceptionBeforeStart’ = 3, <br>‘ExceptionWhileProcessing’ = 4<br>)</td>
+<td>执行查询时发生的事件类型<br>1 成功开始查询执行。<br>2 查询执行成功结束。<br>3 查询执行开始前的异常。<br>4 查询执行期间的异常。</td>
+</tr>
+<tr>
+<td>event_date</td>
+<td>Date</td>
+<td>线程完成查询执行的日期</td>
+</tr>
+<tr>
+<td>event_time</td>
+<td>DateTime</td>
+<td>线程完成查询执行的日期和时间</td>
+</tr>
+<tr>
+<td>event_time_microseconds</td>
+<td>DateTime64(6)</td>
+<td>线程完成查询执行的日期和时间毫秒</td>
+</tr>
+<tr>
+<td>query_start_time</td>
+<td>DateTime</td>
+<td>查询执行的开始时间</td>
+</tr>
+<tr>
+<td>query_start_time_microseconds</td>
+<td>DateTime64(6)</td>
+<td>查询执行的开始时间毫秒</td>
+</tr>
+<tr>
+<td>query_duration_ms</td>
+<td>UInt64</td>
+<td>查询执行的消耗时长</td>
+</tr>
+<tr>
+<td>read_rows</td>
+<td>UInt64</td>
+<td>读取行数</td>
+</tr>
+<tr>
+<td>read_bytes</td>
+<td>UInt64</td>
+<td>读取字节数</td>
+</tr>
+<tr>
+<td>written_rows</td>
+<td>UInt64</td>
+<td>写入的行数<br>对于查询列值为0</td>
+</tr>
+<tr>
+<td>written_bytes</td>
+<td>UInt64</td>
+<td>写入的字节数<br>对于查询列值为0</td>
+</tr>
+<tr>
+<td>result_rows</td>
+<td>UInt64</td>
+<td>SELECT 查询结果中的行数，或 INSERT 查询中的行数</td>
+</tr>
+<tr>
+<td>result_bytes</td>
+<td>UInt64</td>
+<td>用于存储查询结果的 RAM 容量（以字节为单位）</td>
+</tr>
+<tr>
+<td>memory_usage</td>
+<td>UInt64</td>
+<td>在此线程上下文中分配和释放的内存数量之间的差异</td>
+</tr>
+<tr>
+<td>current_database</td>
+<td>String</td>
+<td>当前数据库的名称</td>
+</tr>
+<tr>
+<td>query</td>
+<td>String</td>
+<td>查询语句</td>
+</tr>
+<tr>
+<td>normalized_query_hash</td>
+<td>UInt64</td>
+<td>哈希值</td>
+</tr>
+<tr>
+<td>query_kind</td>
+<td>LowCardinality(String)</td>
+<td>查询类型</td>
+</tr>
+<tr>
+<td>databases</td>
+<td>Array(LowCardinality(String))</td>
+<td>查询中存在的数据库的名称</td>
+</tr>
+<tr>
+<td>tables</td>
+<td>Array(LowCardinality(String))</td>
+<td>查询中存在的数据表的名称</td>
+</tr>
+<tr>
+<td>columns</td>
+<td>Array(LowCardinality(String))</td>
+<td>查询中存在的列的名称</td>
+</tr>
+<tr>
+<td>exception_code</td>
+<td>Int32</td>
+<td>异常代码</td>
+</tr>
+<tr>
+<td>exception</td>
+<td>String</td>
+<td>异常信息</td>
+</tr>
+<tr>
+<td>stack_trace</td>
+<td>String</td>
+<td>堆栈跟踪。如果查询成功完成，则为空字符串</td>
+</tr>
+<tr>
+<td>is_initial_query</td>
+<td>UInt8</td>
+<td>查询类型<br>1 查询由客户端发起。<br>0 作为分布式查询执行的一部分，查询由另一个查询启动。</td>
+</tr>
+<tr>
+<td>user</td>
+<td>String</td>
+<td>发起当前查询的用户名</td>
+</tr>
+<tr>
+<td>query_id</td>
+<td>String</td>
+<td>查询 ID</td>
+</tr>
+<tr>
+<td>address</td>
+<td>IPv6</td>
+<td>用于进行查询的 IP 地址</td>
+</tr>
+<tr>
+<td>port</td>
+<td>UInt16</td>
+<td>用于进行查询的客户端端口</td>
+</tr>
+<tr>
+<td>initial_user</td>
+<td>String</td>
+<td>运行初始查询的用户名（用于分布式查询执行）</td>
+</tr>
+<tr>
+<td>initial_query_id</td>
+<td>String</td>
+<td>初始查询的 ID（用于分布式查询执行）</td>
+</tr>
+<tr>
+<td>initial_address</td>
+<td>IPv6</td>
+<td>启动父查询的 IP 地址</td>
+</tr>
+<tr>
+<td>initial_port</td>
+<td>UInt16</td>
+<td>用于进行父查询的客户端端口</td>
+</tr>
+<tr>
+<td>interface</td>
+<td>UInt8</td>
+<td>发起查询的接口。<br>1 TCP<br>2 HTTP</td>
+</tr>
+<tr>
+<td>os_user</td>
+<td>String</td>
+<td>运行 clickhouse-client 的操作系统用户名</td>
+</tr>
+<tr>
+<td>client_hostname</td>
+<td>String</td>
+<td>运行 clickhouse-client 或其他 TCP 客户端的客户端机器的主机名</td>
+</tr>
+<tr>
+<td>client_name</td>
+<td>String</td>
+<td>clickhouse-client 或其他 TCP 客户端名称</td>
+</tr>
+<tr>
+<td>client_revision</td>
+<td>UInt32</td>
+<td>clickhouse-client 或另一个 TCP 客户端的修订版</td>
+</tr>
+<tr>
+<td>client_version_major</td>
+<td>UInt32</td>
+<td>clickhouse-client 或其他 TCP 客户端的主要版本</td>
+</tr>
+<tr>
+<td>client_version_minor</td>
+<td>UInt32</td>
+<td>clickhouse-client 或其他 TCP 客户端的次要版本</td>
+</tr>
+<tr>
+<td>client_version_patch</td>
+<td>UInt32</td>
+<td>clickhouse-client 或其他 TCP 客户端版本的补丁组件</td>
+</tr>
+<tr>
+<td>http_method</td>
+<td>UInt8</td>
+<td>发起查询的 HTTP 方法<br>0  查询是从 TCP 接口启动的<br>1  使用了 GET 方法<br>2  使用了 POST 方法</td>
+</tr>
+<tr>
+<td>http_user_agent</td>
+<td>String</td>
+<td>在 HTTP 查询中传递的 HTTP 标头 UserAgent</td>
+</tr>
+<tr>
+<td>http_referer</td>
+<td>String</td>
+<td>在 HTTP 查询中传递的 HTTP 标头 Referer（包含进行查询的页面的绝对或部分地址）</td>
+</tr>
+<tr>
+<td>forwarded_for</td>
+<td>String</td>
+<td>在 HTTP 查询中传递的 HTTP 标头 X-Forwarded-For</td>
+</tr>
+<tr>
+<td>quota_key</td>
+<td>String</td>
+<td>在配额设置中指定的配额键</td>
+</tr>
+<tr>
+<td>revision</td>
+<td>UInt32</td>
+<td>ClickHouse 修订版</td>
+</tr>
+<tr>
+<td>log_comment</td>
+<td>String</td>
+<td>记录备注。<br>它可以设置为不超过<code>max_query_size</code>的任意字符串<br>如果未定义，则为空字符串</td>
+</tr>
+<tr>
+<td>thread_ids</td>
+<td>Array(UInt64)</td>
+<td>参与查询执行的线程 ID</td>
+</tr>
+<tr>
+<td>ProfileEvents.Names</td>
+<td>Array(String)</td>
+<td>衡量不同指标的计数器。它们的描述可以在表 system.events 中找到</td>
+</tr>
+<tr>
+<td>ProfileEvents.Values</td>
+<td>Array(UInt64)</td>
+<td>ProfileEvents.Names 列中列出的指标值</td>
+</tr>
+<tr>
+<td>Settings.Names</td>
+<td>Array(String)</td>
+<td>客户端运行查询时更改的设置名称。要启用对设置的日志更改，请将 log_query_settings 参数设置为 1</td>
+</tr>
+<tr>
+<td>Settings.Values</td>
+<td>Array(String)</td>
+<td>Settings.Names 列中列出的设置值</td>
+</tr>
+<tr>
+<td>used_aggregate_functions</td>
+<td>Array(String)</td>
+<td>在查询执行期间使用的聚合函数的规范名称</td>
+</tr>
+<tr>
+<td>used_aggregate_function_combinators</td>
+<td>Array(String)</td>
+<td>在查询执行期间使用的聚合函数组合器的规范名称</td>
+</tr>
+<tr>
+<td>used_database_engines</td>
+<td>Array(String)</td>
+<td>在查询执行期间使用的数据库引擎的规范名称</td>
+</tr>
+<tr>
+<td>used_data_type_families</td>
+<td>Array(String)</td>
+<td>在查询执行期间使用的数据类型系列的规范名称</td>
+</tr>
+<tr>
+<td>used_dictionaries</td>
+<td>Array(String)</td>
+<td>字典的规范名称，在查询执行期间使用</td>
+</tr>
+<tr>
+<td>used_formats</td>
+<td>Array(String)</td>
+<td>格式的规范名称，在查询执行期间使用</td>
+</tr>
+<tr>
+<td>used_functions</td>
+<td>Array(String)</td>
+<td>在查询执行期间使用的函数的规范名称</td>
+</tr>
+<tr>
+<td>used_storages</td>
+<td>Array(String)</td>
+<td>存储的规范名称，在查询执行期间使用</td>
+</tr>
+<tr>
+<td>used_table_functions</td>
+<td>Array(String)</td>
+<td>在查询执行期间使用的表函数的规范名称</td>
+</tr>
+</tbody></table>
+<h3 id="3-query-thread-log-（执行线程信息）"><a href="#3-query-thread-log-（执行线程信息）" class="headerlink" title="3. query_thread_log （执行线程信息）"></a>3. query_thread_log （执行线程信息）</h3><p>包含有关执行查询的线程的信息，例如线程名称、线程开始时间、查询处理的持续时间。开启该日志需要：</p>
+<ol>
+<li>配置log_query_threads参数</li>
+<li>设置log_query_threads=1</li>
+</ol>
+<p>刷新周期通过flush_interval_milliseconds 参数设置，使用 SYSTEM FLUSH LOGS 要强制刷新。</p>
+<table>
+<thead>
+<tr>
+<th>name</th>
+<th>type</th>
+<th>comment</th>
+</tr>
+</thead>
+<tbody><tr>
+<td>event_date</td>
+<td>Date</td>
+<td>线程完成查询执行的日期</td>
+</tr>
+<tr>
+<td>event_time</td>
+<td>DateTime</td>
+<td>线程完成查询执行的日期和时间</td>
+</tr>
+<tr>
+<td>event_time_microseconds</td>
+<td>DateTime64(6)</td>
+<td>线程完成查询执行的日期和时间毫秒</td>
+</tr>
+<tr>
+<td>query_start_time</td>
+<td>DateTime</td>
+<td>查询开始时间</td>
+</tr>
+<tr>
+<td>query_start_time_microseconds</td>
+<td>DateTime64(6)</td>
+<td>查询开始时间毫秒</td>
+</tr>
+<tr>
+<td>query_duration_ms</td>
+<td>UInt64</td>
+<td>查询消耗时长</td>
+</tr>
+<tr>
+<td>read_rows</td>
+<td>UInt64</td>
+<td>读取行数</td>
+</tr>
+<tr>
+<td>read_bytes</td>
+<td>UInt64</td>
+<td>读取字节数</td>
+</tr>
+<tr>
+<td>written_rows</td>
+<td>UInt64</td>
+<td>写入行数，查询时为 0</td>
+</tr>
+<tr>
+<td>written_bytes</td>
+<td>UInt64</td>
+<td>写入字节数，查询时为 0</td>
+</tr>
+<tr>
+<td>memory_usage</td>
+<td>Int64</td>
+<td>在此线程上下文中分配和释放的内存数量之间的差异</td>
+</tr>
+<tr>
+<td>peak_memory_usage</td>
+<td>Int64</td>
+<td>在此线程上下文中分配和释放的内存数量之间的最大差异。</td>
+</tr>
+<tr>
+<td>thread_name</td>
+<td>String</td>
+<td>线程名称</td>
+</tr>
+<tr>
+<td>thread_id</td>
+<td>UInt64</td>
+<td>线程ID</td>
+</tr>
+<tr>
+<td>master_thread_id</td>
+<td>UInt64</td>
+<td>初始线程的初始ID</td>
+</tr>
+<tr>
+<td>current_database</td>
+<td>String</td>
+<td>初始线程的操作系统初始 ID</td>
+</tr>
+<tr>
+<td>query</td>
+<td>String</td>
+<td>查询语句</td>
+</tr>
+<tr>
+<td>normalized_query_hash</td>
+<td>UInt64</td>
+<td>标准化查询哈希</td>
+</tr>
+<tr>
+<td>is_initial_query</td>
+<td>UInt8</td>
+<td>查询类型。可能的取值：<br>1 查询由客户端发起。<br> 0  查询由另一个查询发起，用于分布式查询执行。</td>
+</tr>
+<tr>
+<td>user</td>
+<td>String</td>
+<td>发起查询的用户</td>
+</tr>
+<tr>
+<td>query_id</td>
+<td>String</td>
+<td>查询ID</td>
+</tr>
+<tr>
+<td>address</td>
+<td>IPv6</td>
+<td>发起查询的 IP</td>
+</tr>
+<tr>
+<td>port</td>
+<td>UInt16</td>
+<td>查询查询的客户端端口</td>
+</tr>
+<tr>
+<td>initial_user</td>
+<td>String</td>
+<td>初始查询的用户名</td>
+</tr>
+<tr>
+<td>initial_query_id</td>
+<td>String</td>
+<td>初始查询的 ID</td>
+</tr>
+<tr>
+<td>initial_address</td>
+<td>IPv6</td>
+<td>启动父查询的 IP</td>
+</tr>
+<tr>
+<td>initial_port</td>
+<td>UInt16</td>
+<td>启动父查询的客户端端口</td>
+</tr>
+<tr>
+<td>interface</td>
+<td>UInt8</td>
+<td>发起查询的接口，1 TCP，2 HTTP</td>
+</tr>
+<tr>
+<td>os_user</td>
+<td>String</td>
+<td>擦做系统用户</td>
+</tr>
+<tr>
+<td>client_hostname</td>
+<td>String</td>
+<td>运行客户端的主机名</td>
+</tr>
+<tr>
+<td>client_name</td>
+<td>String</td>
+<td>Clickhouse-client 或另一个 TCP 客户端</td>
+</tr>
+<tr>
+<td>client_revision</td>
+<td>UInt32</td>
+<td>clickhouse-client 或另一个 TCP 客户端的修订版</td>
+</tr>
+<tr>
+<td>client_version_major</td>
+<td>UInt32</td>
+<td>clickhouse-client 或其他 TCP 客户端的主要版本</td>
+</tr>
+<tr>
+<td>client_version_minor</td>
+<td>UInt32</td>
+<td>clickhouse-client 或其他 TCP 客户端的次要版本</td>
+</tr>
+<tr>
+<td>client_version_patch</td>
+<td>UInt32</td>
+<td>clickhouse-client 或其他 TCP 客户端版本的补丁组件</td>
+</tr>
+<tr>
+<td>http_method</td>
+<td>UInt8</td>
+<td>发起查询的 HTTP 方法：<br>0 查询从 TCP 启动<br>1 使用 GET 方法<br>2 使用 POST 方法</td>
+</tr>
+<tr>
+<td>http_user_agent</td>
+<td>String</td>
+<td>在使用 HTTP 请求中传递的 UserAgent请求头</td>
+</tr>
+<tr>
+<td>http_referer</td>
+<td>String</td>
+<td>HTTP 请求中传递的 UserAgent 标头</td>
+</tr>
+<tr>
+<td>forwarded_for</td>
+<td>String</td>
+<td>在 HTTP 查询中传递的 HTTP 标头 X-Forwarded-For</td>
+</tr>
+<tr>
+<td>quota_key</td>
+<td>String</td>
+<td>配额设置中指定的配额键</td>
+</tr>
+<tr>
+<td>revision</td>
+<td>UInt32</td>
+<td>clickhouse 修订版本</td>
+</tr>
+<tr>
+<td>ProfileEvents.Names</td>
+<td>Array(String)</td>
+<td>测量不同指标的机器数</td>
+</tr>
+<tr>
+<td>ProfileEvents.Values</td>
+<td>Array(UInt64)</td>
+<td>在 ProfileEvents.Names 中列出的指标值</td>
+</tr>
+</tbody></table>
+<h3 id="4-mutations（mutation-操作记录表）"><a href="#4-mutations（mutation-操作记录表）" class="headerlink" title="4. mutations（mutation 操作记录表）"></a>4. mutations（mutation 操作记录表）</h3><p>该表记录有关MergeTree表的变化及其处理信息。每个变化命令都用一行表示</p>
+<table>
+<thead>
+<tr>
+<th>name</th>
+<th>type</th>
+<th>comment</th>
+</tr>
+</thead>
+<tbody><tr>
+<td>database</td>
+<td>String</td>
+<td>数据库名</td>
+</tr>
+<tr>
+<td>table</td>
+<td>String</td>
+<td>数据表名</td>
+</tr>
+<tr>
+<td>mutation_id</td>
+<td>String</td>
+<td>操作 ID<br>对于副本集的表，<br>这些id对应于ZooKeeper中的<br><table_path_in_zookeeper>/mutations/<br>目录中的znode名称。<br>对于没有副本的表，id对应于表的数据目录中的文件名。</table_path_in_zookeeper></td>
+</tr>
+<tr>
+<td>command</td>
+<td>String</td>
+<td>命令字符串<br>（ALTER TABLE [db.] TABLE后的查询部分）</td>
+</tr>
+<tr>
+<td>create_time</td>
+<td>DateTime</td>
+<td>当提交执行此变化命令的时间</td>
+</tr>
+<tr>
+<td>block_numbers.partition_id</td>
+<td>Array(String)</td>
+<td>对于复制表，数组包含分区的 ID（每个分区一个记录）。对于非复制表，数组为空。</td>
+</tr>
+<tr>
+<td>block_numbers.number</td>
+<td>Array(Int64)</td>
+<td>对于复制表，数组包含每个分区的一条记录，以及获得的块号。只有包含数字小于此数字的块的部分才会在分区中发生变更。在非复制表中所有分区中的块号形成一个序列，该列将包含一条记录，该记录具有通过mutation获得的单个块号。</td>
+</tr>
+<tr>
+<td>parts_to_do_names</td>
+<td>Array(String)</td>
+<td>数据部分的名称数组</td>
+</tr>
+<tr>
+<td>parts_to_do</td>
+<td>Int64</td>
+<td>需要为完成变化而进行突变的数据变化的数量</td>
+</tr>
+<tr>
+<td>is_done</td>
+<td>UInt8</td>
+<td>是否完成，<br>即使parts_to_do = 0，由于长时间运行的插入操作将创建需要进行修改的新的新数据片段，复制表的修改仍然有可能没有完成</td>
+</tr>
+<tr>
+<td>latest_failed_part</td>
+<td>String</td>
+<td>最近不能修改的数据片段的名称</td>
+</tr>
+<tr>
+<td>latest_fail_time</td>
+<td>DateTime</td>
+<td>最新数据片段修改失败的时间</td>
+</tr>
+<tr>
+<td>latest_fail_reason</td>
+<td>String</td>
+<td>导致最近的数据片段修改失败的异常消息</td>
+</tr>
+</tbody></table>
+<h3 id="5-distributed-ddl-queue（分布式-DDL-队列）"><a href="#5-distributed-ddl-queue（分布式-DDL-队列）" class="headerlink" title="5. distributed_ddl_queue（分布式 DDL 队列）"></a>5. distributed_ddl_queue（分布式 DDL 队列）</h3><p>包含有关在集群上执行的分布式 ddl 查询（ON CLUSTER 子句）的信息</p>
+<table>
+<thead>
+<tr>
+<th>name</th>
+<th>type</th>
+<th>comment</th>
+</tr>
+</thead>
+<tbody><tr>
+<td>entry</td>
+<td>String</td>
+<td>查询ID</td>
+</tr>
+<tr>
+<td>host_name</td>
+<td>String</td>
+<td>主机名</td>
+</tr>
+<tr>
+<td>host_address</td>
+<td>String</td>
+<td>IP</td>
+</tr>
+<tr>
+<td>port</td>
+<td>UInt16</td>
+<td>端口</td>
+</tr>
+<tr>
+<td>status</td>
+<td>Enum8( <br>‘Active’ = 0, <br>‘Finished’ = 1, <br>‘Unknown’ = 2, <br>‘Errored’ = 3<br>)</td>
+<td>查询状态</td>
+</tr>
+<tr>
+<td>cluster</td>
+<td>String</td>
+<td>集群名称</td>
+</tr>
+<tr>
+<td>query</td>
+<td>String</td>
+<td>执行的语句</td>
+</tr>
+<tr>
+<td>initiator</td>
+<td>String</td>
+<td>执行查询的节点</td>
+</tr>
+<tr>
+<td>query_start_time</td>
+<td>DateTime</td>
+<td>查询开始时间</td>
+</tr>
+<tr>
+<td>query_finish_time</td>
+<td>DateTime</td>
+<td>查询结束时间</td>
+</tr>
+<tr>
+<td>query_duration_ms</td>
+<td>UInt64</td>
+<td>执行时间，毫秒</td>
+</tr>
+<tr>
+<td>exception_code</td>
+<td>Enum8( <br>‘ZSESSIONMOVED’ = -118, <br>‘ZNOTHING’ = -117, <br>‘ZCLOSING’ = -116, <br>‘ZAUTHFAILED’ = -115, <br>‘ZINVALIDACL’ = -114, <br>‘ZINVALIDCALLBACK’ = -113, <br>‘ZSESSIONEXPIRED’ = -112, <br>‘ZNOTEMPTY’ = -111, <br>‘ZNODEEXISTS’ = -110, <br>‘ZNOCHILDRENFOREPHEMERALS’ = -108, <br>‘ZBADVERSION’ = -103, <br>‘ZNOAUTH’ = -102, <br>‘ZNONODE’ = -101, <br>‘ZAPIERROR’ = -100, <br>‘ZINVALIDSTATE’ = -9, <br>‘ZBADARGUMENTS’ = -8, <br>‘ZOPERATIONTIMEOUT’ = -7, <br>‘ZUNIMPLEMENTED’ = -6, <br>‘ZMARSHALLINGERROR’ = -5, <br>‘ZCONNECTIONLOSS’ = -4, <br>‘ZDATAINCONSISTENCY’ = -3, <br>‘ZRUNTIMEINCONSISTENCY’ = -2, <br>‘ZSYSTEMERROR’ = -1, <br>‘ZOK’ = 0<br>)</td>
+<td>ZooKeeper 的异常代码</td>
+</tr>
+</tbody></table>
+<h3 id="6-distribution-queue（分发队列中的信息）"><a href="#6-distribution-queue（分发队列中的信息）" class="headerlink" title="6. distribution_queue（分发队列中的信息）"></a>6. distribution_queue（分发队列中的信息）</h3><p>包含要发送到分片的队列中的本地文件的信息。这些本地文件通过以异步模式将新数据插入分布式表而创建的新部分。</p>
+<table>
+<thead>
+<tr>
+<th>name</th>
+<th>type</th>
+<th>comment</th>
+</tr>
+</thead>
+<tbody><tr>
+<td>database</td>
+<td>String</td>
+<td>库名</td>
+</tr>
+<tr>
+<td>table</td>
+<td>String</td>
+<td>表名</td>
+</tr>
+<tr>
+<td>data_path</td>
+<td>String</td>
+<td>包含本地文件的文件夹的路径</td>
+</tr>
+<tr>
+<td>is_blocked</td>
+<td>UInt8</td>
+<td>标志指示是否阻止向服务器发送本地文件</td>
+</tr>
+<tr>
+<td>error_count</td>
+<td>UInt64</td>
+<td>错误数</td>
+</tr>
+<tr>
+<td>data_files</td>
+<td>UInt64</td>
+<td>文件夹中的本地文件数</td>
+</tr>
+<tr>
+<td>data_compressed_bytes</td>
+<td>UInt64</td>
+<td>本地文件中压缩数据的大小，以字节为单位</td>
+</tr>
+<tr>
+<td>last_exception</td>
+<td>String</td>
+<td>关于发生的最后一个错误（如果有）的文本消息</td>
+</tr>
+</tbody></table>
+<h3 id="7-replication-queue（复制表任务队列）"><a href="#7-replication-queue（复制表任务队列）" class="headerlink" title="7. replication_queue（复制表任务队列）"></a>7. replication_queue（复制表任务队列）</h3><p>包含有关存储在 ZooKeeper 中的复制队列任务的信息，用于 ReplicatedMergeTree 系列中的表。</p>
+<table>
+<thead>
+<tr>
+<th>name</th>
+<th>type</th>
+<th>comment</th>
+</tr>
+</thead>
+<tbody><tr>
+<td>database</td>
+<td>String</td>
+<td>数据库的名称</td>
+</tr>
+<tr>
+<td>table</td>
+<td>String</td>
+<td>数据表的名称</td>
+</tr>
+<tr>
+<td>replica_name</td>
+<td>String</td>
+<td>ZooKeeper 中的副本名称。同一张表的不同副本有不同的名称。</td>
+</tr>
+<tr>
+<td>position</td>
+<td>UInt32</td>
+<td>任务在队列中的位置。</td>
+</tr>
+<tr>
+<td>node_name</td>
+<td>String</td>
+<td>ZooKeeper 中的节点名称</td>
+</tr>
+<tr>
+<td>type</td>
+<td>String</td>
+<td>队列中任务的类型，以下之一：<br>GET_PART — 从另一个副本中获取零件。<br>ATTACH_PART — 附加分区，可能来自我们自己的副本（如果在分离的文件夹中找到）。<br>MERGE_PARTS — 合并分区。<br>DROP_RANGE — 删除指定分区中指定编号范围内的部分。<br>CLEAR_COLUMN — 已弃用。从指定分区删除特定列。<br>CLEAR_INDEX — 已弃用。从指定分区删除特定索引。<br>REPLACE_RANGE — 删除一定范围的分区并用新分区替换。<br>MUTATE_PART — 对分区应用一个或多个mutation。<br>ALTER_METADATA — 根据全局 /metadata 和 /columns 路径应用更改修改。</td>
+</tr>
+<tr>
+<td>create_time</td>
+<td>DateTime</td>
+<td>提交任务执行的日期和时间</td>
+</tr>
+<tr>
+<td>required_quorum</td>
+<td>UInt32</td>
+<td>等待任务完成并确认完成的副本数。此列仅与 GET_PARTS 任务相关</td>
+</tr>
+<tr>
+<td>source_replica</td>
+<td>String</td>
+<td>源副本的名称</td>
+</tr>
+<tr>
+<td>new_part_name</td>
+<td>String</td>
+<td>新部件的名称</td>
+</tr>
+<tr>
+<td>parts_to_merge</td>
+<td>Array(String)</td>
+<td>要合并或更新的分区的名称</td>
+</tr>
+<tr>
+<td>is_detach</td>
+<td>UInt8</td>
+<td>该标志指示 DETACH_PARTS 任务是否在队列中</td>
+</tr>
+<tr>
+<td>is_currently_executing</td>
+<td>UInt8</td>
+<td>该标志指示当前是否正在执行特定任务</td>
+</tr>
+<tr>
+<td>num_tries</td>
+<td>UInt32</td>
+<td>完成任务的失败尝试次数</td>
+</tr>
+<tr>
+<td>last_exception</td>
+<td>String</td>
+<td>关于发生的最后一个错误（如果有）的文本消息</td>
+</tr>
+<tr>
+<td>last_attempt_time</td>
+<td>DateTime</td>
+<td>上次尝试任务的日期和时间</td>
+</tr>
+<tr>
+<td>num_postponed</td>
+<td>UInt32</td>
+<td>推迟任务的数量</td>
+</tr>
+<tr>
+<td>postpone_reason</td>
+<td>String</td>
+<td>任务被推迟的原因</td>
+</tr>
+<tr>
+<td>last_postpone_time</td>
+<td>DateTime</td>
+<td>上次推迟任务的日期和时间</td>
+</tr>
+<tr>
+<td>merge_type</td>
+<td>String</td>
+<td>当前合并的类型。如果是mutation则为空</td>
+</tr>
+</tbody></table>
+<script type="text/javascript" src="https://cdn.jsdelivr.net/npm/kity@2.0.4/dist/kity.min.js"></script><script type="text/javascript" src="https://cdn.jsdelivr.net/npm/kityminder-core@1.4.50/dist/kityminder.core.min.js"></script><script defer="true" type="text/javascript" src="https://cdn.jsdelivr.net/npm/hexo-simple-mindmap@0.2.0/dist/mindmap.min.js"></script><link rel="stylesheet" type="text/css" href="https://cdn.jsdelivr.net/npm/hexo-simple-mindmap@0.2.0/dist/mindmap.min.css">
+            </div>
+            <hr/>
+
+            
+
+    <div class="reprint" id="reprint-statement">
+        
+            <div class="reprint__author">
+                <span class="reprint-meta" style="font-weight: bold;">
+                    <i class="fas fa-user">
+                        文章作者:
+                    </i>
+                </span>
+                <span class="reprint-info">
+                    <a href="https://www.hnbian.cn" rel="external nofollow noreferrer">hnbian</a>
+                </span>
+            </div>
+            <div class="reprint__type">
+                <span class="reprint-meta" style="font-weight: bold;">
+                    <i class="fas fa-link">
+                        文章链接:
+                    </i>
+                </span>
+                <span class="reprint-info">
+                    <a href="https://www.hnbian.cn/posts/c36e741c.html">https://www.hnbian.cn/posts/c36e741c.html</a>
+                </span>
+            </div>
+            <div class="reprint__notice">
+                <span class="reprint-meta" style="font-weight: bold;">
+                    <i class="fas fa-copyright">
+                        版权声明:
+                    </i>
+                </span>
+                <span class="reprint-info">
+                    本博客所有文章除特別声明外，均采用
+                    <a href="https://creativecommons.org/licenses/by/4.0/deed.zh" rel="external nofollow noreferrer" target="_blank">CC BY 4.0</a>
+                    许可协议。转载请注明来源
+                    <a href="https://www.hnbian.cn" target="_blank">hnbian</a>
+                    !
+                </span>
+            </div>
+        
+    </div>
+
+    <script async defer>
+      document.addEventListener("copy", function (e) {
+        let toastHTML = '<span>复制成功，请遵循本文的转载规则</span><button class="btn-flat toast-action" onclick="navToReprintStatement()" style="font-size: smaller">查看</a>';
+        M.toast({html: toastHTML})
+      });
+
+      function navToReprintStatement() {
+        $("html, body").animate({scrollTop: $("#reprint-statement").offset().top - 80}, 800);
+      }
+    </script>
+
+
+
+            <div class="tag_share" style="display: block;">
+                <div class="post-meta__tag-list" style="display: inline-block;">
+                    
+                        <div class="article-tag">
+                            
+                                <a href="/tags/clickhouse/">
+                                    <span class="chip bg-color">clickhouse</span>
+                                </a>
+                            
+                                <a href="/tags/olap/">
+                                    <span class="chip bg-color">olap</span>
+                                </a>
+                            
+                        </div>
+                    
+                </div>
+                <div class="post_share" style="zoom: 80%; width: fit-content; display: inline-block; float: right; margin: -0.15rem 0;">
+                    <link rel="stylesheet" type="text/css" href="/libs/share/css/share.min.css">
+
+<div id="article-share">
+    
+    
+    <div class="social-share" data-sites="twitter,facebook,google,qq,qzone,wechat,weibo,douban,linkedin" data-wechat-qrcode-helper="<p>微信扫一扫即可分享！</p>"></div>
+    <script src="/libs/share/js/social-share.min.js"></script>
+    
+
+    
+
+</div>
+
+                </div>
+            </div>
+            
+                <style>
+    #reward {
+        margin: 40px 0;
+        text-align: center;
+    }
+
+    #reward .reward-link {
+        font-size: 1.4rem;
+        line-height: 38px;
+    }
+
+    #reward .btn-floating:hover {
+        box-shadow: 0 6px 12px rgba(0, 0, 0, 0.2), 0 5px 15px rgba(0, 0, 0, 0.2);
+    }
+
+    #rewardModal {
+        width: 320px;
+        height: 350px;
+    }
+
+    #rewardModal .reward-title {
+        margin: 15px auto;
+        padding-bottom: 5px;
+    }
+
+    #rewardModal .modal-content {
+        padding: 10px;
+    }
+
+    #rewardModal .close {
+        position: absolute;
+        right: 15px;
+        top: 15px;
+        color: rgba(0, 0, 0, 0.5);
+        font-size: 1.3rem;
+        line-height: 20px;
+        cursor: pointer;
+    }
+
+    #rewardModal .close:hover {
+        color: #ef5350;
+        transform: scale(1.3);
+        -moz-transform:scale(1.3);
+        -webkit-transform:scale(1.3);
+        -o-transform:scale(1.3);
+    }
+
+    #rewardModal .reward-tabs {
+        margin: 0 auto;
+        width: 210px;
+    }
+
+    .reward-tabs .tabs {
+        height: 38px;
+        margin: 10px auto;
+        padding-left: 0;
+    }
+
+    .reward-content ul {
+        padding-left: 0 !important;
+    }
+
+    .reward-tabs .tabs .tab {
+        height: 38px;
+        line-height: 38px;
+    }
+
+    .reward-tabs .tab a {
+        color: #fff;
+        background-color: #ccc;
+    }
+
+    .reward-tabs .tab a:hover {
+        background-color: #ccc;
+        color: #fff;
+    }
+
+    .reward-tabs .wechat-tab .active {
+        color: #fff !important;
+        background-color: #22AB38 !important;
+    }
+
+    .reward-tabs .alipay-tab .active {
+        color: #fff !important;
+        background-color: #019FE8 !important;
+    }
+
+    .reward-tabs .reward-img {
+        width: 210px;
+        height: 210px;
+    }
+</style>
+
+<div id="reward">
+    <a href="#rewardModal" class="reward-link modal-trigger btn-floating btn-medium waves-effect waves-light red">赏</a>
+
+    <!-- Modal Structure -->
+    <div id="rewardModal" class="modal">
+        <div class="modal-content">
+            <a class="close modal-close"><i class="fas fa-times"></i></a>
+            <h4 class="reward-title">你的赏识是我前进的动力</h4>
+            <div class="reward-content">
+                <div class="reward-tabs">
+                    <ul class="tabs row">
+                        <li class="tab col s6 alipay-tab waves-effect waves-light"><a href="#alipay">支付宝</a></li>
+                        <li class="tab col s6 wechat-tab waves-effect waves-light"><a href="#wechat">微 信</a></li>
+                    </ul>
+                    <div id="alipay">
+                        <img src="/medias/reward/alipay.jpg" class="reward-img" alt="支付宝打赏二维码">
+                    </div>
+                    <div id="wechat">
+                        <img src="/medias/reward/wechat.jpg" class="reward-img" alt="微信打赏二维码">
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<script>
+    $(function () {
+        $('.tabs').tabs();
+    });
+</script>
+            
+        </div>
+    </div>
+
+    
+
+    
+
+    
+
+    
+
+    
+        <style>
+    .valine-card {
+        margin: 1.5rem auto;
+    }
+
+    .valine-card .card-content {
+        padding: 20px 20px 5px 20px;
+    }
+
+    #vcomments textarea {
+        box-sizing: border-box;
+        background: url("/medias/comment_bg.png") 100% 100% no-repeat;
+    }
+
+    #vcomments p {
+        margin: 2px 2px 10px;
+        font-size: 1.05rem;
+        line-height: 1.78rem;
+    }
+
+    #vcomments blockquote p {
+        text-indent: 0.2rem;
+    }
+
+    #vcomments a {
+        padding: 0 2px;
+        color: #4cbf30;
+        font-weight: 500;
+        text-decoration: none;
+    }
+
+    #vcomments img {
+        max-width: 100%;
+        height: auto;
+        cursor: pointer;
+    }
+
+    #vcomments ol li {
+        list-style-type: decimal;
+    }
+
+    #vcomments ol,
+    ul {
+        display: block;
+        padding-left: 2em;
+        word-spacing: 0.05rem;
+    }
+
+    #vcomments ul li,
+    ol li {
+        display: list-item;
+        line-height: 1.8rem;
+        font-size: 1rem;
+    }
+
+    #vcomments ul li {
+        list-style-type: disc;
+    }
+
+    #vcomments ul ul li {
+        list-style-type: circle;
+    }
+
+    #vcomments table, th, td {
+        padding: 12px 13px;
+        border: 1px solid #dfe2e5;
+    }
+
+    #vcomments table, th, td {
+        border: 0;
+    }
+
+    table tr:nth-child(2n), thead {
+        background-color: #fafafa;
+    }
+
+    #vcomments table th {
+        background-color: #f2f2f2;
+        min-width: 80px;
+    }
+
+    #vcomments table td {
+        min-width: 80px;
+    }
+
+    #vcomments h1 {
+        font-size: 1.85rem;
+        font-weight: bold;
+        line-height: 2.2rem;
+    }
+
+    #vcomments h2 {
+        font-size: 1.65rem;
+        font-weight: bold;
+        line-height: 1.9rem;
+    }
+
+    #vcomments h3 {
+        font-size: 1.45rem;
+        font-weight: bold;
+        line-height: 1.7rem;
+    }
+
+    #vcomments h4 {
+        font-size: 1.25rem;
+        font-weight: bold;
+        line-height: 1.5rem;
+    }
+
+    #vcomments h5 {
+        font-size: 1.1rem;
+        font-weight: bold;
+        line-height: 1.4rem;
+    }
+
+    #vcomments h6 {
+        font-size: 1rem;
+        line-height: 1.3rem;
+    }
+
+    #vcomments p {
+        font-size: 1rem;
+        line-height: 1.5rem;
+    }
+
+    #vcomments hr {
+        margin: 12px 0;
+        border: 0;
+        border-top: 1px solid #ccc;
+    }
+
+    #vcomments blockquote {
+        margin: 15px 0;
+        border-left: 5px solid #42b983;
+        padding: 1rem 0.8rem 0.3rem 0.8rem;
+        color: #666;
+        background-color: rgba(66, 185, 131, .1);
+    }
+
+    #vcomments pre {
+        font-family: monospace, monospace;
+        padding: 1.2em;
+        margin: .5em 0;
+        background: #272822;
+        overflow: auto;
+        border-radius: 0.3em;
+        tab-size: 4;
+    }
+
+    #vcomments code {
+        font-family: monospace, monospace;
+        padding: 1px 3px;
+        font-size: 0.92rem;
+        color: #e96900;
+        background-color: #f8f8f8;
+        border-radius: 2px;
+    }
+
+    #vcomments pre code {
+        font-family: monospace, monospace;
+        padding: 0;
+        color: #e8eaf6;
+        background-color: #272822;
+    }
+
+    #vcomments pre[class*="language-"] {
+        padding: 1.2em;
+        margin: .5em 0;
+    }
+
+    #vcomments code[class*="language-"],
+    pre[class*="language-"] {
+        color: #e8eaf6;
+    }
+
+    #vcomments [type="checkbox"]:not(:checked), [type="checkbox"]:checked {
+        position: inherit;
+        margin-left: -1.3rem;
+        margin-right: 0.4rem;
+        margin-top: -1px;
+        vertical-align: middle;
+        left: unset;
+        visibility: visible;
+    }
+
+    #vcomments b,
+    strong {
+        font-weight: bold;
+    }
+
+    #vcomments dfn {
+        font-style: italic;
+    }
+
+    #vcomments small {
+        font-size: 85%;
+    }
+
+    #vcomments cite {
+        font-style: normal;
+    }
+
+    #vcomments mark {
+        background-color: #fcf8e3;
+        padding: .2em;
+    }
+
+    #vcomments table, th, td {
+        padding: 12px 13px;
+        border: 1px solid #dfe2e5;
+    }
+
+    table tr:nth-child(2n), thead {
+        background-color: #fafafa;
+    }
+
+    #vcomments table th {
+        background-color: #f2f2f2;
+        min-width: 80px;
+    }
+
+    #vcomments table td {
+        min-width: 80px;
+    }
+
+    #vcomments [type="checkbox"]:not(:checked), [type="checkbox"]:checked {
+        position: inherit;
+        margin-left: -1.3rem;
+        margin-right: 0.4rem;
+        margin-top: -1px;
+        vertical-align: middle;
+        left: unset;
+        visibility: visible;
+    }
+</style>
+
+<div class="card valine-card" data-aos="fade-up">
+    <div class="comment_headling" style="font-size: 20px; font-weight: 700; position: relative; left: 20px; top: 15px; padding-bottom: 5px;">
+        <i class="fas fa-comments fa-fw" aria-hidden="true"></i>
+        <span>评论</span>
+    </div>
+    <div id="vcomments" class="card-content" style="display: grid">
+    </div>
+</div>
+
+<script src="/libs/valine/av-min.js"></script>
+<script src="https://unpkg.com/valine/dist/Valine.min.js"></script>
+<script>
+    new Valine({
+        el: '#vcomments',
+        appId: 'h1rND3bHC0OqFwzm1UfPQpaY-gzGzoHsz',
+        appKey: 'd7uboDt2WLV2HJCEMHkkLuU4',
+        notify: 'true' === 'true',
+        verify: 'false' === 'true',
+        visitor: 'true' === 'true',
+        avatar: 'identicon',
+        pageSize: '10',
+        lang: 'zh-cn',
+        placeholder: ' 写点什么吧 . . .'
+    });
+</script>
+
+    
+
+    
+
+<article id="prenext-posts" class="prev-next articles">
+    <div class="row article-row">
+        
+        <div class="article col s12 m6" data-aos="fade-up">
+            <div class="article-badge left-badge text-color">
+                <i class="fas fa-chevron-left"></i>&nbsp;上一篇</div>
+            <div class="card">
+                <a href="/posts/ee267336.html">
+                    <div class="card-image">
+                        
+                        <img src="https://images.hnbian.cn/Fhk3pKjcFQ5d8RCubNy26z3_oAS6" class="responsive-img" alt="ClickHouse元数据 3.运行时监控信息">
+                        
+                        <span class="card-title">ClickHouse元数据 3.运行时监控信息</span>
+                    </div>
+                </a>
+                <div class="card-content article-content">
+                    <div class="summary block-with-text">
+                        
+                            1. trace_log（跟踪信息）记录由抽样查询分析器收集的堆栈调用信息。
+ClickHouse只有在trace_log服务器配置配置部分设置时才会创建这个表。还应该设置 query_profiler_real_time__ns 和 qu
+                        
+                    </div>
+                    <div class="publish-info">
+                        <span class="publish-date">
+                            <i class="far fa-clock fa-fw icon-date"></i>2021-08-02
+                        </span>
+                        <span class="publish-author">
+                            
+                            <i class="fas fa-bookmark fa-fw icon-category"></i>
+                            
+                            <a href="/categories/clickhouse/" class="post-category">
+                                    clickhouse
+                                </a>
+                            
+                            
+                        </span>
+                    </div>
+                </div>
+                
+                <div class="card-action article-tags">
+                    
+                    <a href="/tags/clickhouse/">
+                        <span class="chip bg-color">clickhouse</span>
+                    </a>
+                    
+                    <a href="/tags/olap/">
+                        <span class="chip bg-color">olap</span>
+                    </a>
+                    
+                </div>
+                
+            </div>
+        </div>
+        
+        
+        <div class="article col s12 m6" data-aos="fade-up">
+            <div class="article-badge right-badge text-color">
+                下一篇&nbsp;<i class="fas fa-chevron-right"></i>
+            </div>
+            <div class="card">
+                <a href="/posts/a49f9b3f.html">
+                    <div class="card-image">
+                        
+                        <img src="https://images.hnbian.cn/FioKiT3GCbhSQjnIY_NdWLhsByej" class="responsive-img" alt="ClickHouse元数据 1.表相关元数据">
+                        
+                        <span class="card-title">ClickHouse元数据 1.表相关元数据</span>
+                    </div>
+                </a>
+                <div class="card-content article-content">
+                    <div class="summary block-with-text">
+                        
+                            1. disks（磁盘信息表）记录有关服务器配置中定义的磁盘的信息。
+
+
+
+name
+type
+comment
+
+
+
+name
+String
+磁盘名称
+
+
+path
+String
+指向文件系统中的挂载点路径
+
+
+free_space
+UIn
+                        
+                    </div>
+                    <div class="publish-info">
+                            <span class="publish-date">
+                                <i class="far fa-clock fa-fw icon-date"></i>2021-08-01
+                            </span>
+                        <span class="publish-author">
+                            
+                            <i class="fas fa-bookmark fa-fw icon-category"></i>
+                            
+                            <a href="/categories/clickhouse/" class="post-category">
+                                    clickhouse
+                                </a>
+                            
+                            
+                        </span>
+                    </div>
+                </div>
+                
+                <div class="card-action article-tags">
+                    
+                    <a href="/tags/clickhouse/">
+                        <span class="chip bg-color">clickhouse</span>
+                    </a>
+                    
+                    <a href="/tags/olap/">
+                        <span class="chip bg-color">olap</span>
+                    </a>
+                    
+                </div>
+                
+            </div>
+        </div>
+        
+    </div>
+</article>
+
+</div>
+
+
+
+<!-- 代码块功能依赖 -->
+<script type="text/javascript" src="/libs/codeBlock/codeBlockFuction.js"></script>
+
+<!-- 代码语言 -->
+
+<script type="text/javascript" src="/libs/codeBlock/codeLang.js"></script>
+
+    
+<!-- 代码块复制 -->
+
+
+<!-- 代码块收缩 -->
+
+
+<!-- 代码块折行 -->
+
+<style type="text/css">
+code[class*="language-"], pre[class*="language-"] { white-space: pre !important; }
+</style>
+
+    </div>
+    <div id="toc-aside" class="expanded col l3 hide-on-med-and-down">
+        <div class="toc-widget">
+            <div class="toc-title"><i class="far fa-list-alt"></i>&nbsp;&nbsp;目录</div>
+            <div id="toc-content"></div>
+        </div>
+    </div>
+</div>
+
+<!-- TOC 悬浮按钮. -->
+
+<div id="floating-toc-btn" class="hide-on-med-and-down">
+    <a class="btn-floating btn-large bg-color">
+        <i class="fas fa-list-ul"></i>
+    </a>
+</div>
+
+
+<script src="https://images.hnbian.cn/tocbot.min.js"></script>
+<script>
+    $(function () {
+        tocbot.init({
+            tocSelector: '#toc-content',
+            contentSelector: '#articleContent',
+            headingsOffset: -($(window).height() * 0.4 - 45),
+            collapseDepth: Number('0'),
+            headingSelector: 'h2, h3, h4, h5'
+        });
+
+        // modify the toc link href to support Chinese.
+        let i = 0;
+        let tocHeading = 'toc-heading-';
+        $('#toc-content a').each(function () {
+            $(this).attr('href', '#' + tocHeading + (++i));
+        });
+
+        // modify the heading title id to support Chinese.
+        i = 0;
+        $('#articleContent').children('h2, h3, h4, h5').each(function () {
+            $(this).attr('id', tocHeading + (++i));
+        });
+
+        // Set scroll toc fixed.
+        let tocHeight = parseInt($(window).height() * 0.4 - 64);
+        let $tocWidget = $('.toc-widget');
+        $(window).scroll(function () {
+            let scroll = $(window).scrollTop();
+            /* add post toc fixed. */
+            if (scroll > tocHeight) {
+                $tocWidget.addClass('toc-fixed');
+            } else {
+                $tocWidget.removeClass('toc-fixed');
+            }
+        });
+
+        
+        /* 修复文章卡片 div 的宽度. */
+        let fixPostCardWidth = function (srcId, targetId) {
+            let srcDiv = $('#' + srcId);
+            if (srcDiv.length === 0) {
+                return;
+            }
+
+            let w = srcDiv.width();
+            if (w >= 450) {
+                w = w + 21;
+            } else if (w >= 350 && w < 450) {
+                w = w + 18;
+            } else if (w >= 300 && w < 350) {
+                w = w + 16;
+            } else {
+                w = w + 14;
+            }
+            $('#' + targetId).width(w);
+        };
+
+        // 切换TOC目录展开收缩的相关操作.
+        const expandedClass = 'expanded';
+        let $tocAside = $('#toc-aside');
+        let $mainContent = $('#main-content');
+        $('#floating-toc-btn .btn-floating').click(function () {
+            if ($tocAside.hasClass(expandedClass)) {
+                $tocAside.removeClass(expandedClass).hide();
+                $mainContent.removeClass('l9');
+            } else {
+                $tocAside.addClass(expandedClass).show();
+                $mainContent.addClass('l9');
+            }
+            fixPostCardWidth('artDetail', 'prenext-posts');
+        });
+        
+    });
+</script>
+
+    
+
+</main>
+
+
+
+    <footer class="page-footer bg-color">
+    <div class="container row center-align" style="margin-bottom: 15px !important;">
+        <div class="col s12 m8 l8 copy-right">
+            Copyright&nbsp;&copy;
+            <span id="year">2019</span>
+            <a href="https://www.hnbian.cn" target="_blank">hnbian</a>
+            |&nbsp;Powered by&nbsp;<a href="https://hexo.io/" target="_blank">Hexo</a>
+            |&nbsp;Theme&nbsp;<a href="https://github.com/blinkfox/hexo-theme-matery" target="_blank">Matery</a>
+            <br>
+            
+            &nbsp;<i class="fas fa-chart-area"></i>&nbsp;站点总字数:&nbsp;<span
+                class="white-color">803.4k</span>&nbsp;字
+            
+            
+            
+            
+            
+            
+            <span id="busuanzi_container_site_pv">
+                |&nbsp;<i class="far fa-eye"></i>&nbsp;总访问量:&nbsp;<span id="busuanzi_value_site_pv"
+                    class="white-color"></span>&nbsp;次
+            </span>
+            
+            
+            <span id="busuanzi_container_site_uv">
+                |&nbsp;<i class="fas fa-users"></i>&nbsp;总访问人数:&nbsp;<span id="busuanzi_value_site_uv"
+                    class="white-color"></span>&nbsp;人
+            </span>
+            
+            <br>
+            
+            <span id="sitetime">载入运行时间...</span>
+            <script>
+                function siteTime() {
+                    var seconds = 1000;
+                    var minutes = seconds * 60;
+                    var hours = minutes * 60;
+                    var days = hours * 24;
+                    var years = days * 365;
+                    var today = new Date();
+                    var startYear = "2019";
+                    var startMonth = "6";
+                    var startDate = "28";
+                    var startHour = "0";
+                    var startMinute = "0";
+                    var startSecond = "0";
+                    var todayYear = today.getFullYear();
+                    var todayMonth = today.getMonth() + 1;
+                    var todayDate = today.getDate();
+                    var todayHour = today.getHours();
+                    var todayMinute = today.getMinutes();
+                    var todaySecond = today.getSeconds();
+                    var t1 = Date.UTC(startYear, startMonth, startDate, startHour, startMinute, startSecond);
+                    var t2 = Date.UTC(todayYear, todayMonth, todayDate, todayHour, todayMinute, todaySecond);
+                    var diff = t2 - t1;
+                    var diffYears = Math.floor(diff / years);
+                    var diffDays = Math.floor((diff / days) - diffYears * 365);
+                    var diffHours = Math.floor((diff - (diffYears * 365 + diffDays) * days) / hours);
+                    var diffMinutes = Math.floor((diff - (diffYears * 365 + diffDays) * days - diffHours * hours) /
+                        minutes);
+                    var diffSeconds = Math.floor((diff - (diffYears * 365 + diffDays) * days - diffHours * hours -
+                        diffMinutes * minutes) / seconds);
+                    if (startYear == todayYear) {
+                        document.getElementById("year").innerHTML = todayYear;
+                        document.getElementById("sitetime").innerHTML = "本站已安全运行 " + diffDays + " 天 " + diffHours +
+                            " 小时 " + diffMinutes + " 分钟 " + diffSeconds + " 秒";
+                    } else {
+                        document.getElementById("year").innerHTML = startYear + " - " + todayYear;
+                        document.getElementById("sitetime").innerHTML = "本站已安全运行 " + diffYears + " 年 " + diffDays +
+                            " 天 " + diffHours + " 小时 " + diffMinutes + " 分钟 " + diffSeconds + " 秒";
+                    }
+                }
+                setInterval(siteTime, 1000);
+            </script>
+            
+            <br>
+            
+            <span id="icp"><img src="/medias/icp.png" style="vertical-align: text-bottom;" />
+                <a href="https://beian.miit.gov.cn" target="_blank">粤ICP备18156920号-2</a>
+            </span>
+            
+        </div>
+        <div class="col s12 m4 l4 social-link social-statis">
+    <a href="https://github.com/hnbian" class="tooltipped" target="_blank" data-tooltip="访问我的GitHub" data-position="top" data-delay="50">
+        <i class="fab fa-github"></i>
+    </a>
+
+
+
+    <a href="mailto:hnbian@126.com" class="tooltipped" target="_blank" data-tooltip="邮件联系我" data-position="top" data-delay="50">
+        <i class="fas fa-envelope-open"></i>
+    </a>
+
+
+
+
+
+
+
+
+
+
+
+
+
+</div>
+    </div>
+</footer>
+
+<div class="progress-bar"></div>
+
+
+    <!-- 搜索遮罩框 -->
+<div id="searchModal" class="modal">
+    <div class="modal-content">
+        <div class="search-header">
+            <span class="title"><i class="fas fa-search"></i>&nbsp;&nbsp;搜索</span>
+            <input type="search" id="searchInput" name="s" placeholder="请输入搜索的关键字"
+                   class="search-input">
+        </div>
+        <div id="searchResult"></div>
+    </div>
+</div>
+
+<script src="/js/search.js"></script>
+<script type="text/javascript">
+$(function () {
+    searchFunc("/" + "search.xml", 'searchInput', 'searchResult');
+});
+</script>
+    <!-- 回到顶部按钮 -->
+<div id="backTop" class="top-scroll">
+    <a class="btn-floating btn-large waves-effect waves-light" href="#!">
+        <i class="fas fa-arrow-up"></i>
+    </a>
+</div>
+
+
+    <script src="https://images.hnbian.cn/materialize.min.js"></script>
+    <script src="https://images.hnbian.cn/masonry.pkgd.min.js"></script>
+    <script src="https://images.hnbian.cn/aos.js"></script>
+    <script src="https://images.hnbian.cn/scrollProgress.min.js"></script>
+    <script src="https://images.hnbian.cn/lightgallery-all.min.js"></script>
+    <script src="/js/matery.js"></script>
+
+    <!-- Global site tag (gtag.js) - Google Analytics -->
+
+    <script async src="https://www.googletagmanager.com/gtag/js?id=UA-155985521-1"></script>
+    <script>
+        window.dataLayer = window.dataLayer || [];
+        function gtag(){dataLayer.push(arguments);}
+        gtag('js', new Date());
+
+        gtag('config', 'UA-155985521-1');
+    </script>
+
+    <!-- Baidu Analytics -->
+
+    <!-- Baidu Push -->
+
+<script>
+    (function () {
+        var bp = document.createElement('script');
+        var curProtocol = window.location.protocol.split(':')[0];
+        if (curProtocol === 'https') {
+            bp.src = 'https://zz.bdstatic.com/linksubmit/push.js';
+        } else {
+            bp.src = 'http://push.zhanzhang.baidu.com/push.js';
+        }
+        var s = document.getElementsByTagName("script")[0];
+        s.parentNode.insertBefore(bp, s);
+    })();
+</script>
+
+    
+    <script src="https://images.hnbian.cn/clicklove.js" async="async"></script>
+    
+    
+    <script async src="https://busuanzi.ibruce.info/busuanzi/2.3/busuanzi.pure.mini.js"></script>
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+    <script type="text/javascript" src="https://images.hnbian.cn/ribbon-dynamic.js" async="async"></script>
+    
+    
+    
+    <script src="https://images.hnbian.cn/instantpage.js" type="module"></script>
+    
+
+</body>
+
+</html>

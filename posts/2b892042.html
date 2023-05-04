@@ -1,0 +1,2108 @@
+<!DOCTYPE HTML>
+<html lang="zh-CN">
+
+
+<head><meta name="generator" content="Hexo 3.9.0">
+    <meta charset="utf-8">
+    <meta name="keywords" content="ARM 服务器编译部署 GreenPlum 6.9, hnbian">
+    <meta name="description" content="Greenplum是一款全球领先的开源大数据平台，为全球各行各业提供具备实时处理、弹性扩容、弹性计算、混合负载、云原生和集成数据分析能力的强大的大数据引擎，目前广泛的应用于包括金融、保险、证券、通信、航空、物流、零售、媒体、政府、医疗、制造">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=no">
+    <meta name="renderer" content="webkit|ie-stand|ie-comp">
+    <meta name="mobile-web-app-capable" content="yes">
+    <meta name="format-detection" content="telephone=no">
+    <meta name="apple-mobile-web-app-capable" content="yes">
+    <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+    <title>ARM 服务器编译部署 GreenPlum 6.9 | hnbian</title>
+    <link rel="icon" type="image/png" href="https://images.hnbian.cn/FvNSAGx7xljxALFh8Fa2DPNFP-JB">
+
+    <link rel="stylesheet" type="text/css" href="https://images.hnbian.cn/all.css">
+    <link rel="stylesheet" type="text/css" href="https://images.hnbian.cn/materialize.min.css">
+    <link rel="stylesheet" type="text/css" href="https://images.hnbian.cn/aos.css">
+    <link rel="stylesheet" type="text/css" href="https://images.hnbian.cn/animate.min.css">
+    <link rel="stylesheet" type="text/css" href="https://images.hnbian.cn/lightgallery.min.css">
+    <link rel="stylesheet" type="text/css" href="/css/matery.css">
+    <link rel="stylesheet" type="text/css" href="/css/my.css">
+    
+    <script src="https://images.hnbian.cn/jquery.min.mind.js"></script>
+    <script data-ad-client="ca-pub-5756598031349071" async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js"></script>
+    <meta name="google-site-verification" content="GrFMoauFrf8T4o0YL7D2b8YqhXQwVruyJKGw57gZ8J4">
+<link rel="alternate" href="/atom.xml" title="hnbian" type="application/atom+xml">
+<link rel="stylesheet" href="/css/prism-tomorrow.css" type="text/css"></head>
+
+
+<body>
+    <header class="navbar-fixed">
+    <nav id="headNav" class="bg-color nav-transparent">
+        <div id="navContainer" class="nav-wrapper head-container">
+            <div class="brand-logo">
+                <a href="/" class="waves-effect waves-light">
+                    
+                    <img src="https://images.hnbian.cn/FvNSAGx7xljxALFh8Fa2DPNFP-JB" class="logo-img" alt="LOGO">
+                    
+                    <span class="logo-span">hnbian</span>
+                </a>
+            </div>
+            
+
+<a href="#" data-target="mobile-nav" class="sidenav-trigger button-collapse"><i class="fas fa-bars"></i></a>
+<ul class="right nav-menu">
+  
+  <li class="hide-on-med-and-down nav-item">
+    
+    <a href="/" class="waves-effect waves-light">
+      
+      <i class="fas fa-home" style="zoom: 0.6;"></i>
+      
+      <span>首页</span>
+    </a>
+    
+  </li>
+  
+  <li class="hide-on-med-and-down nav-item">
+    
+    <a href="/tags" class="waves-effect waves-light">
+      
+      <i class="fas fa-tags" style="zoom: 0.6;"></i>
+      
+      <span>标签</span>
+    </a>
+    
+  </li>
+  
+  <li class="hide-on-med-and-down nav-item">
+    
+    <a href="/categories" class="waves-effect waves-light">
+      
+      <i class="fas fa-bookmark" style="zoom: 0.6;"></i>
+      
+      <span>分类</span>
+    </a>
+    
+  </li>
+  
+  <li class="hide-on-med-and-down nav-item">
+    
+    <a href="/archives" class="waves-effect waves-light">
+      
+      <i class="fas fa-archive" style="zoom: 0.6;"></i>
+      
+      <span>归档</span>
+    </a>
+    
+  </li>
+  
+  <li class="hide-on-med-and-down nav-item">
+    
+    <a href="/graph" class="waves-effect waves-light">
+      
+      <i class="fa fa-graduation-cap" style="zoom: 0.6;"></i>
+      
+      <span>知识图谱</span>
+    </a>
+    
+  </li>
+  
+  <li class="hide-on-med-and-down nav-item">
+    
+    <a href="/about" class="waves-effect waves-light">
+      
+      <i class="fas fa-comments" style="zoom: 0.6;"></i>
+      
+      <span>关于</span>
+    </a>
+    
+  </li>
+  
+  <li>
+    <a href="#searchModal" class="modal-trigger waves-effect waves-light">
+      <i id="searchIcon" class="fas fa-search" title="搜索" style="zoom: 0.85;"></i>
+    </a>
+  </li>
+</ul>
+
+<div id="mobile-nav" class="side-nav sidenav">
+
+    <div class="mobile-head bg-color">
+        
+        <img src="https://images.hnbian.cn/FvNSAGx7xljxALFh8Fa2DPNFP-JB" class="logo-img circle responsive-img">
+        
+        <div class="logo-name">hnbian</div>
+        <div class="logo-desc">
+            
+            Never really desperate, only the lost of the soul.
+            
+        </div>
+    </div>
+
+    
+
+    <ul class="menu-list mobile-menu-list">
+        
+        <li class="m-nav-item">
+	  
+		<a href="/" class="waves-effect waves-light">
+			
+			    <i class="fa-fw fas fa-home"></i>
+			
+			首页
+		</a>
+          
+        </li>
+        
+        <li class="m-nav-item">
+	  
+		<a href="/tags" class="waves-effect waves-light">
+			
+			    <i class="fa-fw fas fa-tags"></i>
+			
+			标签
+		</a>
+          
+        </li>
+        
+        <li class="m-nav-item">
+	  
+		<a href="/categories" class="waves-effect waves-light">
+			
+			    <i class="fa-fw fas fa-bookmark"></i>
+			
+			分类
+		</a>
+          
+        </li>
+        
+        <li class="m-nav-item">
+	  
+		<a href="/archives" class="waves-effect waves-light">
+			
+			    <i class="fa-fw fas fa-archive"></i>
+			
+			归档
+		</a>
+          
+        </li>
+        
+        <li class="m-nav-item">
+	  
+		<a href="/graph" class="waves-effect waves-light">
+			
+			    <i class="fa-fw fa fa-graduation-cap"></i>
+			
+			知识图谱
+		</a>
+          
+        </li>
+        
+        <li class="m-nav-item">
+	  
+		<a href="/about" class="waves-effect waves-light">
+			
+			    <i class="fa-fw fas fa-comments"></i>
+			
+			关于
+		</a>
+          
+        </li>
+        
+        
+        <li><div class="divider"></div></li>
+        <li>
+            <a href="https://github.com/hnbian" class="waves-effect waves-light" target="_blank">
+                <i class="fab fa-github-square fa-fw"></i>Fork Me
+            </a>
+        </li>
+        
+    </ul>
+</div>
+
+        </div>
+
+        
+            <style>
+    .nav-transparent .github-corner {
+        display: none !important;
+    }
+
+    .github-corner {
+        position: absolute;
+        z-index: 10;
+        top: 0;
+        right: 0;
+        border: 0;
+        transform: scale(1.1);
+    }
+
+    .github-corner svg {
+        color: #0f9d58;
+        fill: #fff;
+        height: 64px;
+        width: 64px;
+    }
+
+    .github-corner:hover .octo-arm {
+        animation: a 0.56s ease-in-out;
+    }
+
+    .github-corner .octo-arm {
+        animation: none;
+    }
+
+    @keyframes a {
+        0%,
+        to {
+            transform: rotate(0);
+        }
+        20%,
+        60% {
+            transform: rotate(-25deg);
+        }
+        40%,
+        80% {
+            transform: rotate(10deg);
+        }
+    }
+</style>
+
+<a href="https://github.com/hnbian" class="github-corner tooltipped hide-on-med-and-down" target="_blank"
+   data-tooltip="Fork Me" data-position="left" data-delay="50">
+    <svg viewBox="0 0 250 250" aria-hidden="true">
+        <path d="M0,0 L115,115 L130,115 L142,142 L250,250 L250,0 Z"></path>
+        <path d="M128.3,109.0 C113.8,99.7 119.0,89.6 119.0,89.6 C122.0,82.7 120.5,78.6 120.5,78.6 C119.2,72.0 123.4,76.3 123.4,76.3 C127.3,80.9 125.5,87.3 125.5,87.3 C122.9,97.6 130.6,101.9 134.4,103.2"
+              fill="currentColor" style="transform-origin: 130px 106px;" class="octo-arm"></path>
+        <path d="M115.0,115.0 C114.9,115.1 118.7,116.5 119.8,115.4 L133.7,101.6 C136.9,99.2 139.9,98.4 142.2,98.6 C133.8,88.0 127.5,74.4 143.8,58.0 C148.5,53.4 154.0,51.2 159.7,51.0 C160.3,49.4 163.2,43.6 171.4,40.1 C171.4,40.1 176.1,42.5 178.8,56.2 C183.1,58.6 187.2,61.8 190.9,65.4 C194.5,69.0 197.7,73.2 200.1,77.6 C213.8,80.2 216.3,84.9 216.3,84.9 C212.7,93.1 206.9,96.0 205.4,96.6 C205.1,102.4 203.0,107.8 198.3,112.5 C181.9,128.9 168.3,122.5 157.7,114.1 C157.9,116.9 156.7,120.9 152.7,124.9 L141.0,136.5 C139.8,137.7 141.6,141.9 141.8,141.8 Z"
+              fill="currentColor" class="octo-body"></path>
+    </svg>
+</a>
+        
+    </nav>
+
+</header>
+
+    
+
+
+
+<div class="bg-cover pd-header post-cover" style="background-image: url('https://images.hnbian.cn/FvuhhYcSWya2jSbcLkGdcwM9cFLy')">
+    <div class="container" style="right: 0px;left: 0px;">
+        <div class="row">
+            <div class="col s12 m12 l12">
+                <div class="brand">
+                    <h1 class="description center-align post-title">ARM 服务器编译部署 GreenPlum 6.9</h1>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+
+
+
+<main class="post-container content">
+
+    
+    <link rel="stylesheet" href="https://images.hnbian.cn/tocbot.css">
+<style>
+    #articleContent h1::before,
+    #articleContent h2::before,
+    #articleContent h3::before,
+    #articleContent h4::before,
+    #articleContent h5::before,
+    #articleContent h6::before {
+        display: block;
+        content: " ";
+        height: 100px;
+        margin-top: -100px;
+        visibility: hidden;
+    }
+
+    #articleContent :focus {
+        outline: none;
+    }
+
+    .toc-fixed {
+        position: fixed;
+        top: 64px;
+    }
+
+    .toc-widget {
+        width: 345px;
+        padding-left: 20px;
+    }
+
+    .toc-widget .toc-title {
+        margin: 35px 0 15px 0;
+        padding-left: 17px;
+        font-size: 1.5rem;
+        font-weight: bold;
+        line-height: 1.5rem;
+    }
+
+    .toc-widget ol {
+        padding: 0;
+        list-style: none;
+    }
+
+    #toc-content {
+        height: calc(100vh - 250px);
+        overflow: auto;
+    }
+
+    #toc-content ol {
+        padding-left: 10px;
+    }
+
+    #toc-content ol li {
+        padding-left: 10px;
+    }
+
+    #toc-content .toc-link:hover {
+        color: #42b983;
+        font-weight: 700;
+        text-decoration: underline;
+    }
+
+    #toc-content .toc-link::before {
+        background-color: transparent;
+        max-height: 25px;
+    }
+
+    #toc-content .is-active-link {
+        color: #42b983;
+    }
+
+    #toc-content .is-active-link::before {
+        background-color: #42b983;
+    }
+
+    #floating-toc-btn {
+        position: fixed;
+        right: 15px;
+        bottom: 76px;
+        padding-top: 15px;
+        margin-bottom: 0;
+        z-index: 998;
+    }
+
+    #floating-toc-btn .btn-floating {
+        width: 48px;
+        height: 48px;
+    }
+
+    #floating-toc-btn .btn-floating i {
+        line-height: 48px;
+        font-size: 1.4rem;
+    }
+</style>
+<div class="row">
+    <div id="main-content" class="col s12 m12 l9">
+        <!-- 文章内容详情 -->
+<div id="artDetail">
+    <div class="card">
+        <div class="card-content article-info">
+            <div class="row tag-cate">
+                <div class="col s7">
+                    
+                    <div class="article-tag">
+                        
+                            <a href="/tags/greenplum/">
+                                <span class="chip bg-color">greenplum</span>
+                            </a>
+                        
+                    </div>
+                    
+                </div>
+                <div class="col s5 right-align">
+                    
+                    <div class="post-cate">
+                        <i class="fas fa-bookmark fa-fw icon-category"></i>
+                        
+                            <a href="/categories/greenplum/" class="post-category">
+                                greenplum
+                            </a>
+                        
+                    </div>
+                    
+                </div>
+            </div>
+
+            <div class="post-info">
+                
+                <div class="post-date info-break-policy">
+                    <i class="far fa-calendar-minus fa-fw"></i>发布日期:&nbsp;&nbsp;
+                    2022-02-17
+                </div>
+                
+
+                
+
+                
+                <div class="info-break-policy">
+                    <i class="far fa-file-word fa-fw"></i>文章字数:&nbsp;&nbsp;
+                    4.1k
+                </div>
+                
+
+                
+                <div class="info-break-policy">
+                    <i class="far fa-clock fa-fw"></i>阅读时长:&nbsp;&nbsp;
+                    20 分
+                </div>
+                
+				
+                
+                    <div id="busuanzi_container_page_pv" class="info-break-policy">
+                        <i class="far fa-eye fa-fw"></i>阅读次数:&nbsp;&nbsp;
+                        <span id="busuanzi_value_page_pv"></span>
+                    </div>
+				
+            </div>
+            
+        </div>
+        <hr class="clearfix">
+        <div class="card-content article-card-content">
+            <div id="articleContent">
+                <p><a href="https://greenplum.cn/2020/01/14/greenplum-htap/" target="_blank" rel="noopener">Greenplum</a>是一款全球领先的开源大数据平台，为全球各行各业提供具备实时处理、弹性扩容、弹性计算、混合负载、云原生和集成数据分析能力的强大的大数据引擎，目前广泛的应用于包括金融、保险、证券、通信、航空、物流、零售、媒体、政府、医疗、制造、能源等行业。</p>
+<p>目前Greenplum的二进制发行版本只能运行在X86服务器。无论是Greenplum的官方开发商Pivotal公司，还是其他Greenplum发行商，都没有提供Greenplum的ARM发行版。不过，Greenplum是开源软件，我们可以通过编译Greenplum源代码自行构建Greenplum的ARM版本。</p>
+<p>本文将详细讲述如何在ARM服务器上编译并运行开源版<a href="https://github.com/greenplum-db/gpdb" target="_blank" rel="noopener">Greenplum</a>。</p>
+<h2 id="1-环境准备"><a href="#1-环境准备" class="headerlink" title="1. 环境准备"></a>1. 环境准备</h2><h3 id="1-1-arm内核配置yum源"><a href="#1-1-arm内核配置yum源" class="headerlink" title="1.1 arm内核配置yum源"></a>1.1 arm内核配置yum源</h3><p>到目录 /etc/yum.repos.d ，创建/替换下面文件</p>
+<ul>
+<li>CentOS-Base.repo</li>
+</ul>
+<pre class=" language-bash"><code class="language-bash"><span class="token punctuation">[</span>root@localhost yum.repos.d<span class="token punctuation">]</span><span class="token comment" spellcheck="true"># cat CentOS-Base.repo</span>
+
+<span class="token comment" spellcheck="true"># CentOS-Base.repo</span>
+<span class="token comment" spellcheck="true">#</span>
+<span class="token comment" spellcheck="true"># The mirror system uses the connecting IP address of the client and the</span>
+<span class="token comment" spellcheck="true"># update status of each mirror to pick mirrors that are updated to and</span>
+<span class="token comment" spellcheck="true"># geographically close to the client.  You should use this for CentOS updates</span>
+<span class="token comment" spellcheck="true"># unless you are manually picking other mirrors.</span>
+<span class="token comment" spellcheck="true">#</span>
+<span class="token comment" spellcheck="true"># If the mirrorlist= does not work for you, as a fall back you can try the</span>
+<span class="token comment" spellcheck="true"># remarked out baseurl= line instead.</span>
+<span class="token comment" spellcheck="true">#</span>
+<span class="token comment" spellcheck="true">#</span>
+
+<span class="token punctuation">[</span>base<span class="token punctuation">]</span>
+name<span class="token operator">=</span>CentOS-<span class="token variable">$releasever</span> - Base
+<span class="token comment" spellcheck="true">#mirrorlist=http://mirrorlist.centos.org/?release=$releasever&amp;arch=$basearch&amp;repo=os</span>
+<span class="token comment" spellcheck="true">#baseurl=http://mirrors.ustc.edu.cn/centos-altarch/$releasever/os/$basearch/</span>
+baseurl<span class="token operator">=</span>http://mirrors.ustc.edu.cn/centos-altarch/7/os/<span class="token variable">$basearch</span>/
+gpgcheck<span class="token operator">=</span>0
+enabled<span class="token operator">=</span>1
+gpgkey<span class="token operator">=</span>file:///etc/pki/rpm-gpg/RPM-GPG-KEY-CentOS-7
+<span class="token comment" spellcheck="true">#       file:///etc/pki/rpm-gpg/RPM-GPG-KEY-CentOS-SIG-AltArch-Arm32</span>
+
+<span class="token comment" spellcheck="true">#released updates</span>
+<span class="token punctuation">[</span>updates<span class="token punctuation">]</span>
+name<span class="token operator">=</span>CentOS-<span class="token variable">$releasever</span> - Updates
+<span class="token comment" spellcheck="true"># mirrorlist=http://mirrorlist.centos.org/?release=$releasever&amp;arch=$basearch&amp;repo=updates</span>
+<span class="token comment" spellcheck="true">#baseurl=http://mirrors.ustc.edu.cn/centos-altarch/$releasever/updates/$basearch/</span>
+baseurl<span class="token operator">=</span>http://mirrors.ustc.edu.cn/centos-altarch/7/updates/<span class="token variable">$basearch</span>/
+gpgcheck<span class="token operator">=</span>0
+enabled<span class="token operator">=</span>1
+gpgkey<span class="token operator">=</span>file:///etc/pki/rpm-gpg/RPM-GPG-KEY-CentOS-7
+<span class="token comment" spellcheck="true">#       file:///etc/pki/rpm-gpg/RPM-GPG-KEY-CentOS-SIG-AltArch-Arm32</span>
+
+<span class="token comment" spellcheck="true">#additional packages that may be useful</span>
+<span class="token punctuation">[</span>extras<span class="token punctuation">]</span>
+name<span class="token operator">=</span>CentOS-<span class="token variable">$releasever</span> - Extras
+<span class="token comment" spellcheck="true"># mirrorlist=http://mirrorlist.centos.org/?release=$releasever&amp;arch=$basearch&amp;repo=extras</span>
+<span class="token comment" spellcheck="true">#baseurl=http://mirrors.ustc.edu.cn/centos-altarch/$releasever/extras/$basearch/</span>
+baseurl<span class="token operator">=</span>http://mirrors.ustc.edu.cn/centos-altarch/7/extras/<span class="token variable">$basearch</span>/
+gpgcheck<span class="token operator">=</span>0
+enabled<span class="token operator">=</span>1
+gpgkey<span class="token operator">=</span>file:///etc/pki/rpm-gpg/RPM-GPG-KEY-CentOS-7
+<span class="token comment" spellcheck="true">#       file:///etc/pki/rpm-gpg/RPM-GPG-KEY-CentOS-SIG-AltArch-Arm32</span>
+
+<span class="token comment" spellcheck="true">#additional packages that extend functionality of existing packages</span>
+<span class="token punctuation">[</span>centosplus<span class="token punctuation">]</span>
+name<span class="token operator">=</span>CentOS-<span class="token variable">$releasever</span> - Plus
+<span class="token comment" spellcheck="true"># mirrorlist=http://mirrorlist.centos.org/?release=$releasever&amp;arch=$basearch&amp;repo=centosplus</span>
+<span class="token comment" spellcheck="true">#baseurl=http://mirrors.ustc.edu.cn/centos-altarch/$releasever/centosplus/$basearch/</span>
+baseurl<span class="token operator">=</span>http://mirrors.ustc.edu.cn/centos-altarch/7/centosplus/<span class="token variable">$basearch</span>/
+gpgcheck<span class="token operator">=</span>0
+enabled<span class="token operator">=</span>0
+gpgkey<span class="token operator">=</span>file:///etc/pki/rpm-gpg/RPM-GPG-KEY-CentOS-7
+<span class="token comment" spellcheck="true"># file:///etc/pki/rpm-gpg/RPM-GPG-KEY-CentOS-SIG-AltArch-Arm32</span>
+</code></pre>
+<ul>
+<li>清空/重建yum 缓存</li>
+</ul>
+<pre class=" language-bash"><code class="language-bash">yum clean all
+yum makecache</code></pre>
+<h3 id="1-2-关闭防火墙"><a href="#1-2-关闭防火墙" class="headerlink" title="1.2 关闭防火墙"></a>1.2 关闭防火墙</h3><pre class=" language-bash"><code class="language-bash">systemctl stop firewalld
+systemctl disable firewalld</code></pre>
+<h3 id="1-3-设置用户使用资源"><a href="#1-3-设置用户使用资源" class="headerlink" title="1.3 设置用户使用资源"></a>1.3 设置用户使用资源</h3><pre class=" language-bash"><code class="language-bash">vim /etc/security/limits.conf
+
+<span class="token comment" spellcheck="true"># 可打开的文件描述符的最大数,超过会警告(软限制)</span>
+* soft nofile 524288
+<span class="token comment" spellcheck="true"># 可打开的文件描述符的最大数,超过会报错(硬限制)</span>
+* hard nofile 524288
+<span class="token comment" spellcheck="true"># 单个用户可用的最大进程数量,超过会警告(软限制)</span>
+* soft nproc 131072
+<span class="token comment" spellcheck="true"># 单个用户可用的最大进程数量,超过会报错(硬限制)</span>
+* hard nproc 131072</code></pre>
+<h3 id="1-4-关闭SELinux"><a href="#1-4-关闭SELinux" class="headerlink" title="1.4 关闭SELinux"></a>1.4 关闭SELinux</h3><pre class=" language-bash"><code class="language-bash">vim /etc/selinux/config
+
+<span class="token comment" spellcheck="true"># This file controls the state of SELinux on the system.</span>
+<span class="token comment" spellcheck="true"># SELINUX= can take one of these three values:</span>
+<span class="token comment" spellcheck="true">#     enforcing - SELinux security policy is enforced.</span>
+<span class="token comment" spellcheck="true">#     permissive - SELinux prints warnings instead of enforcing.</span>
+<span class="token comment" spellcheck="true">#     disabled - No SELinux policy is loaded.</span>
+SELINUX<span class="token operator">=</span>disabled
+<span class="token comment" spellcheck="true"># SELINUXTYPE= can take one of these two values:</span>
+<span class="token comment" spellcheck="true">#     targeted - Targeted processes are protected,</span>
+<span class="token comment" spellcheck="true">#     mls - Multi Level Security protection.</span>
+SELINUXTYPE<span class="token operator">=</span>targeted
+
+<span class="token comment" spellcheck="true"># 查看 SELINUX 状态</span>
+<span class="token punctuation">[</span>root@localhost ~<span class="token punctuation">]</span><span class="token comment" spellcheck="true"># sestatus</span>
+SELinux status:   disabled
+<span class="token comment" spellcheck="true"># 如果状态没有修改则需要重启服务器</span></code></pre>
+<h3 id="1-5-修改内核参数"><a href="#1-5-修改内核参数" class="headerlink" title="1.5 修改内核参数"></a>1.5 修改内核参数</h3><pre class=" language-bash"><code class="language-bash">vim /etc/sysctl.conf
+
+<span class="token comment" spellcheck="true"># 新增参数</span>
+
+<span class="token comment" spellcheck="true"># 用于设置系统范围内共享内存段的最大数量。该参数的默认值是 4096.</span>
+kernel.shmmni <span class="token operator">=</span> 4096
+<span class="token comment" spellcheck="true"># 系统任意时刻可以分配的所有共享内存段的总和的最大值(以页为单位)</span>
+kernel.shmall <span class="token operator">=</span> 4000000000
+<span class="token comment" spellcheck="true"># 表示设置的信号量</span>
+kernel.sem <span class="token operator">=</span> 250 512000 100 2048
+<span class="token comment" spellcheck="true"># 启用SsyRq</span>
+kernel.sysrq <span class="token operator">=</span> 1
+<span class="token comment" spellcheck="true"># 设置pid作为文件扩展名</span>
+kernel.core_uses_pid <span class="token operator">=</span> 1
+<span class="token comment" spellcheck="true"># 每个消息队列的最大字节限制</span>
+kernel.msgmnb <span class="token operator">=</span> 65536
+<span class="token comment" spellcheck="true"># 单个消息的最大size</span>
+kernel.msgmax <span class="token operator">=</span> 65536
+<span class="token comment" spellcheck="true"># 整个系统的最大数量的消息队列。</span>
+kernel.msgmni <span class="token operator">=</span> 2048
+<span class="token comment" spellcheck="true"># 开启TCP连接中TIME-WAIT sockets的快速回收，默认为0，表示关闭。</span>
+net.ipv4.tcp_tw_recycle <span class="token operator">=</span> 1
+<span class="token comment" spellcheck="true"># 定义了处于SYN_RECV的TCP最大连接数</span>
+net.ipv4.tcp_max_syn_backlog <span class="token operator">=</span> 4096
+<span class="token comment" spellcheck="true"># ARP响应有关</span>
+net.ipv4.conf.default.arp_filter <span class="token operator">=</span> 1
+<span class="token comment" spellcheck="true"># 增加客户端端口可用范围</span>
+net.ipv4.ip_local_port_range <span class="token operator">=</span> 1025 65535
+<span class="token comment" spellcheck="true"># 当网卡接收数据包的速度大于内核处理的速度时，会有一个队列保存这些数据包。这个参数表示该队列的最大值。</span>
+net.core.netdev_max_backlog <span class="token operator">=</span> 10000
+<span class="token comment" spellcheck="true"># 接收缓冲区最大值</span>
+net.core.rmem_max <span class="token operator">=</span> 2097152
+<span class="token comment" spellcheck="true"># 发送缓冲区最大值</span>
+net.core.wmem_max <span class="token operator">=</span> 2097152
+
+<span class="token comment" spellcheck="true"># 表示内核允许分配超过所有物理内存和交换空间总和的内存。</span>
+vm.overcommit_memory <span class="token operator">=</span> 2
+
+<span class="token comment" spellcheck="true"># 原本参数</span>
+net.ipv4.tcp_syncookies <span class="token operator">=</span> 1
+net.ipv4.ip_forward <span class="token operator">=</span> 0
+
+<span class="token comment" spellcheck="true"># 重启或刷新配置</span>
+sysctl -p</code></pre>
+<ul>
+<li>遇见的问题</li>
+</ul>
+<pre class=" language-bash"><code class="language-bash"><span class="token punctuation">[</span>root@localhost rpm<span class="token punctuation">]</span><span class="token comment" spellcheck="true"># yum localinstall epel-release-latest-7.noarch.rpm</span>
+上次元数据过期检查：0:42:55 前，执行于 2022年02月15日 星期二 10时42分51秒。
+错误：
+ 问题: conflicting requests 相互矛盾的请求
+  - nothing provides redhat-release <span class="token operator">>=</span> 7 needed by epel-release-7-14.noarch
+  没有提供 redhat-release   7 needed by epel-release-7-14.noarch
+<span class="token punctuation">(</span>try to add <span class="token string">'--skip-broken'</span> to skip uninstallable packages or <span class="token string">'--nobest'</span> to use not only best candidate packages<span class="token punctuation">)</span>
+
+尝试添加“--skip-broken”以跳过可卸载包   或“--nobest”以不仅使用最佳候选包</code></pre>
+<h3 id="1-8-安装编译所需的工具及软件包"><a href="#1-8-安装编译所需的工具及软件包" class="headerlink" title="1.8 安装编译所需的工具及软件包"></a>1.8 安装编译所需的工具及软件包</h3><pre class=" language-bash"><code class="language-bash"><span class="token comment" spellcheck="true"># 1. epel-release</span>
+yum <span class="token function">install</span> https://dl.fedoraproject.org/pub/epel/epel-release-latest-7.noarch.rpm
+
+<span class="token comment" spellcheck="true"># 或使用下面命令强制安装 </span>
+rpm -ivh --force --nodeps https://dl.fedoraproject.org/pub/epel/epel-release-latest-7.noarch.rpm
+
+<span class="token comment" spellcheck="true"># 使用强制安装</span>
+rpm -ivh --force --nodeps epel-release-latest-7.noarch.rpm
+
+yum makecache
+
+<span class="token comment" spellcheck="true"># 2. 安装所需编译环境</span>
+yum groupinstall  <span class="token string">'Development Tools'</span> <span class="token comment" spellcheck="true"># GCC, libtools etc </span>
+
+
+
+<span class="token comment" spellcheck="true"># 3. 安装所需编译环境</span>
+yum <span class="token function">install</span> curl-devel bzip2-devel python-devel openssl-devel readline-devel perl-ExtUtils-Embed libxml2-devel perl-devel zstd <span class="token function">git</span>
+
+<span class="token comment" spellcheck="true"># 下面为安装明细与检查</span>
+yum <span class="token function">install</span> curl-devel <span class="token comment" spellcheck="true"># ok</span>
+yum <span class="token function">install</span> python-devel <span class="token comment" spellcheck="true"># ok</span>
+yum <span class="token function">install</span> openssl-devel <span class="token comment" spellcheck="true"># ok</span>
+yum <span class="token function">install</span> readline-devel <span class="token comment" spellcheck="true"># ok</span>
+yum <span class="token function">install</span> libdb-devel <span class="token comment" spellcheck="true"># ok</span>
+yum <span class="token function">install</span> bzip2-devel <span class="token comment" spellcheck="true"># ok</span>
+yum <span class="token function">install</span> perl-ExtUtils-Embed <span class="token comment" spellcheck="true"># ok </span>
+yum <span class="token function">install</span> libxml2-devel <span class="token comment" spellcheck="true"># ok</span>
+yum <span class="token function">install</span> perl-devel <span class="token comment" spellcheck="true"># ok </span>
+yum <span class="token function">install</span> zstd <span class="token comment" spellcheck="true"># ok -</span>
+yum <span class="token function">install</span> <span class="token function">git</span> <span class="token comment" spellcheck="true"># ok </span>
+yum <span class="token function">install</span> epel-release <span class="token comment" spellcheck="true"># ok </span>
+yum <span class="token function">install</span> libzstd-devel <span class="token comment" spellcheck="true"># ok</span>
+yum <span class="token function">install</span> glibc-langpack-tr ok</code></pre>
+<h3 id="1-9-安装python-组件"><a href="#1-9-安装python-组件" class="headerlink" title="1.9 安装python 组件"></a>1.9 安装python 组件</h3><pre class=" language-bash"><code class="language-bash"><span class="token comment" spellcheck="true"># 3. 下载文件</span>
+<span class="token function">wget</span> https://bootstrap.pypa.io/pip/2.7/get-pip.py
+
+<span class="token comment" spellcheck="true"># 4. 使用 Python 安装 pip</span>
+python get-pip.py
+
+<span class="token comment" spellcheck="true"># 5. 使用 pip 安装插件</span>
+pip <span class="token function">install</span> psutil lockfile paramiko setuptools epydoc conan
+
+<span class="token comment" spellcheck="true"># 明细</span>
+pip <span class="token function">install</span> lockfile
+pip <span class="token function">install</span> paramiko
+pip <span class="token function">install</span> setuptools
+pip <span class="token function">install</span> epydoc
+pip <span class="token function">install</span> conan
+
+<span class="token comment" spellcheck="true"># 安装Python组件明细</span>
+<span class="token operator">==</span><span class="token operator">==</span><span class="token operator">==</span><span class="token operator">=</span>  默认  <span class="token operator">==</span><span class="token operator">==</span><span class="token operator">==</span><span class="token operator">==</span>
+configobj<span class="token operator">==</span>5.0.6
+configparser<span class="token operator">==</span>3.5.0b2
+mysqlclient<span class="token operator">==</span>1.3.12 <span class="token operator">==</span>》 删除
+pycairo<span class="token operator">==</span>1.19.1 <span class="token operator">==</span>》 删除
+PyGObject<span class="token operator">==</span>3.36.1
+python-xlib<span class="token operator">==</span>0.15rc1 <span class="token operator">==</span>》 删除
+pyxdg<span class="token operator">==</span>0.26
+six<span class="token operator">==</span>1.15.0
+<span class="token operator">==</span><span class="token operator">==</span><span class="token operator">==</span><span class="token operator">==</span>  psutil  <span class="token operator">==</span><span class="token operator">==</span><span class="token operator">==</span><span class="token operator">==</span>
+pip          20.3.4
+psutil       5.9.0
+setuptools   44.1.1
+wheel        0.37.1
+<span class="token operator">==</span><span class="token operator">==</span><span class="token operator">==</span><span class="token operator">==</span>  lockfile      <span class="token operator">==</span><span class="token operator">==</span><span class="token operator">==</span><span class="token operator">==</span>
+lockfile     0.12.2
+<span class="token operator">==</span><span class="token operator">==</span><span class="token operator">==</span><span class="token operator">==</span>  paramiko      <span class="token operator">==</span><span class="token operator">==</span><span class="token operator">==</span><span class="token operator">==</span>
+bcrypt       3.1.7
+cffi         1.15.0
+cryptography 3.3.2
+enum34       1.1.10
+ipaddress    1.0.23
+paramiko     2.10.3
+pycparser    2.21
+PyNaCl       1.4.0
+
+<span class="token operator">==</span><span class="token operator">==</span><span class="token operator">==</span><span class="token operator">==</span>  setuptools    <span class="token operator">==</span><span class="token operator">==</span><span class="token operator">==</span><span class="token operator">==</span>
+已装
+
+<span class="token operator">==</span><span class="token operator">==</span><span class="token operator">==</span><span class="token operator">==</span>  epydoc        <span class="token operator">==</span><span class="token operator">==</span><span class="token operator">==</span><span class="token operator">==</span>
+epydoc       3.0.1
+<span class="token operator">==</span><span class="token operator">==</span><span class="token operator">==</span><span class="token operator">==</span>  conan         <span class="token operator">==</span><span class="token operator">==</span><span class="token operator">==</span><span class="token operator">==</span>
+Package             Version
+------------------- -----------
+bottle              0.12.19
+certifi             2021.10.8
+chardet             4.0.0
+colorama            0.4.4
+conan               1.47.0
+contextlib2         0.6.0.post1
+distro              1.6.0
+fasteners           0.16.3
+idna                2.10
+importlib-resources 3.3.1
+Jinja2              2.11.3
+MarkupSafe          1.1.1
+monotonic           1.6
+node-semver         0.6.1
+patch-ng            1.17.4
+pathlib2            2.3.7.post1
+pluginbase          1.0.1
+Pygments            2.5.2
+PyJWT               1.7.1
+python-dateutil     2.8.2
+PyYAML              5.4.1
+requests            2.27.1
+scandir             1.10.0
+singledispatch      3.7.0
+tqdm                4.64.0
+typing              3.10.0.0
+urllib3             1.26.9
+zipp                1.2.0
+
+
+pip download -d your_offline_packages psutil
+
+<span class="token comment" spellcheck="true"># 离线下载安装包</span>
+<span class="token comment" spellcheck="true"># 下载单个离线包 - </span>
+pip download -d your_offline_packages <span class="token operator">&lt;</span>package_name<span class="token operator">></span>
+<span class="token comment" spellcheck="true"># 批量下载离线包 - </span>
+pip download -d your_offline_packages -r requirements.txt
+
+<span class="token comment" spellcheck="true"># 离线安装</span>
+<span class="token comment" spellcheck="true"># 安装单个离线包 - </span>
+pip <span class="token function">install</span> --no-index --find-links<span class="token operator">=</span>/your_offline_packages/ package_name
+<span class="token comment" spellcheck="true"># 批量安装离线包 - </span>
+pip <span class="token function">install</span> --no-index --find-links<span class="token operator">=</span>/your_offline_packages/ -r requirements.txt</code></pre>
+<h2 id="2-编译Greenplum源代码"><a href="#2-编译Greenplum源代码" class="headerlink" title="2. 编译Greenplum源代码"></a>2. 编译Greenplum源代码</h2><h3 id="2-1-创建-gpadmin-用户"><a href="#2-1-创建-gpadmin-用户" class="headerlink" title="2.1 创建 gpadmin 用户"></a>2.1 创建 gpadmin 用户</h3><pre class=" language-bash"><code class="language-bash"><span class="token comment" spellcheck="true"># 增加用户组</span>
+<span class="token function">groupadd</span> -g 530 gpadmin
+<span class="token comment" spellcheck="true"># 增加用户</span>
+<span class="token function">useradd</span> -g 530 -u 530 -m -d /home/gpadmin -s /bin/bash gpadmin
+
+<span class="token comment" spellcheck="true"># 对文件夹进行赋权</span>
+<span class="token function">chown</span> -R gpadmin:gpadmin /home/gpadmin/
+
+<span class="token comment" spellcheck="true"># 为新用户创建密码</span>
+<span class="token punctuation">[</span>root@localhost ~<span class="token punctuation">]</span><span class="token comment" spellcheck="true"># passwd gpadmin</span>
+更改用户 gpadmin 的密码
+新的 密码： <span class="token punctuation">(</span>gpadmin<span class="token punctuation">)</span>
+<span class="token comment" spellcheck="true">#密码提示太简单，连续输入两次即可。</span>
+无效的密码： 密码少于 8 个字符
+重新输入新的 密码：
+passwd：所有的身份验证令牌已经成功更新</code></pre>
+<h3 id="2-2-下载Greenplum源代码"><a href="#2-2-下载Greenplum源代码" class="headerlink" title="2.2 下载Greenplum源代码"></a>2.2 下载Greenplum源代码</h3><pre class=" language-bash"><code class="language-bash"><span class="token comment" spellcheck="true"># 切换用 gpadmin 用户</span>
+<span class="token function">su</span> gpadmin
+
+<span class="token comment" spellcheck="true"># 下载源码</span>
+<span class="token function">git</span> clone https://github.com/greenplum-db/gpdb
+
+<span class="token comment" spellcheck="true"># 进入 gpdb 目录</span>
+<span class="token function">cd</span> gpdb
+
+<span class="token comment" spellcheck="true"># 切换版本</span>
+<span class="token function">git</span> checkout 6.9
+</code></pre>
+<h3 id="2-3-编译安装"><a href="#2-3-编译安装" class="headerlink" title="2.3 编译安装"></a>2.3 编译安装</h3><p>注意编译的时候使用的 Python2 版本, 但要是 2.2 之后的版本</p>
+<pre class=" language-bash"><code class="language-bash"><span class="token comment" spellcheck="true"># 1. 编译</span>
+CFLAGS<span class="token operator">=</span><span class="token string">"-O0 -g3 -ggdb3"</span> \
+./configure --with-python --with-libxml --enable-debug --enable-cassert \
+--disable-orca --disable-gpcloud --disable-gpfdist \
+--disable-gpfdist
+
+<span class="token comment" spellcheck="true"># 打印日志</span>
+checking build system type<span class="token punctuation">..</span>. aarch64-unknown-linux-gnu
+checking host system type<span class="token punctuation">..</span>. aarch64-unknown-linux-gnu
+checking <span class="token function">which</span> template to use<span class="token punctuation">..</span>. linux
+checking whether to build with 64-bit integer date/time support<span class="token punctuation">..</span>. <span class="token function">yes</span>
+checking <span class="token keyword">for</span> default port number<span class="token punctuation">..</span>. 5432
+checking <span class="token keyword">for</span> block size<span class="token punctuation">..</span>. 32kB
+checking <span class="token keyword">for</span> segment size<span class="token punctuation">..</span>. 1GB
+checking <span class="token keyword">for</span> WAL block size<span class="token punctuation">..</span>. 32kB
+
+<span class="token punctuation">..</span><span class="token punctuation">..</span><span class="token punctuation">..</span>
+
+config.status: linking src/backend/port/tas/dummy.s to src/backend/port/tas.s
+config.status: linking src/backend/port/dynloader/linux.c to src/backend/port/dynloader.c
+config.status: linking src/backend/port/sysv_sema.c to src/backend/port/pg_sema.c
+config.status: linking src/backend/port/sysv_shmem.c to src/backend/port/pg_shmem.c
+config.status: linking src/backend/port/unix_latch.c to src/backend/port/pg_latch.c
+config.status: linking src/backend/port/dynloader/linux.h to src/include/dynloader.h
+config.status: linking src/include/port/linux.h to src/include/pg_config_os.h
+config.status: linking src/makefiles/Makefile.linux to src/Makefile.port
+
+
+<span class="token comment" spellcheck="true"># 2. 编译</span>
+<span class="token function">sudo</span> <span class="token function">make</span>
+
+<span class="token comment" spellcheck="true"># 打印日志</span>
+make<span class="token punctuation">[</span>1<span class="token punctuation">]</span>: 进入目录“/home/gpadmin/gpdb/src”
+<span class="token function">make</span> -C common all
+make<span class="token punctuation">[</span>2<span class="token punctuation">]</span>: 进入目录“/home/gpadmin/gpdb/src/common”
+<span class="token function">make</span> -C <span class="token punctuation">..</span>/backend submake-errcodes
+make<span class="token punctuation">[</span>3<span class="token punctuation">]</span>: 进入目录“/home/gpadmin/gpdb/src/backend”
+<span class="token function">make</span> -C utils errcodes.h
+make<span class="token punctuation">[</span>4<span class="token punctuation">]</span>: 进入目录“/home/gpadmin/gpdb/src/backend/utils”
+<span class="token string">'/usr/bin/perl'</span> ./generate-errcodes.pl <span class="token punctuation">..</span>/<span class="token punctuation">..</span>/<span class="token punctuation">..</span>/src/backend/utils/errcodes.txt <span class="token operator">></span> errcodes.h
+make<span class="token punctuation">[</span>4<span class="token punctuation">]</span>: 离开目录“/home/gpadmin/gpdb/src/backend/utils”
+<span class="token punctuation">..</span><span class="token punctuation">..</span><span class="token punctuation">..</span>
+n -fPIC -shared -o pxf.so src/pxfprotocol.o src/pxfbridge.o src/pxfuriparser.o src/libchurl.o src/pxfutils.o src/pxfheaders.o src/pxffragment.o src/gpdbwritableformatter.o src/pxffilters.o -L<span class="token punctuation">..</span>/<span class="token punctuation">..</span>/src/port -L<span class="token punctuation">..</span>/<span class="token punctuation">..</span>/src/common    -Wl,--as-needed -Wl,-rpath,<span class="token string">'/usr/local/gpdb/lib'</span>,--enable-new-dtags   -lcurl
+make<span class="token punctuation">[</span>2<span class="token punctuation">]</span>: 离开目录“/home/gpadmin/gpdb/gpcontrib/pxf”
+make<span class="token punctuation">[</span>1<span class="token punctuation">]</span>: 离开目录“/home/gpadmin/gpdb/gpcontrib”
+All of Greenplum Database successfully made. Ready to install.
+
+
+
+<span class="token comment" spellcheck="true"># 3. 安装</span>
+<span class="token function">sudo</span> <span class="token function">make</span> <span class="token function">install</span>
+
+<span class="token comment" spellcheck="true"># 打印日志</span>
+
+/usr/bin/install -c -m 755  pxf.so <span class="token string">'/usr/local/gpdb/lib/postgresql/pxf.so'</span>
+/usr/bin/install -c -m 644 pxf.control <span class="token string">'/usr/local/gpdb/share/postgresql/extension/'</span>
+/usr/bin/install -c -m 644 pxf--1.0.sql <span class="token string">'/usr/local/gpdb/share/postgresql/extension/'</span>
+make<span class="token punctuation">[</span>2<span class="token punctuation">]</span>: 离开目录“/home/gpadmin/gpdb/gpcontrib/pxf”
+make<span class="token punctuation">[</span>1<span class="token punctuation">]</span>: 离开目录“/home/gpadmin/gpdb/gpcontrib”
+Greenplum Database installation complete.
+
+</code></pre>
+<ul>
+<li>问题 zstd library not found</li>
+</ul>
+<pre class=" language-bash"><code class="language-bash">configure: error: zstd library not found
+If you have libzstd already installed, see config.log <span class="token keyword">for</span> details on the
+failure.  It is possible the compiler isn't looking <span class="token keyword">in</span> the proper directory.
+Use --without-zstd to disable zstd support.
+
+<span class="token comment" spellcheck="true"># 解决办法 -- </span>
+yum <span class="token function">install</span> epel-release
+yum <span class="token function">install</span> libzstd-devel
+<span class="token comment" spellcheck="true"># 这是安装时遇见的问题, 已经在前面增加了此软件的安装命令</span></code></pre>
+<ul>
+<li>问题 configure: error: libperl library is required for Perl</li>
+</ul>
+<pre class=" language-bash"><code class="language-bash">checking <span class="token keyword">for</span> libperl<span class="token punctuation">..</span>. no
+configure: error: libperl library is required <span class="token keyword">for</span> Perl
+
+<span class="token comment" spellcheck="true"># 解决</span>
+<span class="token function">wget</span> https://rpmfind.net/linux/fedora/linux/development/rawhide/Everything/aarch64/os/Packages/p/perl-devel-5.34.0-485.fc36.aarch64.rpm
+
+<span class="token comment" spellcheck="true"># 下载源码</span>
+<span class="token function">wget</span> https://vault.centos.org/8.5.2111/AppStream/Source/SPackages/perl-5.30.1-452.module_el8.4.0+646+45e06e4a.src.rpm
+
+<span class="token comment" spellcheck="true"># 编译源码</span>
+rpmbuild --rebuild --clean perl-5.30.1-452.module_el8.4.0+646+45e06e4a.src.rpm
+
+
+<span class="token comment" spellcheck="true"># 编译失败需要依赖</span>
+错误：构建依赖失败：
+    gdbm-devel 被 perl-4:5.30.1-452.ky10.ky10.aarch64 需要
+    glibc-langpack-tr 被 perl-4:5.30.1-452.ky10.ky10.aarch64 需要
+    libdb-devel 被 perl-4:5.30.1-452.ky10.ky10.aarch64 需要
+
+<span class="token comment" spellcheck="true"># 安装依赖 -- </span>
+yum <span class="token function">install</span> gdbm-devel <span class="token comment" spellcheck="true"># 安装失败</span>
+yum <span class="token function">install</span> glibc-langpack-tr <span class="token comment" spellcheck="true"># 找不到</span>
+yum <span class="token function">install</span> libdb-devel <span class="token comment" spellcheck="true"># 安装成功</span></code></pre>
+<ul>
+<li>问题  bison’ is missing on your system</li>
+</ul>
+<pre class=" language-bash"><code class="language-bash">***
+ERROR: `bison<span class="token string">' is missing on your system. It is needed to create the
+file `gram.c'</span><span class="token keyword">.</span> You can either get bison from a GNU mirror site
+or download an official distribution of PostgreSQL, <span class="token function">which</span> contains
+pre-packaged bison output.
+***
+make<span class="token punctuation">[</span>3<span class="token punctuation">]</span>: *** <span class="token punctuation">[</span>gram.c<span class="token punctuation">]</span> Error 1
+make<span class="token punctuation">[</span>3<span class="token punctuation">]</span>: Leaving directory `/home/gpdb_src/gpdb-5.16.0/src/backend/parser<span class="token string">'
+make[2]: *** [parser/gram.h] Error 2
+make[2]: *** Waiting for unfinished jobs....
+AWK='</span><span class="token function">gawk</span><span class="token string">' /bin/sh Gen_fmgrtab.sh pg_proc_combined.h.tmp
+make[3]: Leaving directory `/home/gpdb_src/gpdb-5.16.0/src/backend/utils'</span>
+make<span class="token punctuation">[</span>2<span class="token punctuation">]</span>: Leaving directory `/home/gpdb_src/gpdb-5.16.0/src/backend<span class="token string">'
+make[1]: *** [all] Error 2
+make[1]: Leaving directory `/home/gpdb_src/gpdb-5.16.0/src'</span>
+make: *** <span class="token punctuation">[</span>all<span class="token punctuation">]</span> Error 2
+
+<span class="token comment" spellcheck="true"># 解决方式</span>
+
+yum <span class="token function">install</span> bison</code></pre>
+<h2 id="3-配置-Greenplum"><a href="#3-配置-Greenplum" class="headerlink" title="3. 配置 Greenplum"></a>3. 配置 Greenplum</h2><h3 id="3-1-设置免密登录"><a href="#3-1-设置免密登录" class="headerlink" title="3.1 设置免密登录"></a>3.1 设置免密登录</h3><p>使用gpadmin登入，配置ssh免密码登录</p>
+<pre class=" language-bash"><code class="language-bash"><span class="token comment" spellcheck="true"># 生成秘钥</span>
+<span class="token punctuation">[</span>root@localhost opt<span class="token punctuation">]</span><span class="token comment" spellcheck="true"># su gpadmin</span>
+<span class="token punctuation">[</span>gpadmin@localhost opt<span class="token punctuation">]</span>$ ssh-keygen -t rsa
+Generating public/private rsa key pair.
+Enter <span class="token function">file</span> <span class="token keyword">in</span> <span class="token function">which</span> to save the key <span class="token punctuation">(</span>/home/gpadmin/.ssh/id_rsa<span class="token punctuation">)</span>: <span class="token comment" spellcheck="true">#(回车)</span>
+Enter passphrase <span class="token punctuation">(</span>empty <span class="token keyword">for</span> no passphrase<span class="token punctuation">)</span>:<span class="token comment" spellcheck="true">#(回车)</span>
+Enter same passphrase again:
+Your identification has been saved <span class="token keyword">in</span> /home/gpadmin/.ssh/id_rsa.
+Your public key has been saved <span class="token keyword">in</span> /home/gpadmin/.ssh/id_rsa.pub.
+The key fingerprint is:
+SHA256:TTr5ZrIMSa+VXwFJJiAoUPmYskWTR8DLiFpraX0+7dg gpadmin@localhost
+The key's randomart image is:
++---<span class="token punctuation">[</span>RSA 2048<span class="token punctuation">]</span>----+
+<span class="token operator">|</span>ooo*o <span class="token punctuation">..</span>. o      <span class="token operator">|</span>
+<span class="token operator">|</span><span class="token keyword">.</span> B <span class="token punctuation">..</span>   + <span class="token keyword">.</span>     <span class="token operator">|</span>
+<span class="token operator">|</span>.<span class="token operator">=</span> B      +      <span class="token operator">|</span>
+<span class="token operator">|</span>+ B <span class="token keyword">.</span>    <span class="token operator">=</span> <span class="token keyword">.</span>     <span class="token operator">|</span>
+<span class="token operator">|</span>.<span class="token operator">=</span> +  <span class="token keyword">.</span> S <span class="token keyword">.</span> <span class="token keyword">.</span>    <span class="token operator">|</span>
+<span class="token operator">|</span>o <span class="token operator">=</span> <span class="token punctuation">..</span>.o +   <span class="token keyword">.</span>   <span class="token operator">|</span>
+<span class="token operator">|</span> o   oo.<span class="token operator">=</span> + <span class="token keyword">.</span>    <span class="token operator">|</span>
+<span class="token operator">|</span>      oB.* <span class="token keyword">.</span>     <span class="token operator">|</span>
+<span class="token operator">|</span>      ooE <span class="token keyword">.</span>      <span class="token operator">|</span>
++----<span class="token punctuation">[</span>SHA256<span class="token punctuation">]</span>-----+
+<span class="token punctuation">[</span>gpadmin@localhost opt<span class="token punctuation">]</span>$
+<span class="token punctuation">[</span>gpadmin@localhost opt<span class="token punctuation">]</span>$ <span class="token function">cd</span> ~
+<span class="token punctuation">[</span>gpadmin@localhost .ssh<span class="token punctuation">]</span>$ <span class="token function">pwd</span>
+/home/gpadmin/.ssh
+
+
+<span class="token comment" spellcheck="true"># 配置 localhost 免密登录</span>
+<span class="token punctuation">[</span>gpadmin@localhost .ssh<span class="token punctuation">]</span>$ ssh-copy-id localhost
+gpadmin@localhost password: <span class="token comment" spellcheck="true">#(输入gpadmin用户的密码)</span>
+<span class="token punctuation">..</span>.
+<span class="token comment" spellcheck="true"># 尝试免密登录 localhost</span>
+<span class="token punctuation">[</span>gpadmin@localhost .ssh<span class="token punctuation">]</span>$ <span class="token function">ssh</span> localhost 
+<span class="token comment" spellcheck="true"># 退出登录</span>
+<span class="token punctuation">[</span>gpadmin@localhost ~<span class="token punctuation">]</span>$ <span class="token keyword">exit</span>
+登出
+Connection to localhost closed.</code></pre>
+<h3 id="3-2-创建节点列表文件"><a href="#3-2-创建节点列表文件" class="headerlink" title="3.2 创建节点列表文件"></a>3.2 创建节点列表文件</h3><p>在管理节点配置</p>
+<pre class=" language-bash"><code class="language-bash"><span class="token punctuation">[</span>gpadmin@localhost .ssh<span class="token punctuation">]</span>$ <span class="token function">mkdir</span> /home/gpadmin/conf
+<span class="token punctuation">[</span>gpadmin@localhost .ssh<span class="token punctuation">]</span>$
+<span class="token punctuation">[</span>gpadmin@localhost .ssh<span class="token punctuation">]</span>$ <span class="token function">cd</span> /home/gpadmin/conf
+<span class="token comment" spellcheck="true">#添加 GreenPlum 集群的所有节点</span>
+<span class="token punctuation">[</span>gpadmin@localhost conf<span class="token punctuation">]</span>$ vim hostlist 
+<span class="token punctuation">[</span>gpadmin@localhost conf<span class="token punctuation">]</span>$ <span class="token function">cat</span> hostlist
+localhost
+
+<span class="token comment" spellcheck="true">#添加 GreenPlum 集群的所有segment节点 </span>
+<span class="token punctuation">[</span>gpadmin@localhost conf<span class="token punctuation">]</span>$ vim seg_hosts 
+<span class="token punctuation">[</span>gpadmin@localhost conf<span class="token punctuation">]</span>$ <span class="token function">cat</span> seg_hosts
+localhost</code></pre>
+<h3 id="3-3-创建数据存储空间"><a href="#3-3-创建数据存储空间" class="headerlink" title="3.3 创建数据存储空间"></a>3.3 创建数据存储空间</h3><pre class=" language-bash"><code class="language-bash"><span class="token comment" spellcheck="true"># 在 Master 节点创建元数据目录</span>
+<span class="token punctuation">[</span>gpadmin@localhost ~<span class="token punctuation">]</span>$ <span class="token function">mkdir</span> -p /home/gpadmin/data/master
+
+<span class="token comment" spellcheck="true"># 创建数据存储目录</span>
+<span class="token punctuation">[</span>gpadmin@localhost ~<span class="token punctuation">]</span>$ <span class="token function">mkdir</span> -p /home/gpadmin/data/primary
+<span class="token punctuation">[</span>gpadmin@localhost ~<span class="token punctuation">]</span>$ <span class="token function">mkdir</span> -p /home/gpadmin/data/mirror</code></pre>
+<h3 id="3-4-配置-bash-profile-环境变量"><a href="#3-4-配置-bash-profile-环境变量" class="headerlink" title="3.4 配置 .bash_profile 环境变量"></a>3.4 配置 .bash_profile 环境变量</h3><pre class=" language-bash"><code class="language-bash"><span class="token punctuation">[</span>gpadmin@localhost ~<span class="token punctuation">]</span>$ vim /home/gpadmin/.bash_profile
+
+<span class="token comment" spellcheck="true"># 添加下面内容</span>
+<span class="token function">source</span> /usr/local/gpdb/greenplum_path.sh <span class="token comment" spellcheck="true"># 这个路径对应安装 gp 的目录</span>
+<span class="token function">export</span> MASTER_DATA_DIRECTORY<span class="token operator">=</span>/home/gpadmin/data/master/gpseg-1
+<span class="token function">export</span> PGPORT<span class="token operator">=</span>5432
+<span class="token function">export</span> PGUSER<span class="token operator">=</span>gpadmin
+<span class="token function">export</span> PGDATABASE<span class="token operator">=</span>Greenplum
+
+<span class="token comment" spellcheck="true"># 将刚刚配置的加到环境变量中</span>
+PATH<span class="token operator">=</span><span class="token variable">$PATH</span><span class="token keyword">:</span><span class="token variable">$HOME</span>/.local/bin:<span class="token variable">$HOME</span>/bin:<span class="token variable">$MASTER_DATA_DIRECTORY</span>
+
+<span class="token punctuation">[</span>gpadmin@localhost ~<span class="token punctuation">]</span>$ <span class="token function">source</span> /home/gpadmin/.bash_profile
+<span class="token punctuation">[</span>gpadmin@localhost ~<span class="token punctuation">]</span>$ <span class="token keyword">echo</span> <span class="token variable">$GPHOME</span>
+/usr/local/gpdb</code></pre>
+<h3 id="3-5-初始化配置文件"><a href="#3-5-初始化配置文件" class="headerlink" title="3.5 初始化配置文件"></a>3.5 初始化配置文件</h3><p>配置文件模板为 <code>$GPHOME/docs/cli_help/gpconfigs/gpinitsystem_config</code></p>
+<pre class=" language-bash"><code class="language-bash"><span class="token punctuation">[</span>gpadmin@localhost ~<span class="token punctuation">]</span>$ <span class="token function">mkdir</span> /home/gpadmin/gpconfigs
+<span class="token punctuation">[</span>gpadmin@localhost ~<span class="token punctuation">]</span>$ <span class="token function">cd</span> /home/gpadmin/gpconfigs/
+<span class="token punctuation">[</span>gpadmin@localhost gpconfigs<span class="token punctuation">]</span>$ <span class="token function">pwd</span>
+/home/gpadmin/gpconfigs
+
+<span class="token comment" spellcheck="true"># 创建 节点列表文件 hostfile_gpinitsystem</span>
+<span class="token punctuation">[</span>gpadmin@localhost gpconfigs<span class="token punctuation">]</span>$ <span class="token keyword">echo</span> localhost <span class="token operator">></span> hostfile_gpinitsystem
+
+<span class="token comment" spellcheck="true">#将segment节点名称添加到该文件内</span>
+<span class="token punctuation">[</span>gpadmin@localhost gpconfigs<span class="token punctuation">]</span>$ <span class="token function">cat</span> /home/gpadmin/gpconfigs/hostfile_gpinitsystem
+localhost
+
+<span class="token comment" spellcheck="true"># 复制配置文件模板</span>
+<span class="token punctuation">[</span>gpadmin@localhost gpconfigs<span class="token punctuation">]</span>$ <span class="token function">cp</span> <span class="token variable">$GPHOME</span>/docs/cli_help/gpconfigs/gpinitsystem_config <span class="token keyword">.</span>
+
+<span class="token comment" spellcheck="true"># 修改配置</span>
+<span class="token punctuation">[</span>gpadmin@localhost gpconfigs<span class="token punctuation">]</span>$ vim gpinitsystem_config
+
+<span class="token comment" spellcheck="true"># 修改以下配置</span>
+
+<span class="token comment" spellcheck="true">#数据库代号</span>
+ARRAY_NAME<span class="token operator">=</span><span class="token string">"Greenplum"</span>
+
+<span class="token comment" spellcheck="true">#segment前缀</span>
+SEG_PREFIX<span class="token operator">=</span>gpseg
+
+<span class="token comment" spellcheck="true">#primary segment 起始的端口号</span>
+PORT_BASE<span class="token operator">=</span>6000
+
+<span class="token comment" spellcheck="true">#指定primary segment的数据目录,网上写的是多个相同目录，多个目录表示一台机器有多个segment</span>
+<span class="token keyword">declare</span> -a DATA_DIRECTORY<span class="token operator">=</span><span class="token punctuation">(</span>/home/gpadmin/data/primary<span class="token punctuation">)</span>
+
+<span class="token comment" spellcheck="true">#master所在机器的host name # 需要修改</span>
+MASTER_HOSTNAME<span class="token operator">=</span>localhost
+
+<span class="token comment" spellcheck="true">#master的数据目录 # 需要修改</span>
+MASTER_DIRECTORY<span class="token operator">=</span>/home/gpadmin/data/master
+
+<span class="token comment" spellcheck="true">#master的端口</span>
+MASTER_PORT<span class="token operator">=</span>5432
+
+<span class="token comment" spellcheck="true">#指定bash的版本</span>
+TRUSTED_SHELL<span class="token operator">=</span>/usr/bin/ssh
+
+<span class="token comment" spellcheck="true">#将日志写入磁盘的间隔，每个段文件通常 =16MB &lt; 2 * CHECK_POINT_SEGMENTS + 1</span>
+CHECK_POINT_SEGMENTS<span class="token operator">=</span>8
+
+<span class="token comment" spellcheck="true">#字符集</span>
+ENCODING<span class="token operator">=</span>UNICODE
+
+<span class="token comment" spellcheck="true">#mirror segment 起始的端口号</span>
+MIRROR_PORT_BASE<span class="token operator">=</span>7000
+
+<span class="token comment" spellcheck="true"># mirror的数据目录，和主数据一样，一个对一个，多个对多个</span>
+<span class="token keyword">declare</span> -a MIRROR_DATA_DIRECTORY<span class="token operator">=</span><span class="token punctuation">(</span>/home/gpadmin/data/mirror<span class="token punctuation">)</span>
+
+DATABASE_NAME<span class="token operator">=</span>Greenplum
+
+MACHINE_LIST_FILE<span class="token operator">=</span>/home/gpadmin/gpconfigs/hostfile_gpinitsystem</code></pre>
+<h2 id="4-Greenplum-初始化"><a href="#4-Greenplum-初始化" class="headerlink" title="4. Greenplum 初始化"></a>4. Greenplum 初始化</h2><pre class=" language-bash"><code class="language-bash"><span class="token punctuation">[</span>gpadmin@localhost gpconfigs<span class="token punctuation">]</span>$ <span class="token function">cd</span> ~
+<span class="token punctuation">[</span>gpadmin@localhost ~<span class="token punctuation">]</span>$ <span class="token function">pwd</span>
+/home/gpadmin
+<span class="token punctuation">[</span>gpadmin@localhost ~<span class="token punctuation">]</span>$ <span class="token function">source</span> /usr/local/gpdb/greenplum_path.sh
+<span class="token punctuation">[</span>gpadmin@localhost ~<span class="token punctuation">]</span>$ gpinitsystem -c gpconfigs/gpinitsystem_config -h gpconfigs/hostfile_gpinitsystem
+<span class="token punctuation">..</span>.
+Continue with Greenplum creation Yy<span class="token operator">|</span>Nn <span class="token punctuation">(</span>default<span class="token operator">=</span>N<span class="token punctuation">)</span>: <span class="token comment" spellcheck="true">#(y)</span>
+<span class="token punctuation">..</span>.
+20200<span class="token punctuation">..</span>. gpstart:localhost:gpadmin-<span class="token punctuation">[</span>INFO<span class="token punctuation">]</span>:-   Successful segment starts                                            <span class="token operator">=</span> 2
+<span class="token punctuation">..</span>.
+20200<span class="token punctuation">..</span>. gpinitsystem:localhost:gpadmin-<span class="token punctuation">[</span>INFO<span class="token punctuation">]</span>:-Greenplum Database instance successfully created
+
+<span class="token comment" spellcheck="true"># GreenPlum 初始化成功</span></code></pre>
+<ul>
+<li>如果出现问题可以去下面路径查看日志</li>
+</ul>
+<pre class=" language-bash"><code class="language-bash"><span class="token function">less</span> /home/gpadmin/gpAdminLogs/</code></pre>
+<h2 id="5-连接-GreenPlum-测试"><a href="#5-连接-GreenPlum-测试" class="headerlink" title="5. 连接 GreenPlum 测试"></a>5. 连接 GreenPlum 测试</h2><pre class=" language-bash"><code class="language-bash"><span class="token comment" spellcheck="true"># 连接GreenPlum</span>
+<span class="token punctuation">[</span>gpadmin@localhost ~<span class="token punctuation">]</span>$ psql -d postgres
+psql <span class="token punctuation">(</span>9.4.24<span class="token punctuation">)</span>
+Type <span class="token string">"help"</span> <span class="token keyword">for</span> help.
+
+postgres<span class="token operator">=</span><span class="token comment" spellcheck="true"># select version();</span>
+                        version
+----------------------------------------------------------
+ PostgreSQL 9.4.24 <span class="token punctuation">(</span>Greenplum Database 6.7.1 build <span class="token punctuation">..</span><span class="token punctuation">..</span><span class="token punctuation">..</span>
+<span class="token punctuation">(</span>1 row<span class="token punctuation">)</span>
+
+<span class="token comment" spellcheck="true"># 查看现有database</span>
+postgres<span class="token operator">=</span><span class="token comment" spellcheck="true"># \l</span>
+                               List of databases
+   Name    <span class="token operator">|</span>  Owner  <span class="token operator">|</span> Encoding <span class="token operator">|</span>  Collate   <span class="token operator">|</span>   Ctype    <span class="token operator">|</span>  Access privileges
+-----------+---------+----------+------------+------------+---------------------
+ postgres  <span class="token operator">|</span> gpadmin <span class="token operator">|</span> UTF8     <span class="token operator">|</span> en_US.utf8 <span class="token operator">|</span> en_US.utf8 <span class="token operator">|</span>
+ template0 <span class="token operator">|</span> gpadmin <span class="token operator">|</span> UTF8     <span class="token operator">|</span> en_US.utf8 <span class="token operator">|</span> en_US.utf8 <span class="token operator">|</span> <span class="token operator">=</span>c/gpadmin         +
+           <span class="token operator">|</span>         <span class="token operator">|</span>          <span class="token operator">|</span>            <span class="token operator">|</span>            <span class="token operator">|</span> gpadmin<span class="token operator">=</span>CTc/gpadmin
+ template1 <span class="token operator">|</span> gpadmin <span class="token operator">|</span> UTF8     <span class="token operator">|</span> en_US.utf8 <span class="token operator">|</span> en_US.utf8 <span class="token operator">|</span> <span class="token operator">=</span>c/gpadmin         +
+           <span class="token operator">|</span>         <span class="token operator">|</span>          <span class="token operator">|</span>            <span class="token operator">|</span>            <span class="token operator">|</span> gpadmin<span class="token operator">=</span>CTc/gpadmin
+<span class="token punctuation">(</span>3 rows<span class="token punctuation">)</span>
+
+<span class="token comment" spellcheck="true"># 新建database</span>
+postgres<span class="token operator">=</span><span class="token comment" spellcheck="true"># create database test;</span>
+CREATE DATABASE
+
+<span class="token comment" spellcheck="true"># 查看 database 是否创建成功</span>
+postgres<span class="token operator">=</span><span class="token comment" spellcheck="true"># \l</span>
+                               List of databases
+   Name    <span class="token operator">|</span>  Owner  <span class="token operator">|</span> Encoding <span class="token operator">|</span>  Collate   <span class="token operator">|</span>   Ctype    <span class="token operator">|</span>  Access privileges
+-----------+---------+----------+------------+------------+---------------------
+ postgres  <span class="token operator">|</span> gpadmin <span class="token operator">|</span> UTF8     <span class="token operator">|</span> en_US.utf8 <span class="token operator">|</span> en_US.utf8 <span class="token operator">|</span>
+ template0 <span class="token operator">|</span> gpadmin <span class="token operator">|</span> UTF8     <span class="token operator">|</span> en_US.utf8 <span class="token operator">|</span> en_US.utf8 <span class="token operator">|</span> <span class="token operator">=</span>c/gpadmin         +
+           <span class="token operator">|</span>         <span class="token operator">|</span>          <span class="token operator">|</span>            <span class="token operator">|</span>            <span class="token operator">|</span> gpadmin<span class="token operator">=</span>CTc/gpadmin
+ template1 <span class="token operator">|</span> gpadmin <span class="token operator">|</span> UTF8     <span class="token operator">|</span> en_US.utf8 <span class="token operator">|</span> en_US.utf8 <span class="token operator">|</span> <span class="token operator">=</span>c/gpadmin         +
+           <span class="token operator">|</span>         <span class="token operator">|</span>          <span class="token operator">|</span>            <span class="token operator">|</span>            <span class="token operator">|</span> gpadmin<span class="token operator">=</span>CTc/gpadmin
+ <span class="token function">test</span>      <span class="token operator">|</span> gpadmin <span class="token operator">|</span> UTF8     <span class="token operator">|</span> en_US.utf8 <span class="token operator">|</span> en_US.utf8 <span class="token operator">|</span>
+<span class="token punctuation">(</span>4 rows<span class="token punctuation">)</span>
+
+<span class="token comment" spellcheck="true"># 退出命令行</span>
+postgres<span class="token operator">=</span><span class="token comment" spellcheck="true"># \q</span>
+<span class="token punctuation">[</span>gpadmin@localhost ~<span class="token punctuation">]</span>$</code></pre>
+<p>命令集参考文档：<a href="https://gpdb.docs.pivotal.io/6-7/ref_guide/sql_commands/sql_ref.html" target="_blank" rel="noopener">https://gpdb.docs.pivotal.io/6-7/ref_guide/sql_commands/sql_ref.html</a></p>
+<h2 id="6-远程登录授权"><a href="#6-远程登录授权" class="headerlink" title="6. 远程登录授权"></a>6. 远程登录授权</h2><ul>
+<li>为 gpadmin 用户创建密码</li>
+</ul>
+<pre class=" language-bash"><code class="language-bash"><span class="token punctuation">[</span>gpadmin@localhost ~<span class="token punctuation">]</span>$ psql -d postgres
+psql <span class="token punctuation">(</span>9.4.24<span class="token punctuation">)</span>
+Type <span class="token string">"help"</span> <span class="token keyword">for</span> help.
+
+postgres<span class="token operator">=</span><span class="token comment" spellcheck="true">#</span>
+postgres<span class="token operator">=</span><span class="token comment" spellcheck="true">#</span>
+postgres<span class="token operator">=</span><span class="token comment" spellcheck="true"># alter role gpadmin with password '123456';</span>
+ALTER ROLE
+postgres<span class="token operator">=</span><span class="token comment" spellcheck="true">#</span>
+</code></pre>
+<ul>
+<li>修改授权文件</li>
+</ul>
+<pre class=" language-bash"><code class="language-bash"><span class="token punctuation">[</span>gpadmin@localhost ~<span class="token punctuation">]</span>$ vim /home/gpadmin/data/master/gpseg-1/pg_hba.conf
+<span class="token comment" spellcheck="true">#在末尾追加如下内容</span>
+
+host     all         gpadmin         localhost/16   trust
+
+<span class="token comment" spellcheck="true"># 重启 GreenPlum</span>
+
+<span class="token punctuation">[</span>gpadmin@localhost ~<span class="token punctuation">]</span>$ gpstop -M fast -a
+
+<span class="token punctuation">[</span>gpadmin@localhost ~<span class="token punctuation">]</span>$ gpstart -a
+
+</code></pre>
+<ul>
+<li>配置说明</li>
+</ul>
+<table>
+<thead>
+<tr>
+<th>连接方式</th>
+<th>连接的数据库</th>
+<th>连接的用户</th>
+<th>要连接GP的主机IP</th>
+<th>认证方式</th>
+</tr>
+</thead>
+<tbody><tr>
+<td>host</td>
+<td>all</td>
+<td>gpadmin</td>
+<td>localhost/16</td>
+<td>trust</td>
+</tr>
+</tbody></table>
+<h2 id="7-启停命令与日志"><a href="#7-启停命令与日志" class="headerlink" title="7. 启停命令与日志"></a>7. 启停命令与日志</h2><table>
+<thead>
+<tr>
+<th>说明</th>
+<th>命令</th>
+</tr>
+</thead>
+<tbody><tr>
+<td>启动</td>
+<td>gpstart</td>
+</tr>
+<tr>
+<td>关闭</td>
+<td>gpstop</td>
+</tr>
+<tr>
+<td>状态</td>
+<td>gpstate</td>
+</tr>
+<tr>
+<td>日志地址</td>
+<td>/home/gpadmin/gpAdminLogs</td>
+</tr>
+<tr>
+<td>日志地址</td>
+<td>/home/gpadmin/data/mirror/gpseg1/pg_log</td>
+</tr>
+<tr>
+<td>日志地址</td>
+<td>/home/gpadmin/data/primary/gpseg0/pg_log</td>
+</tr>
+</tbody></table>
+<script type="text/javascript" src="https://cdn.jsdelivr.net/npm/kity@2.0.4/dist/kity.min.js"></script><script type="text/javascript" src="https://cdn.jsdelivr.net/npm/kityminder-core@1.4.50/dist/kityminder.core.min.js"></script><script defer="true" type="text/javascript" src="https://cdn.jsdelivr.net/npm/hexo-simple-mindmap@0.2.0/dist/mindmap.min.js"></script><link rel="stylesheet" type="text/css" href="https://cdn.jsdelivr.net/npm/hexo-simple-mindmap@0.2.0/dist/mindmap.min.css">
+            </div>
+            <hr/>
+
+            
+
+    <div class="reprint" id="reprint-statement">
+        
+            <div class="reprint__author">
+                <span class="reprint-meta" style="font-weight: bold;">
+                    <i class="fas fa-user">
+                        文章作者:
+                    </i>
+                </span>
+                <span class="reprint-info">
+                    <a href="https://www.hnbian.cn" rel="external nofollow noreferrer">hnbian</a>
+                </span>
+            </div>
+            <div class="reprint__type">
+                <span class="reprint-meta" style="font-weight: bold;">
+                    <i class="fas fa-link">
+                        文章链接:
+                    </i>
+                </span>
+                <span class="reprint-info">
+                    <a href="https://www.hnbian.cn/posts/2b892042.html">https://www.hnbian.cn/posts/2b892042.html</a>
+                </span>
+            </div>
+            <div class="reprint__notice">
+                <span class="reprint-meta" style="font-weight: bold;">
+                    <i class="fas fa-copyright">
+                        版权声明:
+                    </i>
+                </span>
+                <span class="reprint-info">
+                    本博客所有文章除特別声明外，均采用
+                    <a href="https://creativecommons.org/licenses/by/4.0/deed.zh" rel="external nofollow noreferrer" target="_blank">CC BY 4.0</a>
+                    许可协议。转载请注明来源
+                    <a href="https://www.hnbian.cn" target="_blank">hnbian</a>
+                    !
+                </span>
+            </div>
+        
+    </div>
+
+    <script async defer>
+      document.addEventListener("copy", function (e) {
+        let toastHTML = '<span>复制成功，请遵循本文的转载规则</span><button class="btn-flat toast-action" onclick="navToReprintStatement()" style="font-size: smaller">查看</a>';
+        M.toast({html: toastHTML})
+      });
+
+      function navToReprintStatement() {
+        $("html, body").animate({scrollTop: $("#reprint-statement").offset().top - 80}, 800);
+      }
+    </script>
+
+
+
+            <div class="tag_share" style="display: block;">
+                <div class="post-meta__tag-list" style="display: inline-block;">
+                    
+                        <div class="article-tag">
+                            
+                                <a href="/tags/greenplum/">
+                                    <span class="chip bg-color">greenplum</span>
+                                </a>
+                            
+                        </div>
+                    
+                </div>
+                <div class="post_share" style="zoom: 80%; width: fit-content; display: inline-block; float: right; margin: -0.15rem 0;">
+                    <link rel="stylesheet" type="text/css" href="/libs/share/css/share.min.css">
+
+<div id="article-share">
+    
+    
+    <div class="social-share" data-sites="twitter,facebook,google,qq,qzone,wechat,weibo,douban,linkedin" data-wechat-qrcode-helper="<p>微信扫一扫即可分享！</p>"></div>
+    <script src="/libs/share/js/social-share.min.js"></script>
+    
+
+    
+
+</div>
+
+                </div>
+            </div>
+            
+                <style>
+    #reward {
+        margin: 40px 0;
+        text-align: center;
+    }
+
+    #reward .reward-link {
+        font-size: 1.4rem;
+        line-height: 38px;
+    }
+
+    #reward .btn-floating:hover {
+        box-shadow: 0 6px 12px rgba(0, 0, 0, 0.2), 0 5px 15px rgba(0, 0, 0, 0.2);
+    }
+
+    #rewardModal {
+        width: 320px;
+        height: 350px;
+    }
+
+    #rewardModal .reward-title {
+        margin: 15px auto;
+        padding-bottom: 5px;
+    }
+
+    #rewardModal .modal-content {
+        padding: 10px;
+    }
+
+    #rewardModal .close {
+        position: absolute;
+        right: 15px;
+        top: 15px;
+        color: rgba(0, 0, 0, 0.5);
+        font-size: 1.3rem;
+        line-height: 20px;
+        cursor: pointer;
+    }
+
+    #rewardModal .close:hover {
+        color: #ef5350;
+        transform: scale(1.3);
+        -moz-transform:scale(1.3);
+        -webkit-transform:scale(1.3);
+        -o-transform:scale(1.3);
+    }
+
+    #rewardModal .reward-tabs {
+        margin: 0 auto;
+        width: 210px;
+    }
+
+    .reward-tabs .tabs {
+        height: 38px;
+        margin: 10px auto;
+        padding-left: 0;
+    }
+
+    .reward-content ul {
+        padding-left: 0 !important;
+    }
+
+    .reward-tabs .tabs .tab {
+        height: 38px;
+        line-height: 38px;
+    }
+
+    .reward-tabs .tab a {
+        color: #fff;
+        background-color: #ccc;
+    }
+
+    .reward-tabs .tab a:hover {
+        background-color: #ccc;
+        color: #fff;
+    }
+
+    .reward-tabs .wechat-tab .active {
+        color: #fff !important;
+        background-color: #22AB38 !important;
+    }
+
+    .reward-tabs .alipay-tab .active {
+        color: #fff !important;
+        background-color: #019FE8 !important;
+    }
+
+    .reward-tabs .reward-img {
+        width: 210px;
+        height: 210px;
+    }
+</style>
+
+<div id="reward">
+    <a href="#rewardModal" class="reward-link modal-trigger btn-floating btn-medium waves-effect waves-light red">赏</a>
+
+    <!-- Modal Structure -->
+    <div id="rewardModal" class="modal">
+        <div class="modal-content">
+            <a class="close modal-close"><i class="fas fa-times"></i></a>
+            <h4 class="reward-title">你的赏识是我前进的动力</h4>
+            <div class="reward-content">
+                <div class="reward-tabs">
+                    <ul class="tabs row">
+                        <li class="tab col s6 alipay-tab waves-effect waves-light"><a href="#alipay">支付宝</a></li>
+                        <li class="tab col s6 wechat-tab waves-effect waves-light"><a href="#wechat">微 信</a></li>
+                    </ul>
+                    <div id="alipay">
+                        <img src="/medias/reward/alipay.jpg" class="reward-img" alt="支付宝打赏二维码">
+                    </div>
+                    <div id="wechat">
+                        <img src="/medias/reward/wechat.jpg" class="reward-img" alt="微信打赏二维码">
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<script>
+    $(function () {
+        $('.tabs').tabs();
+    });
+</script>
+            
+        </div>
+    </div>
+
+    
+
+    
+
+    
+
+    
+
+    
+        <style>
+    .valine-card {
+        margin: 1.5rem auto;
+    }
+
+    .valine-card .card-content {
+        padding: 20px 20px 5px 20px;
+    }
+
+    #vcomments textarea {
+        box-sizing: border-box;
+        background: url("/medias/comment_bg.png") 100% 100% no-repeat;
+    }
+
+    #vcomments p {
+        margin: 2px 2px 10px;
+        font-size: 1.05rem;
+        line-height: 1.78rem;
+    }
+
+    #vcomments blockquote p {
+        text-indent: 0.2rem;
+    }
+
+    #vcomments a {
+        padding: 0 2px;
+        color: #4cbf30;
+        font-weight: 500;
+        text-decoration: none;
+    }
+
+    #vcomments img {
+        max-width: 100%;
+        height: auto;
+        cursor: pointer;
+    }
+
+    #vcomments ol li {
+        list-style-type: decimal;
+    }
+
+    #vcomments ol,
+    ul {
+        display: block;
+        padding-left: 2em;
+        word-spacing: 0.05rem;
+    }
+
+    #vcomments ul li,
+    ol li {
+        display: list-item;
+        line-height: 1.8rem;
+        font-size: 1rem;
+    }
+
+    #vcomments ul li {
+        list-style-type: disc;
+    }
+
+    #vcomments ul ul li {
+        list-style-type: circle;
+    }
+
+    #vcomments table, th, td {
+        padding: 12px 13px;
+        border: 1px solid #dfe2e5;
+    }
+
+    #vcomments table, th, td {
+        border: 0;
+    }
+
+    table tr:nth-child(2n), thead {
+        background-color: #fafafa;
+    }
+
+    #vcomments table th {
+        background-color: #f2f2f2;
+        min-width: 80px;
+    }
+
+    #vcomments table td {
+        min-width: 80px;
+    }
+
+    #vcomments h1 {
+        font-size: 1.85rem;
+        font-weight: bold;
+        line-height: 2.2rem;
+    }
+
+    #vcomments h2 {
+        font-size: 1.65rem;
+        font-weight: bold;
+        line-height: 1.9rem;
+    }
+
+    #vcomments h3 {
+        font-size: 1.45rem;
+        font-weight: bold;
+        line-height: 1.7rem;
+    }
+
+    #vcomments h4 {
+        font-size: 1.25rem;
+        font-weight: bold;
+        line-height: 1.5rem;
+    }
+
+    #vcomments h5 {
+        font-size: 1.1rem;
+        font-weight: bold;
+        line-height: 1.4rem;
+    }
+
+    #vcomments h6 {
+        font-size: 1rem;
+        line-height: 1.3rem;
+    }
+
+    #vcomments p {
+        font-size: 1rem;
+        line-height: 1.5rem;
+    }
+
+    #vcomments hr {
+        margin: 12px 0;
+        border: 0;
+        border-top: 1px solid #ccc;
+    }
+
+    #vcomments blockquote {
+        margin: 15px 0;
+        border-left: 5px solid #42b983;
+        padding: 1rem 0.8rem 0.3rem 0.8rem;
+        color: #666;
+        background-color: rgba(66, 185, 131, .1);
+    }
+
+    #vcomments pre {
+        font-family: monospace, monospace;
+        padding: 1.2em;
+        margin: .5em 0;
+        background: #272822;
+        overflow: auto;
+        border-radius: 0.3em;
+        tab-size: 4;
+    }
+
+    #vcomments code {
+        font-family: monospace, monospace;
+        padding: 1px 3px;
+        font-size: 0.92rem;
+        color: #e96900;
+        background-color: #f8f8f8;
+        border-radius: 2px;
+    }
+
+    #vcomments pre code {
+        font-family: monospace, monospace;
+        padding: 0;
+        color: #e8eaf6;
+        background-color: #272822;
+    }
+
+    #vcomments pre[class*="language-"] {
+        padding: 1.2em;
+        margin: .5em 0;
+    }
+
+    #vcomments code[class*="language-"],
+    pre[class*="language-"] {
+        color: #e8eaf6;
+    }
+
+    #vcomments [type="checkbox"]:not(:checked), [type="checkbox"]:checked {
+        position: inherit;
+        margin-left: -1.3rem;
+        margin-right: 0.4rem;
+        margin-top: -1px;
+        vertical-align: middle;
+        left: unset;
+        visibility: visible;
+    }
+
+    #vcomments b,
+    strong {
+        font-weight: bold;
+    }
+
+    #vcomments dfn {
+        font-style: italic;
+    }
+
+    #vcomments small {
+        font-size: 85%;
+    }
+
+    #vcomments cite {
+        font-style: normal;
+    }
+
+    #vcomments mark {
+        background-color: #fcf8e3;
+        padding: .2em;
+    }
+
+    #vcomments table, th, td {
+        padding: 12px 13px;
+        border: 1px solid #dfe2e5;
+    }
+
+    table tr:nth-child(2n), thead {
+        background-color: #fafafa;
+    }
+
+    #vcomments table th {
+        background-color: #f2f2f2;
+        min-width: 80px;
+    }
+
+    #vcomments table td {
+        min-width: 80px;
+    }
+
+    #vcomments [type="checkbox"]:not(:checked), [type="checkbox"]:checked {
+        position: inherit;
+        margin-left: -1.3rem;
+        margin-right: 0.4rem;
+        margin-top: -1px;
+        vertical-align: middle;
+        left: unset;
+        visibility: visible;
+    }
+</style>
+
+<div class="card valine-card" data-aos="fade-up">
+    <div class="comment_headling" style="font-size: 20px; font-weight: 700; position: relative; left: 20px; top: 15px; padding-bottom: 5px;">
+        <i class="fas fa-comments fa-fw" aria-hidden="true"></i>
+        <span>评论</span>
+    </div>
+    <div id="vcomments" class="card-content" style="display: grid">
+    </div>
+</div>
+
+<script src="/libs/valine/av-min.js"></script>
+<script src="https://unpkg.com/valine/dist/Valine.min.js"></script>
+<script>
+    new Valine({
+        el: '#vcomments',
+        appId: 'h1rND3bHC0OqFwzm1UfPQpaY-gzGzoHsz',
+        appKey: 'd7uboDt2WLV2HJCEMHkkLuU4',
+        notify: 'true' === 'true',
+        verify: 'false' === 'true',
+        visitor: 'true' === 'true',
+        avatar: 'identicon',
+        pageSize: '10',
+        lang: 'zh-cn',
+        placeholder: ' 写点什么吧 . . .'
+    });
+</script>
+
+    
+
+    
+
+<article id="prenext-posts" class="prev-next articles">
+    <div class="row article-row">
+        
+        <div class="article col s12 m6" data-aos="fade-up">
+            <div class="article-badge left-badge text-color">
+                <i class="fas fa-chevron-left"></i>&nbsp;上一篇</div>
+            <div class="card">
+                <a href="/posts/579b89c7.html">
+                    <div class="card-image">
+                        
+                        <img src="https://images.hnbian.cn/FqHngy294hlaOHb71U_0KL9ErggW" class="responsive-img" alt="Spark 使用 Hive元数据遇到的一些问题">
+                        
+                        <span class="card-title">Spark 使用 Hive元数据遇到的一些问题</span>
+                    </div>
+                </a>
+                <div class="card-content article-content">
+                    <div class="summary block-with-text">
+                        
+                            Required field ‘client_protocol’ is unset!beeline 出现 org.apache.thrift.TApplicationException: Required field ‘client_pro
+                        
+                    </div>
+                    <div class="publish-info">
+                        <span class="publish-date">
+                            <i class="far fa-clock fa-fw icon-date"></i>2022-02-27
+                        </span>
+                        <span class="publish-author">
+                            
+                            <i class="fas fa-bookmark fa-fw icon-category"></i>
+                            
+                            <a href="/categories/ambari/" class="post-category">
+                                    ambari
+                                </a>
+                            
+                            
+                        </span>
+                    </div>
+                </div>
+                
+                <div class="card-action article-tags">
+                    
+                    <a href="/tags/exception/">
+                        <span class="chip bg-color">exception</span>
+                    </a>
+                    
+                    <a href="/tags/spark/">
+                        <span class="chip bg-color">spark</span>
+                    </a>
+                    
+                    <a href="/tags/hive/">
+                        <span class="chip bg-color">hive</span>
+                    </a>
+                    
+                    <a href="/tags/ambari/">
+                        <span class="chip bg-color">ambari</span>
+                    </a>
+                    
+                </div>
+                
+            </div>
+        </div>
+        
+        
+        <div class="article col s12 m6" data-aos="fade-up">
+            <div class="article-badge right-badge text-color">
+                下一篇&nbsp;<i class="fas fa-chevron-right"></i>
+            </div>
+            <div class="card">
+                <a href="/posts/8e38e034.html">
+                    <div class="card-image">
+                        
+                        <img src="http://images.hnbian.cn//FgHHSA4Tu4X9TBIkRF-MxEbYRRLQ" class="responsive-img" alt="ClickHouse 常见错误码">
+                        
+                        <span class="card-title">ClickHouse 常见错误码</span>
+                    </div>
+                </a>
+                <div class="card-content article-content">
+                    <div class="summary block-with-text">
+                        
+                            1. 介绍ClickHouse 是一种高性能列式数据库管理系统，专为在线分析处理（OLAP）场景设计。它具有高查询性能、水平可扩展性和实时数据更新等优点，广泛应用于大数据分析领域。在使用 ClickHouse 时，用户可能会遇到各种错误。为
+                        
+                    </div>
+                    <div class="publish-info">
+                            <span class="publish-date">
+                                <i class="far fa-clock fa-fw icon-date"></i>2022-01-20
+                            </span>
+                        <span class="publish-author">
+                            
+                            <i class="fas fa-bookmark fa-fw icon-category"></i>
+                            
+                            <a href="/categories/clickhouse/" class="post-category">
+                                    clickhouse
+                                </a>
+                            
+                            
+                        </span>
+                    </div>
+                </div>
+                
+                <div class="card-action article-tags">
+                    
+                    <a href="/tags/exception/">
+                        <span class="chip bg-color">exception</span>
+                    </a>
+                    
+                    <a href="/tags/clickhouse/">
+                        <span class="chip bg-color">clickhouse</span>
+                    </a>
+                    
+                    <a href="/tags/olap/">
+                        <span class="chip bg-color">olap</span>
+                    </a>
+                    
+                </div>
+                
+            </div>
+        </div>
+        
+    </div>
+</article>
+
+</div>
+
+
+
+<!-- 代码块功能依赖 -->
+<script type="text/javascript" src="/libs/codeBlock/codeBlockFuction.js"></script>
+
+<!-- 代码语言 -->
+
+<script type="text/javascript" src="/libs/codeBlock/codeLang.js"></script>
+
+    
+<!-- 代码块复制 -->
+
+
+<!-- 代码块收缩 -->
+
+
+<!-- 代码块折行 -->
+
+<style type="text/css">
+code[class*="language-"], pre[class*="language-"] { white-space: pre !important; }
+</style>
+
+    </div>
+    <div id="toc-aside" class="expanded col l3 hide-on-med-and-down">
+        <div class="toc-widget">
+            <div class="toc-title"><i class="far fa-list-alt"></i>&nbsp;&nbsp;目录</div>
+            <div id="toc-content"></div>
+        </div>
+    </div>
+</div>
+
+<!-- TOC 悬浮按钮. -->
+
+<div id="floating-toc-btn" class="hide-on-med-and-down">
+    <a class="btn-floating btn-large bg-color">
+        <i class="fas fa-list-ul"></i>
+    </a>
+</div>
+
+
+<script src="https://images.hnbian.cn/tocbot.min.js"></script>
+<script>
+    $(function () {
+        tocbot.init({
+            tocSelector: '#toc-content',
+            contentSelector: '#articleContent',
+            headingsOffset: -($(window).height() * 0.4 - 45),
+            collapseDepth: Number('0'),
+            headingSelector: 'h2, h3, h4, h5'
+        });
+
+        // modify the toc link href to support Chinese.
+        let i = 0;
+        let tocHeading = 'toc-heading-';
+        $('#toc-content a').each(function () {
+            $(this).attr('href', '#' + tocHeading + (++i));
+        });
+
+        // modify the heading title id to support Chinese.
+        i = 0;
+        $('#articleContent').children('h2, h3, h4, h5').each(function () {
+            $(this).attr('id', tocHeading + (++i));
+        });
+
+        // Set scroll toc fixed.
+        let tocHeight = parseInt($(window).height() * 0.4 - 64);
+        let $tocWidget = $('.toc-widget');
+        $(window).scroll(function () {
+            let scroll = $(window).scrollTop();
+            /* add post toc fixed. */
+            if (scroll > tocHeight) {
+                $tocWidget.addClass('toc-fixed');
+            } else {
+                $tocWidget.removeClass('toc-fixed');
+            }
+        });
+
+        
+        /* 修复文章卡片 div 的宽度. */
+        let fixPostCardWidth = function (srcId, targetId) {
+            let srcDiv = $('#' + srcId);
+            if (srcDiv.length === 0) {
+                return;
+            }
+
+            let w = srcDiv.width();
+            if (w >= 450) {
+                w = w + 21;
+            } else if (w >= 350 && w < 450) {
+                w = w + 18;
+            } else if (w >= 300 && w < 350) {
+                w = w + 16;
+            } else {
+                w = w + 14;
+            }
+            $('#' + targetId).width(w);
+        };
+
+        // 切换TOC目录展开收缩的相关操作.
+        const expandedClass = 'expanded';
+        let $tocAside = $('#toc-aside');
+        let $mainContent = $('#main-content');
+        $('#floating-toc-btn .btn-floating').click(function () {
+            if ($tocAside.hasClass(expandedClass)) {
+                $tocAside.removeClass(expandedClass).hide();
+                $mainContent.removeClass('l9');
+            } else {
+                $tocAside.addClass(expandedClass).show();
+                $mainContent.addClass('l9');
+            }
+            fixPostCardWidth('artDetail', 'prenext-posts');
+        });
+        
+    });
+</script>
+
+    
+
+</main>
+
+
+
+    <footer class="page-footer bg-color">
+    <div class="container row center-align" style="margin-bottom: 15px !important;">
+        <div class="col s12 m8 l8 copy-right">
+            Copyright&nbsp;&copy;
+            <span id="year">2019</span>
+            <a href="https://www.hnbian.cn" target="_blank">hnbian</a>
+            |&nbsp;Powered by&nbsp;<a href="https://hexo.io/" target="_blank">Hexo</a>
+            |&nbsp;Theme&nbsp;<a href="https://github.com/blinkfox/hexo-theme-matery" target="_blank">Matery</a>
+            <br>
+            
+            &nbsp;<i class="fas fa-chart-area"></i>&nbsp;站点总字数:&nbsp;<span
+                class="white-color">803.4k</span>&nbsp;字
+            
+            
+            
+            
+            
+            
+            <span id="busuanzi_container_site_pv">
+                |&nbsp;<i class="far fa-eye"></i>&nbsp;总访问量:&nbsp;<span id="busuanzi_value_site_pv"
+                    class="white-color"></span>&nbsp;次
+            </span>
+            
+            
+            <span id="busuanzi_container_site_uv">
+                |&nbsp;<i class="fas fa-users"></i>&nbsp;总访问人数:&nbsp;<span id="busuanzi_value_site_uv"
+                    class="white-color"></span>&nbsp;人
+            </span>
+            
+            <br>
+            
+            <span id="sitetime">载入运行时间...</span>
+            <script>
+                function siteTime() {
+                    var seconds = 1000;
+                    var minutes = seconds * 60;
+                    var hours = minutes * 60;
+                    var days = hours * 24;
+                    var years = days * 365;
+                    var today = new Date();
+                    var startYear = "2019";
+                    var startMonth = "6";
+                    var startDate = "28";
+                    var startHour = "0";
+                    var startMinute = "0";
+                    var startSecond = "0";
+                    var todayYear = today.getFullYear();
+                    var todayMonth = today.getMonth() + 1;
+                    var todayDate = today.getDate();
+                    var todayHour = today.getHours();
+                    var todayMinute = today.getMinutes();
+                    var todaySecond = today.getSeconds();
+                    var t1 = Date.UTC(startYear, startMonth, startDate, startHour, startMinute, startSecond);
+                    var t2 = Date.UTC(todayYear, todayMonth, todayDate, todayHour, todayMinute, todaySecond);
+                    var diff = t2 - t1;
+                    var diffYears = Math.floor(diff / years);
+                    var diffDays = Math.floor((diff / days) - diffYears * 365);
+                    var diffHours = Math.floor((diff - (diffYears * 365 + diffDays) * days) / hours);
+                    var diffMinutes = Math.floor((diff - (diffYears * 365 + diffDays) * days - diffHours * hours) /
+                        minutes);
+                    var diffSeconds = Math.floor((diff - (diffYears * 365 + diffDays) * days - diffHours * hours -
+                        diffMinutes * minutes) / seconds);
+                    if (startYear == todayYear) {
+                        document.getElementById("year").innerHTML = todayYear;
+                        document.getElementById("sitetime").innerHTML = "本站已安全运行 " + diffDays + " 天 " + diffHours +
+                            " 小时 " + diffMinutes + " 分钟 " + diffSeconds + " 秒";
+                    } else {
+                        document.getElementById("year").innerHTML = startYear + " - " + todayYear;
+                        document.getElementById("sitetime").innerHTML = "本站已安全运行 " + diffYears + " 年 " + diffDays +
+                            " 天 " + diffHours + " 小时 " + diffMinutes + " 分钟 " + diffSeconds + " 秒";
+                    }
+                }
+                setInterval(siteTime, 1000);
+            </script>
+            
+            <br>
+            
+            <span id="icp"><img src="/medias/icp.png" style="vertical-align: text-bottom;" />
+                <a href="https://beian.miit.gov.cn" target="_blank">粤ICP备18156920号-2</a>
+            </span>
+            
+        </div>
+        <div class="col s12 m4 l4 social-link social-statis">
+    <a href="https://github.com/hnbian" class="tooltipped" target="_blank" data-tooltip="访问我的GitHub" data-position="top" data-delay="50">
+        <i class="fab fa-github"></i>
+    </a>
+
+
+
+    <a href="mailto:hnbian@126.com" class="tooltipped" target="_blank" data-tooltip="邮件联系我" data-position="top" data-delay="50">
+        <i class="fas fa-envelope-open"></i>
+    </a>
+
+
+
+
+
+
+
+
+
+
+
+
+
+</div>
+    </div>
+</footer>
+
+<div class="progress-bar"></div>
+
+
+    <!-- 搜索遮罩框 -->
+<div id="searchModal" class="modal">
+    <div class="modal-content">
+        <div class="search-header">
+            <span class="title"><i class="fas fa-search"></i>&nbsp;&nbsp;搜索</span>
+            <input type="search" id="searchInput" name="s" placeholder="请输入搜索的关键字"
+                   class="search-input">
+        </div>
+        <div id="searchResult"></div>
+    </div>
+</div>
+
+<script src="/js/search.js"></script>
+<script type="text/javascript">
+$(function () {
+    searchFunc("/" + "search.xml", 'searchInput', 'searchResult');
+});
+</script>
+    <!-- 回到顶部按钮 -->
+<div id="backTop" class="top-scroll">
+    <a class="btn-floating btn-large waves-effect waves-light" href="#!">
+        <i class="fas fa-arrow-up"></i>
+    </a>
+</div>
+
+
+    <script src="https://images.hnbian.cn/materialize.min.js"></script>
+    <script src="https://images.hnbian.cn/masonry.pkgd.min.js"></script>
+    <script src="https://images.hnbian.cn/aos.js"></script>
+    <script src="https://images.hnbian.cn/scrollProgress.min.js"></script>
+    <script src="https://images.hnbian.cn/lightgallery-all.min.js"></script>
+    <script src="/js/matery.js"></script>
+
+    <!-- Global site tag (gtag.js) - Google Analytics -->
+
+    <script async src="https://www.googletagmanager.com/gtag/js?id=UA-155985521-1"></script>
+    <script>
+        window.dataLayer = window.dataLayer || [];
+        function gtag(){dataLayer.push(arguments);}
+        gtag('js', new Date());
+
+        gtag('config', 'UA-155985521-1');
+    </script>
+
+    <!-- Baidu Analytics -->
+
+    <!-- Baidu Push -->
+
+<script>
+    (function () {
+        var bp = document.createElement('script');
+        var curProtocol = window.location.protocol.split(':')[0];
+        if (curProtocol === 'https') {
+            bp.src = 'https://zz.bdstatic.com/linksubmit/push.js';
+        } else {
+            bp.src = 'http://push.zhanzhang.baidu.com/push.js';
+        }
+        var s = document.getElementsByTagName("script")[0];
+        s.parentNode.insertBefore(bp, s);
+    })();
+</script>
+
+    
+    <script src="https://images.hnbian.cn/clicklove.js" async="async"></script>
+    
+    
+    <script async src="https://busuanzi.ibruce.info/busuanzi/2.3/busuanzi.pure.mini.js"></script>
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+    <script type="text/javascript" src="https://images.hnbian.cn/ribbon-dynamic.js" async="async"></script>
+    
+    
+    
+    <script src="https://images.hnbian.cn/instantpage.js" type="module"></script>
+    
+
+</body>
+
+</html>
