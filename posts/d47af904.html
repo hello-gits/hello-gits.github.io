@@ -607,23 +607,23 @@
 <pre class=" language-bash"><code class="language-bash">http://node1:8088/proxy/application_1624419433039_1569885/mapreduce/singletaskcounter/task_1624419433039_1569885_r_000000/org.apache.hadoop.mapreduce.FileSystemCounter</code></pre>
 <p>通过输入记录数，普通的 task counter 如下，输入的记录数是 13 亿多:</p>
 <p><img src="https://images.hnbian.cn/202305041416396.png?imageView2/0/interlace/1/q/70%7Cwatermark/2/text/d3d3LmhuYmlhbi5jbg==/font/5b6u6L2v6ZuF6buR/fontsize/600/fill/IzBDMjU2NA==/dissolve/100/gravity/SouthEast/dx/10/dy/10%7Cimageslim" alt></p>
-<p><img src="https://images.hnbian.cn/202305041416260.png?imageView2/0/interlace/1/q/70%7Cwatermark/2/text/d3d3LmhuYmlhbi5jbg==/font/5b6u6L2v6ZuF6buR/fontsize/600/fill/IzBDMjU2NA==/dissolve/100/gravity/SouthEast/dx/10/dy/10%7Cimageslim" alt="04-lqePZugrX-transformed"></p>
+<p><img src="https://images.hnbian.cn/202305041416260.png?imageView2/0/interlace/1/q/70%7Cwatermark/2/text/d3d3LmhuYmlhbi5jbg==/font/5b6u6L2v6ZuF6buR/fontsize/600/fill/IzBDMjU2NA==/dissolve/100/gravity/SouthEast/dx/10/dy/10%7Cimageslim" alt></p>
 <p>而 task=000000 的 counter 如下，其输入记录数是 230 多亿。是其他任务的 100 多倍：</p>
-<p><img src="https://images.hnbian.cn/202305041416823.png?imageView2/0/interlace/1/q/70%7Cwatermark/2/text/d3d3LmhuYmlhbi5jbg==/font/5b6u6L2v6ZuF6buR/fontsize/600/fill/IzBDMjU2NA==/dissolve/100/gravity/SouthEast/dx/10/dy/10%7Cimageslim" alt="05-t_E4ElBTU-transformed"></p>
+<p><img src="https://images.hnbian.cn/202305041416823.png?imageView2/0/interlace/1/q/70%7Cwatermark/2/text/d3d3LmhuYmlhbi5jbg==/font/5b6u6L2v6ZuF6buR/fontsize/600/fill/IzBDMjU2NA==/dissolve/100/gravity/SouthEast/dx/10/dy/10%7Cimageslim" alt></p>
 <h3 id="5-3-确定任务卡住的-stage"><a href="#5-3-确定任务卡住的-stage" class="headerlink" title="5.3 确定任务卡住的 stage"></a>5.3 确定任务卡住的 stage</h3><p>通过 jobname 确定 stage：</p>
 <p><strong>一般 Hive 默认的 jobname 名称会带上 stage 阶段，如下通过 jobname 看到任务卡住的为 Stage-4：</strong></p>
-<p><img src="https://images.hnbian.cn/202305041417787.png?imageView2/0/interlace/1/q/70%7Cwatermark/2/text/d3d3LmhuYmlhbi5jbg==/font/5b6u6L2v6ZuF6buR/fontsize/600/fill/IzBDMjU2NA==/dissolve/100/gravity/SouthEast/dx/10/dy/10%7Cimageslim" alt="06-aEnAbdnNg-transformed"></p>
+<p><img src="https://images.hnbian.cn/202305041417787.png?imageView2/0/interlace/1/q/70%7Cwatermark/2/text/d3d3LmhuYmlhbi5jbg==/font/5b6u6L2v6ZuF6buR/fontsize/600/fill/IzBDMjU2NA==/dissolve/100/gravity/SouthEast/dx/10/dy/10%7Cimageslim" alt></p>
 <ul>
 <li><p>如果 jobname 是自定义的，那可能没法通过 jobname 判断 stage。需要借助于任务日志：</p>
 <p>找到执行特别慢的那个 task，然后 Ctrl+F 搜索 “CommonJoinOperator: JOIN struct” 。Hive 在 join 的时候，会把 join 的 key 打印到日志中。如下：</p>
 </li>
 </ul>
-<p><img src="https://images.hnbian.cn/202305041418935.png?imageView2/0/interlace/1/q/70%7Cwatermark/2/text/d3d3LmhuYmlhbi5jbg==/font/5b6u6L2v6ZuF6buR/fontsize/600/fill/IzBDMjU2NA==/dissolve/100/gravity/SouthEast/dx/10/dy/10%7Cimageslim" alt="07-_AQk2tCeA-transformed"></p>
+<p><img src="https://images.hnbian.cn/202305041418935.png?imageView2/0/interlace/1/q/70%7Cwatermark/2/text/d3d3LmhuYmlhbi5jbg==/font/5b6u6L2v6ZuF6buR/fontsize/600/fill/IzBDMjU2NA==/dissolve/100/gravity/SouthEast/dx/10/dy/10%7Cimageslim" alt></p>
 <p>上图中的关键信息是：<strong>struct&lt;_col0:string, _col1:string, _col3:string&gt;</strong></p>
 <p>这时候，需要参考该 SQL 的执行计划。通过参考执行计划，可以断定该阶段为 Stage-4 阶段：</p>
-<p><img src="https://images.hnbian.cn/202305041419354.png?imageView2/0/interlace/1/q/70%7Cwatermark/2/text/d3d3LmhuYmlhbi5jbg==/font/5b6u6L2v6ZuF6buR/fontsize/600/fill/IzBDMjU2NA==/dissolve/100/gravity/SouthEast/dx/10/dy/10%7Cimageslim" alt="08-jJgPNebXN-transformed"></p>
+<p><img src="https://images.hnbian.cn/202305041419354.png?imageView2/0/interlace/1/q/70%7Cwatermark/2/text/d3d3LmhuYmlhbi5jbg==/font/5b6u6L2v6ZuF6buR/fontsize/600/fill/IzBDMjU2NA==/dissolve/100/gravity/SouthEast/dx/10/dy/10%7Cimageslim" alt></p>
 <h3 id="5-4-确定-SQL-执行代码"><a href="#5-4-确定-SQL-执行代码" class="headerlink" title="5.4 确定 SQL 执行代码"></a>5.4 确定 SQL 执行代码</h3><p>确定了执行阶段，即 stage。通过执行计划，则可以判断出是执行哪段代码时出现了倾斜。还是从此图，这个 stage 中进行连接操作的表别名是 d：</p>
-<p><img src="https://images.hnbian.cn/202305041419288.png?imageView2/0/interlace/1/q/70%7Cwatermark/2/text/d3d3LmhuYmlhbi5jbg==/font/5b6u6L2v6ZuF6buR/fontsize/600/fill/IzBDMjU2NA==/dissolve/100/gravity/SouthEast/dx/10/dy/10%7Cimageslim" alt="09-M2Dm4QVC9-transformed"></p>
+<p><img src="https://images.hnbian.cn/202305041419288.png?imageView2/0/interlace/1/q/70%7Cwatermark/2/text/d3d3LmhuYmlhbi5jbg==/font/5b6u6L2v6ZuF6buR/fontsize/600/fill/IzBDMjU2NA==/dissolve/100/gravity/SouthEast/dx/10/dy/10%7Cimageslim" alt></p>
 <p>就可以推测出是在执行下面红框中代码时出现了数据倾斜，因为这行的表的别名是 d：</p>
 <pre class=" language-sql"><code class="language-sql"><span class="token keyword">select</span>
   <span class="token number">a</span><span class="token punctuation">.</span>userkey<span class="token punctuation">,</span>
@@ -1452,7 +1452,7 @@ code[class*="language-"], pre[class*="language-"] { white-space: pre !important;
             <br>
             
             &nbsp;<i class="fas fa-chart-area"></i>&nbsp;站点总字数:&nbsp;<span
-                class="white-color">803.4k</span>&nbsp;字
+                class="white-color">804.3k</span>&nbsp;字
             
             
             
