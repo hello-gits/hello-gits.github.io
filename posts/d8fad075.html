@@ -27,8 +27,8 @@
     <script src="https://images.hnbian.cn/jquery.min.mind.js"></script>
     <script data-ad-client="ca-pub-5756598031349071" async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js"></script>
     <meta name="google-site-verification" content="GrFMoauFrf8T4o0YL7D2b8YqhXQwVruyJKGw57gZ8J4">
-<link rel="stylesheet" href="/css/prism-tomorrow.css" type="text/css"><link rel="alternate" href="/atom.xml" title="hnbian" type="application/atom+xml">
-</head>
+<link rel="alternate" href="/atom.xml" title="hnbian" type="application/atom+xml">
+<link rel="stylesheet" href="/css/prism-tomorrow.css" type="text/css"></head>
 
 
 <body>
@@ -803,7 +803,7 @@ JavaPairRDD<span class="token operator">&lt;</span>String<span class="token punc
                 <span class="token keyword">return</span> <span class="token keyword">new</span> <span class="token class-name">Tuple2</span><span class="token operator">&lt;</span>String<span class="token punctuation">,</span> String<span class="token operator">></span><span class="token punctuation">(</span>key<span class="token punctuation">,</span> <span class="token keyword">new</span> <span class="token class-name">Tuple2</span><span class="token operator">&lt;</span>String<span class="token punctuation">,</span> Row<span class="token operator">></span><span class="token punctuation">(</span>value<span class="token punctuation">,</span> rdd1Value<span class="token punctuation">)</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
             <span class="token punctuation">}</span>
         <span class="token punctuation">}</span><span class="token punctuation">)</span><span class="token punctuation">;</span></code></pre>
-<h3 id="对key分拆join操作"><a href="#对key分拆join操作" class="headerlink" title="对key分拆join操作"></a>对key分拆join操作</h3><ul>
+<h3 id="7-6-对key分拆join操作"><a href="#7-6-对key分拆join操作" class="headerlink" title="7.6 对key分拆join操作"></a>7.6 对key分拆join操作</h3><ul>
 <li><p>适用场景：当两个数据量较大的 RDD/Hive 表进行 join 且无法采用将 reduce join 转为 map join 的方法时，若数据倾斜是由一个 RDD/Hive 表中少数几个 key 的数据量过大而另一个表中所有 key 分布较均匀所导致的，此方案较为合适。</p>
 </li>
 <li><p>实现思路：</p>
@@ -825,7 +825,7 @@ JavaPairRDD<span class="token operator">&lt;</span>String<span class="token punc
 <li><p>缺点：若导致倾斜的 key 数量特别多，如成千上万个 key 都导致数据倾斜，此方案不适用。</p>
 </li>
 </ul>
-<p><img src="https://ask.qcloudimg.com/http-save/yehe-2039230/0990fc3e779564f5d9ed2f60e19cdbfe.png?imageView2/2/w/2560/h/7000" alt></p>
+<p><img src="https://images.hnbian.cn/202305051745522.png?imageView2/0/interlace/1/q/70%7Cwatermark/2/text/d3d3LmhuYmlhbi5jbg==/font/5b6u6L2v6ZuF6buR/fontsize/600/fill/IzBDMjU2NA==/dissolve/100/gravity/SouthEast/dx/10/dy/10%7Cimageslim" alt></p>
 <ul>
 <li>代码示例</li>
 </ul>
@@ -918,8 +918,6 @@ JavaPairRDD<span class="token operator">&lt;</span>Long<span class="token punctu
             <span class="token punctuation">}</span>
         <span class="token punctuation">}</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
 
-
-
 JavaPairRDD<span class="token operator">&lt;</span>Long<span class="token punctuation">,</span> Long<span class="token operator">></span> reversedSampledRDD <span class="token operator">=</span> countedSampledRDD<span class="token punctuation">.</span><span class="token function">mapToPair</span><span class="token punctuation">(</span> 
         <span class="token keyword">new</span> <span class="token class-name">PairFunction</span><span class="token operator">&lt;</span>Tuple2<span class="token operator">&lt;</span>Long<span class="token punctuation">,</span>Long<span class="token operator">></span><span class="token punctuation">,</span> Long<span class="token punctuation">,</span> Long<span class="token operator">></span><span class="token punctuation">(</span><span class="token punctuation">)</span> <span class="token punctuation">{</span>
             <span class="token keyword">private</span> <span class="token keyword">static</span> <span class="token keyword">final</span> <span class="token keyword">long</span> serialVersionUID <span class="token operator">=</span> 1L<span class="token punctuation">;</span>
@@ -1007,7 +1005,7 @@ JavaPairRDD<span class="token operator">&lt;</span>Long<span class="token punctu
 <span class="token comment" spellcheck="true">// 将倾斜key join后的结果与普通key join后的结果，uinon起来。</span>
 <span class="token comment" spellcheck="true">// 就是最终的join结果。</span>
 JavaPairRDD<span class="token operator">&lt;</span>Long<span class="token punctuation">,</span> Tuple2<span class="token operator">&lt;</span>String<span class="token punctuation">,</span> Row<span class="token operator">>></span> joinedRDD <span class="token operator">=</span> joinedRDD1<span class="token punctuation">.</span><span class="token function">union</span><span class="token punctuation">(</span>joinedRDD2<span class="token punctuation">)</span><span class="token punctuation">;</span></code></pre>
-<h3 id="使用随机前缀和扩容RDD进行join"><a href="#使用随机前缀和扩容RDD进行join" class="headerlink" title="使用随机前缀和扩容RDD进行join"></a>使用随机前缀和扩容RDD进行join</h3><ol>
+<h3 id="7-7-使用随机前缀和扩容RDD进行join"><a href="#7-7-使用随机前缀和扩容RDD进行join" class="headerlink" title="7.7 使用随机前缀和扩容RDD进行join"></a>7.7 使用随机前缀和扩容RDD进行join</h3><ol>
 <li>适用场景</li>
 </ol>
 <p>此方案适用于在进行 join 操作时，由于 RDD 中存在大量导致数据倾斜的 key，从而无法通过分拆 key 进行优化的情况。</p>
@@ -1039,7 +1037,7 @@ JavaPairRDD<span class="token operator">&lt;</span>Long<span class="token punctu
 <ol start="6">
 <li>实践经验</li>
 </ol>
-<p>在一个数据需求开发过程中，发现 join 操作导致数据倾斜。优化前，作业执行时间约为 60 分钟；采用此方案优化后，执行时间缩短至 10 分钟，性能提升了 6 倍。</p>
+<p>在一个数据需求开发过程中，发现 join 操作导致数据倾斜。优化前，作业执行时间约为 60 分钟，采用此方案优化后，执行时间缩短至 10 分钟，性能提升了 6 倍。</p>
 <ol start="7">
 <li>代码示例：</li>
 </ol>
@@ -1840,14 +1838,14 @@ code[class*="language-"], pre[class*="language-"] { white-space: pre !important;
     <div class="container row center-align" style="margin-bottom: 15px !important;">
         <div class="col s12 m8 l8 copy-right">
             Copyright&nbsp;&copy;
-            <span id="year">2019</span>
+            <span id="year">2018</span>
             <a href="https://www.hnbian.cn" target="_blank">hnbian</a>
             |&nbsp;Powered by&nbsp;<a href="https://hexo.io/" target="_blank">Hexo</a>
             |&nbsp;Theme&nbsp;<a href="https://github.com/blinkfox/hexo-theme-matery" target="_blank">Matery</a>
             <br>
             
             &nbsp;<i class="fas fa-chart-area"></i>&nbsp;站点总字数:&nbsp;<span
-                class="white-color">804.3k</span>&nbsp;字
+                class="white-color">810.5k</span>&nbsp;字
             
             
             
@@ -1876,9 +1874,9 @@ code[class*="language-"], pre[class*="language-"] { white-space: pre !important;
                     var days = hours * 24;
                     var years = days * 365;
                     var today = new Date();
-                    var startYear = "2019";
-                    var startMonth = "6";
-                    var startDate = "28";
+                    var startYear = "2018";
+                    var startMonth = "2";
+                    var startDate = "08";
                     var startHour = "0";
                     var startMinute = "0";
                     var startSecond = "0";
