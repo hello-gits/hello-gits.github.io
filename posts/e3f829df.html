@@ -542,9 +542,9 @@ Caused by<span class="token operator">:</span> java<span class="token punctuatio
     at org<span class="token punctuation">.</span>apache<span class="token punctuation">.</span>flink<span class="token punctuation">.</span>shaded<span class="token punctuation">.</span>guava18<span class="token punctuation">.</span>com<span class="token punctuation">.</span>google<span class="token punctuation">.</span>common<span class="token punctuation">.</span>cache<span class="token punctuation">.</span>LocalCache$Segment<span class="token punctuation">.</span>lockedGetOrLoad<span class="token punctuation">(</span>LocalCache<span class="token punctuation">.</span>java<span class="token operator">:</span><span class="token number">2282</span><span class="token punctuation">)</span>
     at org<span class="token punctuation">.</span>apache<span class="token punctuation">.</span>flink<span class="token punctuation">.</span>shaded<span class="token punctuation">.</span>guava18<span class="token punctuation">.</span>com<span class="token punctuation">.</span>google<span class="token punctuation">.</span>common<span class="token punctuation">.</span>cache<span class="token punctuation">.</span>LocalCache$Segment<span class="token punctuation">.</span>get<span class="token punctuation">(</span>LocalCache<span class="token punctuation">.</span>java<span class="token operator">:</span><span class="token number">2197</span><span class="token punctuation">)</span>
     <span class="token punctuation">.</span><span class="token punctuation">.</span><span class="token punctuation">.</span> <span class="token number">24</span> more</code></pre>
-<h2 id="2-异常原因"><a href="#2-异常原因" class="headerlink" title="2. 异常原因"></a>2. 异常原因</h2><p>版本冲突导致flink在寻找guava版本的时候shaded错误导致此异常。</p>
-<p><img src="https://images.hnbian.cn/Fl8O8ESKIbl4s9BlCFEMfM0Ow18a" alt="编译器引用的scala-sdk版本是2.11.8"></p>
-<p><img src="https://images.hnbian.cn/FmvmBQKaV0kvQxupcdqt29ikFkuM" alt=" 但是maven引入的scala相关包2.11.12"></p>
+<h2 id="2-异常原因"><a href="#2-异常原因" class="headerlink" title="2. 异常原因"></a>2. 异常原因</h2><p>版本冲突导致 flink 在寻找 guava 版本的时候 shaded 错误导致此异常。</p>
+<p><img src="https://images.hnbian.cn/Fl8O8ESKIbl4s9BlCFEMfM0Ow18a?imageView2/0/interlace/1/q/70%7Cwatermark/2/text/d3d3LmhuYmlhbi5jbg==/font/5b6u6L2v6ZuF6buR/fontsize/600/fill/IzBDMjU2NA==/dissolve/100/gravity/SouthEast/dx/10/dy/10%7Cimageslim" alt="编译器引用的scala-sdk版本是2.11.8"></p>
+<p><img src="https://images.hnbian.cn/FmvmBQKaV0kvQxupcdqt29ikFkuM?imageView2/0/interlace/1/q/70%7Cwatermark/2/text/d3d3LmhuYmlhbi5jbg==/font/5b6u6L2v6ZuF6buR/fontsize/600/fill/IzBDMjU2NA==/dissolve/100/gravity/SouthEast/dx/10/dy/10%7Cimageslim" alt=" 但是maven引入的scala相关包2.11.12"></p>
 <h2 id="3-解决办法"><a href="#3-解决办法" class="headerlink" title="3. 解决办法"></a>3. 解决办法</h2><p>可以在maven中将引入的 Scala 版本改为 2.11.8。</p>
 <pre class=" language-xml"><code class="language-xml"><span class="token tag"><span class="token tag"><span class="token punctuation">&lt;</span>dependency</span><span class="token punctuation">></span></span>
     <span class="token tag"><span class="token tag"><span class="token punctuation">&lt;</span>groupId</span><span class="token punctuation">></span></span>org.scala-lang<span class="token tag"><span class="token tag"><span class="token punctuation">&lt;/</span>groupId</span><span class="token punctuation">></span></span>
@@ -1286,7 +1286,7 @@ code[class*="language-"], pre[class*="language-"] { white-space: pre !important;
             <br>
             
             &nbsp;<i class="fas fa-chart-area"></i>&nbsp;站点总字数:&nbsp;<span
-                class="white-color">810.5k</span>&nbsp;字
+                class="white-color">812.8k</span>&nbsp;字
             
             
             

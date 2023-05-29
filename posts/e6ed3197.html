@@ -4,7 +4,7 @@
 
 <head><meta name="generator" content="Hexo 3.9.0">
     <meta charset="utf-8">
-    <meta name="keywords" content="ClickHouse表引擎 2.MergeTree 索引与数据存储方式, hnbian">
+    <meta name="keywords" content="ClickHouse 表引擎 2.MergeTree 索引与数据存储方式, hnbian">
     <meta name="description" content="1. 一级索引MergeTree 主键使用 primary key 定义，定义主键后，会将数据依据 index_granularity 参数设置的间隔（默认：8192）为表生成一级索引保存到 primary.idx 文件中，索引文件按照 p">
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=no">
@@ -13,7 +13,7 @@
     <meta name="format-detection" content="telephone=no">
     <meta name="apple-mobile-web-app-capable" content="yes">
     <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
-    <title>ClickHouse表引擎 2.MergeTree 索引与数据存储方式 | hnbian</title>
+    <title>ClickHouse 表引擎 2.MergeTree 索引与数据存储方式 | hnbian</title>
     <link rel="icon" type="image/png" href="https://images.hnbian.cn/FvNSAGx7xljxALFh8Fa2DPNFP-JB">
 
     <link rel="stylesheet" type="text/css" href="https://images.hnbian.cn/all.css">
@@ -288,7 +288,7 @@
         <div class="row">
             <div class="col s12 m12 l12">
                 <div class="brand">
-                    <h1 class="description center-align post-title">ClickHouse表引擎 2.MergeTree 索引与数据存储方式</h1>
+                    <h1 class="description center-align post-title">ClickHouse 表引擎 2.MergeTree 索引与数据存储方式</h1>
                 </div>
             </div>
         </div>
@@ -405,12 +405,12 @@
                     
                     <div class="article-tag">
                         
-                            <a href="/tags/clickhouse/">
-                                <span class="chip bg-color">clickhouse</span>
-                            </a>
-                        
                             <a href="/tags/olap/">
                                 <span class="chip bg-color">olap</span>
+                            </a>
+                        
+                            <a href="/tags/ClickHouse/">
+                                <span class="chip bg-color">ClickHouse</span>
                             </a>
                         
                     </div>
@@ -421,8 +421,8 @@
                     <div class="post-cate">
                         <i class="fas fa-bookmark fa-fw icon-category"></i>
                         
-                            <a href="/categories/clickhouse/" class="post-category">
-                                clickhouse
+                            <a href="/categories/ClickHouse/" class="post-category">
+                                ClickHouse
                             </a>
                         
                     </div>
@@ -488,7 +488,7 @@
 <li>标记文件与一级索引文件粒度相同，彼此对齐，数据文件也会依据粒度间隔生成压缩数据块。</li>
 <li>查询数据时需要数据索引、数据标记和数据文件一起工作完成查询功能。</li>
 </ul>
-<p><img src="https://images.hnbian.cn/FgipmO_qt8jkZdBvnaHCD8LEefqA" alt="索引粒度图示"></p>
+<p><img src="https://images.hnbian.cn/FgipmO_qt8jkZdBvnaHCD8LEefqA?imageView2/0/interlace/1/q/70%7Cwatermark/2/text/d3d3LmhuYmlhbi5jbg==/font/5b6u6L2v6ZuF6buR/fontsize/600/fill/IzBDMjU2NA==/dissolve/100/gravity/SouthEast/dx/10/dy/10%7Cimageslim" alt="索引粒度图示"></p>
 <h3 id="1-3-索引数据的生成规则"><a href="#1-3-索引数据的生成规则" class="headerlink" title="1.3 索引数据的生成规则"></a>1.3 索引数据的生成规则</h3><ul>
 <li>MergeTree 的一级索引属于稀疏索引，需要间隔 index_granularity 行数据才会生成一条索引记录，其索引值会依据声明的主键字段获取。</li>
 <li>索引值为间隔index_granularity行数据取一次主键值作为索引值，将几次取指拼接到一起形成最终索引值，索引数据最终会被保存到primary.idx 文件中进行保存。</li>
@@ -496,10 +496,10 @@
 </ul>
 <img src="https://images.hnbian.cn/Fi3JoIguwjBaDPu5fFvSGEJGsuyp" alt="稀疏索引生成规则" style="zoom:50%;">
 
-<p>MergeTree 对稀疏索引的存储是非常紧凑的，索引值前后相连，按主键顺序紧密排列在一起，clickhouse 中很多数据结构都被设计的非常紧凑，如使用位读取代替专门的标识位或状态码，不浪费一点空间，这也是 clickhouse 性能出色的原因之一。</p>
+<p>MergeTree 对稀疏索引的存储是非常紧凑的，索引值前后相连，按主键顺序紧密排列在一起， ClickHouse  中很多数据结构都被设计的非常紧凑，如使用位读取代替专门的标识位或状态码，不浪费一点空间，这也是  ClickHouse  性能出色的原因之一。</p>
 <p>如果使用多个主键，索引如下图所示，order by (ID,EventData)</p>
 <p><img src="https://images.hnbian.cn/FnqRQxRu7nf4ksEyZnSlNfkGym-r?imageView2/0/interlace/1/q/70%7Cwatermark/2/text/d3d3LmhuYmlhbi5jbg==/font/5b6u6L2v6ZuF6buR/fontsize/600/fill/IzBDMjU2NA==/dissolve/100/gravity/SouthEast/dx/10/dy/10%7Cimageslim" alt></p>
-<h3 id="1-4-索引的查询过程"><a href="#1-4-索引的查询过程" class="headerlink" title="1.4 索引的查询过程"></a>1.4 索引的查询过程</h3><p>要想知道索引是如何工作的，需要先知道 MarkRange是什么，MarkRange 是clickhouse 中用于定义标记区间的对象，MergeTree 按照index_granularity的间隔粒度将一段完整的数据划分成多个小的间隔数据段，其中的每个小的数据段都是一个 MarkRange。</p>
+<h3 id="1-4-索引的查询过程"><a href="#1-4-索引的查询过程" class="headerlink" title="1.4 索引的查询过程"></a>1.4 索引的查询过程</h3><p>要想知道索引是如何工作的，需要先知道 MarkRange是什么，MarkRange 是 ClickHouse  中用于定义标记区间的对象，MergeTree 按照 index_granularity 的间隔粒度将一段完整的数据划分成多个小的间隔数据段，其中的每个小的数据段都是一个 MarkRange。</p>
 <p>MarkRange 与索引编号对应，使用 start 和 end 两个属性表示其区间范围，通过与 start 和 end 对应的索引编号的取值，即能够得到它对应的数值区间，而数值区间表示了此 MarkRange包含的数据范围。</p>
 <p>一份 192 行的测试数据，主键为 String 类型的 ID，取值范围从 A000 ，A001，A002 …  A192。MergeTree 索引粒度 index_granularity = 3，根据索引生成规则，primary.idx 文件内的索引数据如下图所示：</p>
 <p><img src="https://images.hnbian.cn/FqzGp4iTykK8Kj2XiLnWpkN7sJfE?imageView2/0/interlace/1/q/70%7Cwatermark/2/text/d3d3LmhuYmlhbi5jbg==/font/5b6u6L2v6ZuF6buR/fontsize/600/fill/IzBDMjU2NA==/dissolve/100/gravity/SouthEast/dx/10/dy/10%7Cimageslim" alt></p>
@@ -592,8 +592,7 @@
 <pre class=" language-sql"><code class="language-sql"><span class="token comment" spellcheck="true">-- 示例</span>
 <span class="token keyword">INDEX</span> <span class="token number">b</span> length<span class="token punctuation">(</span>id<span class="token punctuation">)</span> <span class="token operator">*</span> <span class="token number">8</span> <span class="token keyword">TYPE</span> <span class="token keyword">set</span><span class="token punctuation">(</span><span class="token number">1000</span><span class="token punctuation">)</span> GRANULARITY <span class="token number">5</span><span class="token punctuation">,</span>
 
-<span class="token comment" spellcheck="true">-- set 索引会记录 id 长度 * 8 的值，每个 index_granularity 最多记录 1000 条</span>
-</code></pre>
+<span class="token comment" spellcheck="true">-- set 索引会记录 id 长度 * 8 的值，每个 index_granularity 最多记录 1000 条</span></code></pre>
 <h4 id="2-3-3-ngrambf-v1"><a href="#2-3-3-ngrambf-v1" class="headerlink" title="2.3.3 ngrambf_v1"></a>2.3.3 ngrambf_v1</h4><ul>
 <li>ngrambf_v1索引记录的是数据短语的布隆过滤器</li>
 <li>ngrambf_v1索引只支持 String 和FixedString 类型</li>
@@ -624,7 +623,7 @@
 <span class="token comment" spellcheck="true">-- token 会经过两次 hash 函数再被写入</span>
 <span class="token comment" spellcheck="true">-- 布隆过滤器的大小是 256 字节</span></code></pre>
 <h2 id="3-数据存储"><a href="#3-数据存储" class="headerlink" title="3. 数据存储"></a>3. 数据存储</h2><h3 id="3-1-各列独立存储"><a href="#3-1-各列独立存储" class="headerlink" title="3.1 各列独立存储"></a>3.1 各列独立存储</h3><ul>
-<li><p>MergeTree 中数据时案列存储的，具体到每个字段时也是独立存储的。</p>
+<li><p>MergeTree 中数据时按列存储的，具体到每个字段时也是独立存储的。</p>
 </li>
 <li><p>每个列字段都有一个与之对应的 [column_name].bin 文件，这些文件承载着数据最终的物理存储。</p>
 </li>
@@ -656,9 +655,9 @@
 </ul>
 <p><img src="https://images.hnbian.cn/Fk2EZXH318Uyc81JqUzLYkluWvUa?imageView2/0/interlace/1/q/70%7Cwatermark/2/text/d3d3LmhuYmlhbi5jbg==/font/5b6u6L2v6ZuF6buR/fontsize/600/fill/IzBDMjU2NA==/dissolve/100/gravity/SouthEast/dx/10/dy/10%7Cimageslim" alt></p>
 <p>.bin 数据文件是由多个数据压缩块组成的，每个数据压缩块的头信息又是由  CompressionMethod_CompressedSize_UncompressedSize组成的。</p>
-<p>可以通过 clickhouse 提供的clickhouse-compressor工具查看某个.bin 数据文件的统计信息。</p>
+<p>可以通过  ClickHouse  提供的 ClickHouse -compressor工具查看某个.bin 数据文件的统计信息。</p>
 <pre class=" language-shell"><code class="language-shell"># 查看 data.bin 压缩数据统计信息
-[root@node3 data]# clickhouse-compressor --stat db_merge/t_merge_tree_partition/202001_1_1_2/data.bin
+[root@node3 data]#  ClickHouse -compressor --stat db_merge/t_merge_tree_partition/202001_1_1_2/data.bin
 2    12
 6    16
 8    18
@@ -746,9 +745,9 @@
 <h4 id="5-3-1-多对一"><a href="#5-3-1-多对一" class="headerlink" title="5.3.1 多对一"></a>5.3.1 多对一</h4><p>多个数据标记对应一个数据压缩块，当一个数据间隔内的未压缩数据不到 64KB 时会出现这种关系。</p>
 <p><img src="https://images.hnbian.cn/FuQjA3Z4gCTop5xkk3O5ecNrC35r?imageView2/0/interlace/1/q/70%7Cwatermark/2/text/d3d3LmhuYmlhbi5jbg==/font/5b6u6L2v6ZuF6buR/fontsize/600/fill/IzBDMjU2NA==/dissolve/100/gravity/SouthEast/dx/10/dy/10%7Cimageslim" alt="多个数据标记对应一个数据压缩块"></p>
 <h4 id="5-3-2-一对一"><a href="#5-3-2-一对一" class="headerlink" title="5.3.2 一对一"></a>5.3.2 一对一</h4><p>一个数据标记对应一个数据压缩块，当一个数据间隔内的未压缩数据大于 64KB  且小于 1MB 时会出现这种关系。</p>
-<p><img src="https://images.hnbian.cn/FsVyLpz0aK84EprNCdvTIAo08Dnx" alt="一个数据标记对应一个数据压缩块"></p>
+<p><img src="https://images.hnbian.cn/FsVyLpz0aK84EprNCdvTIAo08Dnx?imageView2/0/interlace/1/q/70%7Cwatermark/2/text/d3d3LmhuYmlhbi5jbg==/font/5b6u6L2v6ZuF6buR/fontsize/600/fill/IzBDMjU2NA==/dissolve/100/gravity/SouthEast/dx/10/dy/10%7Cimageslim" alt="一个数据标记对应一个数据压缩块"></p>
 <h4 id="5-3-3-一对多"><a href="#5-3-3-一对多" class="headerlink" title="5.3.3 一对多"></a>5.3.3 一对多</h4><p>一个数据标记对应多个数据压缩块，当一个数据间隔内的未压缩数据大于 1MB 时会出现这种关系。</p>
-<p><img src="https://images.hnbian.cn/FgEDoEtQW44G83DmsMwWnS3W83D1" alt="一个数据标记对应多个数据压缩块"></p>
+<p><img src="https://images.hnbian.cn/FgEDoEtQW44G83DmsMwWnS3W83D1?imageView2/0/interlace/1/q/70%7Cwatermark/2/text/d3d3LmhuYmlhbi5jbg==/font/5b6u6L2v6ZuF6buR/fontsize/600/fill/IzBDMjU2NA==/dissolve/100/gravity/SouthEast/dx/10/dy/10%7Cimageslim" alt="一个数据标记对应多个数据压缩块"></p>
 <script type="text/javascript" src="https://cdn.jsdelivr.net/npm/kity@2.0.4/dist/kity.min.js"></script><script type="text/javascript" src="https://cdn.jsdelivr.net/npm/kityminder-core@1.4.50/dist/kityminder.core.min.js"></script><script defer="true" type="text/javascript" src="https://cdn.jsdelivr.net/npm/hexo-simple-mindmap@0.2.0/dist/mindmap.min.js"></script><link rel="stylesheet" type="text/css" href="https://cdn.jsdelivr.net/npm/hexo-simple-mindmap@0.2.0/dist/mindmap.min.css">
             </div>
             <hr/>
@@ -812,12 +811,12 @@
                     
                         <div class="article-tag">
                             
-                                <a href="/tags/clickhouse/">
-                                    <span class="chip bg-color">clickhouse</span>
-                                </a>
-                            
                                 <a href="/tags/olap/">
                                     <span class="chip bg-color">olap</span>
+                                </a>
+                            
+                                <a href="/tags/ClickHouse/">
+                                    <span class="chip bg-color">ClickHouse</span>
                                 </a>
                             
                         </div>
@@ -1347,12 +1346,12 @@ Traceback (most recent call last):
                         <span class="chip bg-color">exception</span>
                     </a>
                     
-                    <a href="/tags/others/">
-                        <span class="chip bg-color">others</span>
-                    </a>
-                    
                     <a href="/tags/ambari/">
                         <span class="chip bg-color">ambari</span>
+                    </a>
+                    
+                    <a href="/tags/others/">
+                        <span class="chip bg-color">others</span>
                     </a>
                     
                     <a href="/tags/kafka/">
@@ -1502,7 +1501,7 @@ code[class*="language-"], pre[class*="language-"] { white-space: pre !important;
             <br>
             
             &nbsp;<i class="fas fa-chart-area"></i>&nbsp;站点总字数:&nbsp;<span
-                class="white-color">810.5k</span>&nbsp;字
+                class="white-color">812.8k</span>&nbsp;字
             
             
             

@@ -567,7 +567,7 @@ DAG：Directed Acyclic Graph ，有向无环图
 <span class="token keyword">val</span> rdd5 <span class="token operator">=</span> rdd4<span class="token punctuation">.</span>map<span class="token punctuation">(</span>e<span class="token keyword">=></span><span class="token punctuation">(</span>e<span class="token punctuation">,</span><span class="token number">1</span><span class="token punctuation">)</span><span class="token punctuation">)</span>
 <span class="token keyword">val</span> rdd6 <span class="token operator">=</span> rdd5<span class="token punctuation">.</span>reduceByKey<span class="token punctuation">(</span>_ <span class="token operator">+</span> _<span class="token punctuation">)</span>
 <span class="token keyword">val</span> rdd7 <span class="token operator">=</span> rdd6<span class="token punctuation">.</span>filter<span class="token punctuation">(</span>e<span class="token keyword">=></span><span class="token punctuation">(</span>e _1<span class="token punctuation">)</span> <span class="token operator">%</span><span class="token number">2</span> <span class="token operator">==</span> <span class="token number">0</span><span class="token punctuation">)</span><span class="token punctuation">.</span>repartition<span class="token punctuation">(</span><span class="token number">3</span><span class="token punctuation">)</span><span class="token punctuation">.</span>reduceByKey<span class="token punctuation">(</span>_ <span class="token operator">+</span> _<span class="token punctuation">)</span><span class="token punctuation">.</span>collect</code></pre>
-<p><img src="https://images.hnbian.cn/image-20210907170057779.png?imageView2/0/interlace/1/q/70%7Cwatermark/2/text/d3d3LmhuYmlhbi5jbg==/font/5b6u6L2v6ZuF6buR/fontsize/600/fill/IzBDMjU2NA==/dissolve/100/gravity/SouthEast/dx/10/dy/10%7Cimageslim" alt="image-20210907170057779"></p>
+<p><img src="https://images.hnbian.cn/image-20210907170057779.png?imageView2/0/interlace/1/q/70%7Cwatermark/2/text/d3d3LmhuYmlhbi5jbg==/font/5b6u6L2v6ZuF6buR/fontsize/600/fill/IzBDMjU2NA==/dissolve/100/gravity/SouthEast/dx/10/dy/10%7Cimageslim" alt></p>
 <h2 id="3-TaskScheduler"><a href="#3-TaskScheduler" class="headerlink" title="3. TaskScheduler"></a>3. TaskScheduler</h2><ul>
 <li><p>任务调度器（Trait）</p>
 </li>
@@ -2056,7 +2056,7 @@ code[class*="language-"], pre[class*="language-"] { white-space: pre !important;
             <br>
             
             &nbsp;<i class="fas fa-chart-area"></i>&nbsp;站点总字数:&nbsp;<span
-                class="white-color">810.5k</span>&nbsp;字
+                class="white-color">812.8k</span>&nbsp;字
             
             
             

@@ -578,7 +578,7 @@ flink 中的窗口计算依赖于触发器。
 <td>永远不会触发的触发器，它是 GlobalWindow 的默认触发器</td>
 </tr>
 </tbody></table>
-<p><img src="https://images.hnbian.cn/FlPDHdM5wYER6OwWvNkG-GoxhcFM" alt="Flink 中触发器相关的类继承图"></p>
+<p><img src="https://images.hnbian.cn/FlPDHdM5wYER6OwWvNkG-GoxhcFM?imageView2/0/interlace/1/q/70%7Cwatermark/2/text/d3d3LmhuYmlhbi5jbg==/font/5b6u6L2v6ZuF6buR/fontsize/600/fill/IzBDMjU2NA==/dissolve/100/gravity/SouthEast/dx/10/dy/10%7Cimageslim" alt="Flink 中触发器相关的类继承图"></p>
 <h2 id="2-窗口触发器介绍"><a href="#2-窗口触发器介绍" class="headerlink" title="2. 窗口触发器介绍"></a>2. 窗口触发器介绍</h2><h3 id="2-1-EventTimeTrigger"><a href="#2-1-EventTimeTrigger" class="headerlink" title="2.1 EventTimeTrigger"></a>2.1 EventTimeTrigger</h3><ul>
 <li>源码</li>
 </ul>
@@ -883,21 +883,21 @@ public TriggerResult onEventTime<span class="token punctuation">(</span>long tim
 <li>PurgingTrigger 清理计算结果的说明</li>
 </ul>
 <p>假如我们定义一个5分钟的基于 EventTime 的滚动窗口，定义一个每2分触发计算的 ContinuousEventTimeTrigger，有4条数据事件时间分别是20:01、20:02、20:03、20:04，对应的值分别是1、2、3、2，我们要对值做 Sum 操作。</p>
-<p><img src="https://images.hnbian.cn/Fu9yfFqKbNhWCCNCGnjRuhjWrHwL" alt="1.初始时 State 和 Result 中的值都为0"></p>
-<p><img src="https://images.hnbian.cn/FmkSIGgNOPK4Bi0t9Lxzk51_Vuc3" alt="2.数据20:01进入窗口时State的值为1，此时还没有到达Trigger的触发时间"></p>
-<p><img src="https://images.hnbian.cn/Fhrl8YX8s6c8_wBwGfEOfIw9nuwc" alt="3.第二条数据20:02进入窗口State中的值为1+2=3，此时达到2分钟满足Trigger的触发条件，故Result输出结果为3"></p>
-<p><img src="https://images.hnbian.cn/FrM8NFJAsiAWau8NDlI9XPCQVkHc" alt="4.第三条数据20:03进入窗口State中的值为3+3=6，此时未达到 Trigger 触发条件没有结果输出"></p>
-<p><img src="https://images.hnbian.cn/FjtbMZqVw7yPxq4UPwXZBYzzJFHp" alt="5.第四条数据20:04进入窗口State中的值更新为6+2=8，此时又到了2分钟达到了Trigger触发时间，所以输出结果为8"></p>
+<p><img src="https://images.hnbian.cn/Fu9yfFqKbNhWCCNCGnjRuhjWrHwL?imageView2/0/interlace/1/q/70%7Cwatermark/2/text/d3d3LmhuYmlhbi5jbg==/font/5b6u6L2v6ZuF6buR/fontsize/600/fill/IzBDMjU2NA==/dissolve/100/gravity/SouthEast/dx/10/dy/10%7Cimageslim" alt="1.初始时 State 和 Result 中的值都为0"></p>
+<p><img src="https://images.hnbian.cn/FmkSIGgNOPK4Bi0t9Lxzk51_Vuc3?imageView2/0/interlace/1/q/70%7Cwatermark/2/text/d3d3LmhuYmlhbi5jbg==/font/5b6u6L2v6ZuF6buR/fontsize/600/fill/IzBDMjU2NA==/dissolve/100/gravity/SouthEast/dx/10/dy/10%7Cimageslim" alt="2.数据20:01进入窗口时State的值为1，此时还没有到达Trigger的触发时间"></p>
+<p><img src="https://images.hnbian.cn/Fhrl8YX8s6c8_wBwGfEOfIw9nuwc?imageView2/0/interlace/1/q/70%7Cwatermark/2/text/d3d3LmhuYmlhbi5jbg==/font/5b6u6L2v6ZuF6buR/fontsize/600/fill/IzBDMjU2NA==/dissolve/100/gravity/SouthEast/dx/10/dy/10%7Cimageslim" alt="3.第二条数据20:02进入窗口State中的值为1+2=3，此时达到2分钟满足Trigger的触发条件，故Result输出结果为3"></p>
+<p><img src="https://images.hnbian.cn/FrM8NFJAsiAWau8NDlI9XPCQVkHc?imageView2/0/interlace/1/q/70%7Cwatermark/2/text/d3d3LmhuYmlhbi5jbg==/font/5b6u6L2v6ZuF6buR/fontsize/600/fill/IzBDMjU2NA==/dissolve/100/gravity/SouthEast/dx/10/dy/10%7Cimageslim" alt="4.第三条数据20:03进入窗口State中的值为3+3=6，此时未达到 Trigger 触发条件没有结果输出"></p>
+<p><img src="https://images.hnbian.cn/FjtbMZqVw7yPxq4UPwXZBYzzJFHp?imageView2/0/interlace/1/q/70%7Cwatermark/2/text/d3d3LmhuYmlhbi5jbg==/font/5b6u6L2v6ZuF6buR/fontsize/600/fill/IzBDMjU2NA==/dissolve/100/gravity/SouthEast/dx/10/dy/10%7Cimageslim" alt="5.第四条数据20:04进入窗口State中的值更新为6+2=8，此时又到了2分钟达到了Trigger触发时间，所以输出结果为8"></p>
 <p>如果我们把结果输出到支持 update 的存储，比如 MySQL，那么结果值就由之前的3更新成了8。但是如果Result 所在的存储介质只支持 add 操作会有什么样的结果呢？</p>
-<p><img src="https://images.hnbian.cn/Fgy2Bb8GwPOvBc2ndPAx5nllJDnO" alt="6.因为 Result只支持 add 所以 Result 中存在两条结果数据"></p>
+<p><img src="https://images.hnbian.cn/Fgy2Bb8GwPOvBc2ndPAx5nllJDnO?imageView2/0/interlace/1/q/70%7Cwatermark/2/text/d3d3LmhuYmlhbi5jbg==/font/5b6u6L2v6ZuF6buR/fontsize/600/fill/IzBDMjU2NA==/dissolve/100/gravity/SouthEast/dx/10/dy/10%7Cimageslim" alt="6.因为 Result只支持 add 所以 Result 中存在两条结果数据"></p>
 <p>如果在此基础上做计算，那么数据处理就会出现问题，这时如果使用 <strong>🌟PurgingTrigger</strong> 就可以很简单的解决这个问题。</p>
 <ul>
 <li><p>使用 PurgingTrigger 的计算流程</p>
 <p>和上面的示例一样，唯一的不同是在 ContinuousEventTimeTrigger 外面包装了一个 PurgingTrigger，其作用是在 ContinuousEventTimeTrigger 触发窗口计算之后将窗口的 State 中的数据清除。</p>
 </li>
 </ul>
-<p><img src="https://images.hnbian.cn/FqecHg7De0UrVFxNBqoip9sf-kPh" alt="1.初始时，State 和 Result 中的值都为0"></p>
-<p><img src="https://images.hnbian.cn/FkoAuaOEpPBYI3coe2gOYjC7Iz0_" alt="2.数据20:01进入窗口时State的值为1，此时还没有到达Trigger的触发时间"></p>
+<p><img src="https://images.hnbian.cn/FqecHg7De0UrVFxNBqoip9sf-kPh?imageView2/0/interlace/1/q/70%7Cwatermark/2/text/d3d3LmhuYmlhbi5jbg==/font/5b6u6L2v6ZuF6buR/fontsize/600/fill/IzBDMjU2NA==/dissolve/100/gravity/SouthEast/dx/10/dy/10%7Cimageslim" alt="1.初始时，State 和 Result 中的值都为0"></p>
+<p><img src="https://images.hnbian.cn/FkoAuaOEpPBYI3coe2gOYjC7Iz0_?imageView2/0/interlace/1/q/70%7Cwatermark/2/text/d3d3LmhuYmlhbi5jbg==/font/5b6u6L2v6ZuF6buR/fontsize/600/fill/IzBDMjU2NA==/dissolve/100/gravity/SouthEast/dx/10/dy/10%7Cimageslim" alt="2.数据20:01进入窗口时State的值为1，此时还没有到达Trigger的触发时间"></p>
 <p><img src="https://images.hnbian.cn/FpiiVnrgAfdZmlB7X-XsHZqbf7Ua" alt="3.第二条数据20:02进入窗口State中的值为1+2=3，此时达到2分钟满足Trigger的触发条件，故Result输出结果为3"></p>
 <p><img src="https://images.hnbian.cn/FnllyQDHV8gvff3UEcUem1zVIBep" alt="4.窗口出发后由于 PurgingTrigger 的作用，State中的数据会被清除"></p>
 <p><img src="https://images.hnbian.cn/FvvEdw3g6A8pPbvKIl5Ysf2E4HJY" alt="5.数据20:03进入窗口时因为之前的State已经清空所以当前State的值为3，此时还没有到达Trigger的触发时间"></p>
@@ -1241,7 +1241,7 @@ Obj1<span class="token punctuation">(</span><span class="token number">1</span><
      * @param evictorContext evictor的上下文
      */</span>
     void evictAfter<span class="token punctuation">(</span>Iterable<span class="token operator">&lt;</span>TimestampedValue<span class="token operator">&lt;</span>T<span class="token operator">>></span> elements<span class="token punctuation">,</span> int size<span class="token punctuation">,</span> W window<span class="token punctuation">,</span> EvictorContext evictorContext<span class="token punctuation">)</span><span class="token punctuation">;</span></code></pre>
-<p><img src="https://images.hnbian.cn/Fo0JKT4-9hTLlTMzPOpPoCN4GmEI" alt="移除器相关类继承图"></p>
+<p><img src="https://images.hnbian.cn/Fo0JKT4-9hTLlTMzPOpPoCN4GmEI?imageView2/0/interlace/1/q/70%7Cwatermark/2/text/d3d3LmhuYmlhbi5jbg==/font/5b6u6L2v6ZuF6buR/fontsize/600/fill/IzBDMjU2NA==/dissolve/100/gravity/SouthEast/dx/10/dy/10%7Cimageslim" alt="移除器相关类继承图"></p>
 <ul>
 <li>Flink为我们实现了3个Evictor：<ul>
 <li><strong>CountEvictor</strong>：保持窗口中用户指定数量的元素，并从窗口缓冲区的开头丢弃剩余的元素。</li>
@@ -2212,7 +2212,7 @@ code[class*="language-"], pre[class*="language-"] { white-space: pre !important;
             <br>
             
             &nbsp;<i class="fas fa-chart-area"></i>&nbsp;站点总字数:&nbsp;<span
-                class="white-color">810.5k</span>&nbsp;字
+                class="white-color">812.8k</span>&nbsp;字
             
             
             

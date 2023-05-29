@@ -470,13 +470,13 @@ Ingestion Time (摄取时间) :  数据进入 Flink 的">
 </li>
 <li><p><strong>Ingestion Time (摄取时间)</strong> :  数据进入 Flink 的时间，数据被 source 算子获取时的本地系统时间</p>
 </li>
-<li><p><strong>Processing Time (处理时间)</strong> : 数据被算子处理时的系统时间，与机器相关。</p>
+<li><p><strong>Processing Time (处理时间)</strong> : 数据被算子处理时的系统时间，与服务器设置的时间相关。</p>
 </li>
 </ul>
-<p>flink 中默认使用Process Time，但是大多数情况下都会使用 EventTime，一般只有在 EventTime 无法使用时才会使用 Process Time 或者 Ingestion Time。</p>
-<p><img src="https://images.hnbian.cn/Fmp-pKI-aGD_N6HGLjWy6B5iObpI" alt="Flink 中的时间概念"></p>
+<p>Flink 中默认使用 Process Time，但是大多数情况下都会使用 EventTime，一般只有在 EventTime 无法使用时才会使用 Process Time 或者 Ingestion Time。</p>
+<p><img src="https://images.hnbian.cn/Fmp-pKI-aGD_N6HGLjWy6B5iObpI?imageView2/0/interlace/1/q/70%7Cwatermark/2/text/d3d3LmhuYmlhbi5jbg==/font/5b6u6L2v6ZuF6buR/fontsize/600/fill/IzBDMjU2NA==/dissolve/100/gravity/SouthEast/dx/10/dy/10%7Cimageslim" alt="Flink 中的时间概念"></p>
 <h3 id="1-2-指定时间语义"><a href="#1-2-指定时间语义" class="headerlink" title="1.2 指定时间语义"></a>1.2 指定时间语义</h3><ul>
-<li>Process Time 是 flink 中的默认时间语义，无需特殊设置，但要使用Ingestion Time  或者 Event Time 则需要手动指定。</li>
+<li>Process Time 是 flink 中的默认时间语义，无需特殊设置，但要使用 Ingestion Time  或者 Event Time 则需要手动指定。</li>
 <li>可以使用 env.setStreamTimeCharacteristic 方法，设置流的时间特性</li>
 <li>设置 Event Time 时间语义时，具体的 Event Time 还需要从数据中提取相关的时间戳（timestamp）</li>
 </ul>
@@ -526,7 +526,7 @@ env<span class="token punctuation">.</span>setStreamTimeCharacteristic<span clas
 <li>WaterMark 用来让程序自己平衡延迟和结果的正确性。</li>
 </ul>
 <h3 id="2-2-为什么要有-WaterMark？"><a href="#2-2-为什么要有-WaterMark？" class="headerlink" title="2.2 为什么要有 WaterMark？"></a>2.2 为什么要有 WaterMark？</h3><p>当 flink 以 EventTime 模式处理流数据时，它会根据数据里的时间戳来处理基于时间的算子。但是由于网络、分布式等原因，会导致数据乱序的情况。如下图所示：</p>
-<p><img src="https://images.hnbian.cn/Fu4qAmqOgaNCctTO1sTjOLKT74kU" alt="顺序与乱序的数据"></p>
+<p><img src="https://images.hnbian.cn/Fu4qAmqOgaNCctTO1sTjOLKT74kU?imageView2/0/interlace/1/q/70%7Cwatermark/2/text/d3d3LmhuYmlhbi5jbg==/font/5b6u6L2v6ZuF6buR/fontsize/600/fill/IzBDMjU2NA==/dissolve/100/gravity/SouthEast/dx/10/dy/10%7Cimageslim" alt="顺序与乱序的数据"></p>
 <p>那么怎么避免乱序数据带来不正确的计算呢？</p>
 <p>通常的解决办法是在遇到时间戳到达了窗口关闭的时间时，不会立即触发窗口计算，而是等待一段时间，等迟到的数据来了在关闭窗口。</p>
 <h3 id="2-3-WaterMark-的特点"><a href="#2-3-WaterMark-的特点" class="headerlink" title="2.3 WaterMark 的特点"></a>2.3 WaterMark 的特点</h3><ul>
@@ -534,10 +534,11 @@ env<span class="token punctuation">.</span>setStreamTimeCharacteristic<span clas
 <li>WaterMark 必须单调递增，以确保任务的事件时间的时钟是向前推进而不是后退的</li>
 <li>WaterMark 与数据的时间戳相关，也就是说当我们要使用 WaterMark 时一定要使用 Event Time 时间语义</li>
 </ul>
-<h3 id="2-4-WaterMark-的传递"><a href="#2-4-WaterMark-的传递" class="headerlink" title="2.4 WaterMark 的传递"></a>2.4 WaterMark 的传递</h3><p><img src="https://images.hnbian.cn/FoHe1U_z--c2BafyEczD9CtOYKJi" alt="WaterMark 传递示意图"></p>
+<h3 id="2-4-WaterMark-的传递"><a href="#2-4-WaterMark-的传递" class="headerlink" title="2.4 WaterMark 的传递"></a>2.4 WaterMark 的传递</h3><p>WaterMark 表示当前事件进展到的时间点， 以最小的 WaterMark 为准。</p>
+<p><img src="https://images.hnbian.cn/FoHe1U_z--c2BafyEczD9CtOYKJi?imageView2/0/interlace/1/q/70%7Cwatermark/2/text/d3d3LmhuYmlhbi5jbg==/font/5b6u6L2v6ZuF6buR/fontsize/600/fill/IzBDMjU2NA==/dissolve/100/gravity/SouthEast/dx/10/dy/10%7Cimageslim" alt="WaterMark 传递示意图"></p>
 <h2 id="3-WaterMark-的设定"><a href="#3-WaterMark-的设定" class="headerlink" title="3. WaterMark 的设定"></a>3. WaterMark 的设定</h2><p>当我们要设定 WaterMark 时一定要先设置好 EventTime，可以使用 DataStream.assignTimestampsAndWatermarks() 方法设置 WaterMark。</p>
 <p>设置 WaterMark 有 AssignerWithPeriodicWatermarks 和 AssignerWithPunctuatedWatermarks两种方式</p>
-<p><img src="https://images.hnbian.cn/Fr1uNf-GoxIGS8e413X1GjyTNGs7" alt="Flink 中实现的设定 WaterMark 相关的类继承图"></p>
+<p><img src="https://images.hnbian.cn/Fr1uNf-GoxIGS8e413X1GjyTNGs7?imageView2/0/interlace/1/q/70%7Cwatermark/2/text/d3d3LmhuYmlhbi5jbg==/font/5b6u6L2v6ZuF6buR/fontsize/600/fill/IzBDMjU2NA==/dissolve/100/gravity/SouthEast/dx/10/dy/10%7Cimageslim" alt="Flink 中实现的设定 WaterMark 相关的类继承图"></p>
 <h3 id="3-1-AssignerWithPeriodicWatermarks"><a href="#3-1-AssignerWithPeriodicWatermarks" class="headerlink" title="3.1 AssignerWithPeriodicWatermarks"></a>3.1 AssignerWithPeriodicWatermarks</h3><ul>
 <li>周期性的生成 WaterMark，系统将周期性的将 WaterMark 插入到流中，默认周期是 200ms</li>
 <li>可以使用ExecutionConfig.setAutoWatermarkInterval() 方法进行设置。例如修改WaterMark 生成时间是 5 秒 env.getConfig.setAutoWatermarkInterval(5000)</li>
@@ -561,7 +562,7 @@ env<span class="token punctuation">.</span>setStreamTimeCharacteristic<span clas
     public <span class="token keyword">final</span> long extractTimestamp<span class="token punctuation">(</span>T element<span class="token punctuation">,</span> long elementPrevTimestamp<span class="token punctuation">)</span> <span class="token punctuation">{</span>
         <span class="token keyword">final</span> long newTimestamp <span class="token operator">=</span> extractAscendingTimestamp<span class="token punctuation">(</span>element<span class="token punctuation">)</span><span class="token punctuation">;</span>
         <span class="token keyword">if</span> <span class="token punctuation">(</span>newTimestamp <span class="token operator">>=</span> <span class="token keyword">this</span><span class="token punctuation">.</span>currentTimestamp<span class="token punctuation">)</span> <span class="token punctuation">{</span> 
-      <span class="token comment" spellcheck="true">// 当当前时间戳小于等于新时间戳（WaterMark） 时返回新的时间戳</span>
+      <span class="token comment" spellcheck="true">// 当 当前时间戳小于等于新时间戳（WaterMark） 时返回新的时间戳</span>
             <span class="token keyword">this</span><span class="token punctuation">.</span>currentTimestamp <span class="token operator">=</span> newTimestamp<span class="token punctuation">;</span>
             <span class="token keyword">return</span> newTimestamp<span class="token punctuation">;</span>
         <span class="token punctuation">}</span> <span class="token keyword">else</span> <span class="token punctuation">{</span>
@@ -1510,7 +1511,7 @@ code[class*="language-"], pre[class*="language-"] { white-space: pre !important;
             <br>
             
             &nbsp;<i class="fas fa-chart-area"></i>&nbsp;站点总字数:&nbsp;<span
-                class="white-color">810.5k</span>&nbsp;字
+                class="white-color">812.8k</span>&nbsp;字
             
             
             

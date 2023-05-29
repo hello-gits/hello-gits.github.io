@@ -439,7 +439,7 @@
                 
                 <div class="info-break-policy">
                     <i class="far fa-file-word fa-fw"></i>文章字数:&nbsp;&nbsp;
-                    3.2k
+                    3.4k
                 </div>
                 
 
@@ -463,8 +463,8 @@
         <div class="card-content article-card-content">
             <div id="articleContent">
                 <h2 id="1-ProcessFunction-介绍"><a href="#1-ProcessFunction-介绍" class="headerlink" title="1. ProcessFunction 介绍"></a>1. ProcessFunction 介绍</h2><h3 id="1-1-介绍"><a href="#1-1-介绍" class="headerlink" title="1.1 介绍"></a>1.1 介绍</h3><p>Flink一般的转换算子是无法访问事件的时间戳信息和WaterMark信息的。例如 MapFunction 这样的 map 转换算子就无法访问时间戳或者当前事件的事件时间。而这在某些应用场景下，这些信息确极为重要。基于此 DataStream API 提供了一系列的 Low-Level 转换算子，可以访问时间戳、watermark 以及注册定时事件。还可以输出特定的一些事件，例如超时事件等。</p>
-<p>Process Function 是用来构建事件驱动的应用以及实现自定义的业务逻辑 ( 使用之前的window 函数和转换算子无法实现 ) 。例如 Flink SQL 就是使用 Process Function 实现的。所有的 Process Function 都继承自 RichFunction 接口，所以都有 open()、close()和 getRuntimeContext()等方法。</p>
-<h3 id="1-2-内部构件"><a href="#1-2-内部构件" class="headerlink" title="1.2 内部构件"></a>1.2 内部构件</h3><p>ProcessFunction是一个低级的流处理操作，允许访问所有（非循环）流应用程序的基本构件：</p>
+<p>Process Function 是用来构建事件驱动的应用以及实现自定义的业务逻辑 ( 使用之前的 window 函数和转换算子无法实现 ) 。例如 Flink SQL 就是使用 Process Function 实现的。所有的 Process Function 都继承自 RichFunction 接口，所以都有 open()、close()和 getRuntimeContext()等方法。</p>
+<h3 id="1-2-内部构件"><a href="#1-2-内部构件" class="headerlink" title="1.2 内部构件"></a>1.2 内部构件</h3><p>ProcessFunction 是一个低级的流处理操作，允许访问所有（非循环）流应用程序的基本构件：</p>
 <ul>
 <li><p>events：数据流中的元素</p>
 </li>
@@ -700,8 +700,9 @@ public void onTimer<span class="token punctuation">(</span>long timestamp<span c
     out<span class="token punctuation">.</span>collect<span class="token punctuation">(</span>s<span class="token string">"processElement2:${value.name},${value.getClass}"</span><span class="token punctuation">)</span>
   <span class="token punctuation">}</span>
 <span class="token punctuation">}</span></code></pre>
-<h2 id="5-ProcessJoinFunction"><a href="#5-ProcessJoinFunction" class="headerlink" title="5. ProcessJoinFunction"></a>5. ProcessJoinFunction</h2><pre class=" language-scala"><code class="language-scala">
-leftKeyedStream
+<h2 id="5-ProcessJoinFunction"><a href="#5-ProcessJoinFunction" class="headerlink" title="5. ProcessJoinFunction"></a>5. ProcessJoinFunction</h2><p><code>ProcessJoinFunction</code> 是一个接口，它定义了对在窗口中的两个流进行内连接操作时应用的函数。此函数会接收两个流中的匹配元素以及元素的时间戳，并产生一个结果。</p>
+<p>这个接口通常与 <code>IntervalJoin</code> API一起使用，以在满足特定条件的情况下将两个流进行连接。这个条件通常是时间条件，即只有当两个元素的时间戳在指定的时间间隔内时，才会将它们进行连接。</p>
+<pre class=" language-scala"><code class="language-scala">leftKeyedStream
   <span class="token comment" spellcheck="true">// intervalJoin目前只支持Event Time</span>
   <span class="token punctuation">.</span>intervalJoin<span class="token punctuation">(</span>rightKeyedStream<span class="token punctuation">)</span>
   <span class="token comment" spellcheck="true">// 时间间隔,设定下界和上界</span>
@@ -763,7 +764,8 @@ leftKeyedStream
       out<span class="token punctuation">.</span>collect<span class="token punctuation">(</span><span class="token punctuation">(</span>obj<span class="token punctuation">.</span>name<span class="token punctuation">,</span>obj<span class="token punctuation">,</span>obj2<span class="token punctuation">)</span><span class="token punctuation">)</span>
   <span class="token punctuation">}</span>
 <span class="token punctuation">}</span></code></pre>
-<h2 id="6-BroadcastProcessFunction"><a href="#6-BroadcastProcessFunction" class="headerlink" title="6. BroadcastProcessFunction"></a>6. BroadcastProcessFunction</h2><pre class=" language-scala"><code class="language-scala"><span class="token keyword">import</span> com<span class="token punctuation">.</span>hnbian<span class="token punctuation">.</span>flink<span class="token punctuation">.</span>common<span class="token punctuation">.</span><span class="token punctuation">{</span>Class<span class="token punctuation">,</span>Student<span class="token punctuation">}</span>
+<h2 id="6-BroadcastProcessFunction"><a href="#6-BroadcastProcessFunction" class="headerlink" title="6. BroadcastProcessFunction"></a>6. BroadcastProcessFunction</h2><p><code>BroadcastProcessFunction</code> 是一个特殊的 <code>CoProcessFunction</code>，用于处理被广播的数据流。这种处理函数允许开发者创建一个或多个数据流，其中一个或多个可以被标记为广播流，并将它们的数据广播到所有并行实例。</p>
+<pre class=" language-scala"><code class="language-scala"><span class="token keyword">import</span> com<span class="token punctuation">.</span>hnbian<span class="token punctuation">.</span>flink<span class="token punctuation">.</span>common<span class="token punctuation">.</span><span class="token punctuation">{</span>Class<span class="token punctuation">,</span>Student<span class="token punctuation">}</span>
 <span class="token keyword">import</span> org<span class="token punctuation">.</span>apache<span class="token punctuation">.</span>flink<span class="token punctuation">.</span>api<span class="token punctuation">.</span>common<span class="token punctuation">.</span>state<span class="token punctuation">.</span>MapStateDescriptor
 <span class="token keyword">import</span> org<span class="token punctuation">.</span>apache<span class="token punctuation">.</span>flink<span class="token punctuation">.</span>api<span class="token punctuation">.</span>common<span class="token punctuation">.</span>typeinfo<span class="token punctuation">.</span>BasicTypeInfo
 <span class="token keyword">import</span> org<span class="token punctuation">.</span>apache<span class="token punctuation">.</span>flink<span class="token punctuation">.</span>streaming<span class="token punctuation">.</span>api<span class="token punctuation">.</span>datastream<span class="token punctuation">.</span>BroadcastStream
@@ -824,7 +826,8 @@ leftKeyedStream
   <span class="token punctuation">}</span>
 <span class="token punctuation">}</span>
 </code></pre>
-<h2 id="7-KeyedBroadcastProcessFunction"><a href="#7-KeyedBroadcastProcessFunction" class="headerlink" title="7. KeyedBroadcastProcessFunction"></a>7. KeyedBroadcastProcessFunction</h2><pre class=" language-scala"><code class="language-scala"><span class="token keyword">import</span> com<span class="token punctuation">.</span>hnbian<span class="token punctuation">.</span>flink<span class="token punctuation">.</span>common<span class="token punctuation">.</span><span class="token punctuation">{</span>Class<span class="token punctuation">,</span> Student<span class="token punctuation">}</span>
+<h2 id="7-KeyedBroadcastProcessFunction"><a href="#7-KeyedBroadcastProcessFunction" class="headerlink" title="7. KeyedBroadcastProcessFunction"></a>7. KeyedBroadcastProcessFunction</h2><p><code>KeyedBroadcastProcessFunction</code> 是用于处理带键的数据流和被广播的数据流的处理函数。<code>KeyedBroadcastProcessFunction</code> 继承自 <code>BroadcastProcessFunction</code>，并添加了对键控流（即带键的数据流）的处理。</p>
+<pre class=" language-scala"><code class="language-scala"><span class="token keyword">import</span> com<span class="token punctuation">.</span>hnbian<span class="token punctuation">.</span>flink<span class="token punctuation">.</span>common<span class="token punctuation">.</span><span class="token punctuation">{</span>Class<span class="token punctuation">,</span> Student<span class="token punctuation">}</span>
 <span class="token keyword">import</span> org<span class="token punctuation">.</span>apache<span class="token punctuation">.</span>flink<span class="token punctuation">.</span>api<span class="token punctuation">.</span>common<span class="token punctuation">.</span>state<span class="token punctuation">.</span>MapStateDescriptor
 <span class="token keyword">import</span> org<span class="token punctuation">.</span>apache<span class="token punctuation">.</span>flink<span class="token punctuation">.</span>api<span class="token punctuation">.</span>common<span class="token punctuation">.</span>typeinfo<span class="token punctuation">.</span>BasicTypeInfo
 <span class="token keyword">import</span> org<span class="token punctuation">.</span>apache<span class="token punctuation">.</span>flink<span class="token punctuation">.</span>streaming<span class="token punctuation">.</span>api<span class="token punctuation">.</span>datastream<span class="token punctuation">.</span>BroadcastStream
@@ -1559,7 +1562,7 @@ leftKeyedStream
                             1. Timer 介绍
 Timer（定时器）是 Flink 提供的用于 Processing Time 或 Event Time 变化的机制。
 
-Timer是 Flink 内部的定时器，与 key 和 timestamp 相关，相同的 ke
+Timer 是 Flink 内部的定时器，与 key 和 timestamp 相关，相同的 k
                         
                     </div>
                     <div class="publish-info">
@@ -1781,7 +1784,7 @@ code[class*="language-"], pre[class*="language-"] { white-space: pre !important;
             <br>
             
             &nbsp;<i class="fas fa-chart-area"></i>&nbsp;站点总字数:&nbsp;<span
-                class="white-color">810.5k</span>&nbsp;字
+                class="white-color">812.8k</span>&nbsp;字
             
             
             

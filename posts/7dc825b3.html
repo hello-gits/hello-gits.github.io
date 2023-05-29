@@ -486,7 +486,7 @@ Flink 实时计算数据场景下，有时需要启动 checkpoint 保存数据�
 <li>FsStateBackend：将状态数据包括到文件系统中</li>
 <li>RocksDBStateBackend：将状态数据保存在RocksDB中</li>
 </ul>
-<h2 id="2-StateBackend-接口"><a href="#2-StateBackend-接口" class="headerlink" title="2. StateBackend 接口"></a>2. StateBackend 接口</h2><p><img src="https://images.hnbian.cn/FgI3Gb91BmdKV2s8GBiKtpV9sjRp" alt="状态后端相关类继承图"></p>
+<h2 id="2-StateBackend-接口"><a href="#2-StateBackend-接口" class="headerlink" title="2. StateBackend 接口"></a>2. StateBackend 接口</h2><p><img src="https://images.hnbian.cn/FgI3Gb91BmdKV2s8GBiKtpV9sjRp?imageView2/0/interlace/1/q/70%7Cwatermark/2/text/d3d3LmhuYmlhbi5jbg==/font/5b6u6L2v6ZuF6buR/fontsize/600/fill/IzBDMjU2NA==/dissolve/100/gravity/SouthEast/dx/10/dy/10%7Cimageslim" alt="状态后端相关类继承图"></p>
 <pre class=" language-scala"><code class="language-scala"><span class="token keyword">package</span> org<span class="token punctuation">.</span>apache<span class="token punctuation">.</span>flink<span class="token punctuation">.</span>runtime<span class="token punctuation">.</span>state<span class="token punctuation">;</span>
 
 <span class="token keyword">import</span> org<span class="token punctuation">.</span>apache<span class="token punctuation">.</span>flink<span class="token punctuation">.</span>annotation<span class="token punctuation">.</span>PublicEvolving<span class="token punctuation">;</span>
@@ -733,7 +733,7 @@ public interface StateBackend <span class="token keyword">extends</span> java<sp
   <span class="token punctuation">}</span>
 <span class="token punctuation">}</span></code></pre>
 <h2 id="4-FsStateBackend"><a href="#4-FsStateBackend" class="headerlink" title="4. FsStateBackend"></a>4. FsStateBackend</h2><h4 id="3-2-1-介绍"><a href="#3-2-1-介绍" class="headerlink" title="3.2.1 介绍"></a>3.2.1 介绍</h4><ul>
-<li><p>FsStateBackend 将正在运行中的状态数据保存在 TaskManager 的内存中。CheckPoint 时，将状态快照写入到配置的文件系统目录中，通常是复制的高可用性文件系统，例如HDFS ， Ceph ， S3 ， GCS 等。 少量的元数据信息存储到 JobManager 的内存中（高可用模式下，将其写入到 CheckPoint 的元数据文件中）。</p>
+<li><p>FsStateBackend 将正在运行中的状态数据保存在 TaskManager 的内存中。CheckPoint 时，将状态快照写入到配置的文件系统目录中，通常是复制的高可用性文件系统，例如 HDFS ， Ceph ， S3 ， GCS 等。 少量的元数据信息存储到 JobManager 的内存中（高可用模式下，将其写入到 CheckPoint 的元数据文件中）。</p>
 </li>
 <li><p>file system state backend 有着内存级别的快速访问和文件系统存储的安全性，能够更好的容错</p>
 </li>
@@ -1685,9 +1685,9 @@ Flink Checkpoi
                 <a href="/posts/1dadc314.html">
                     <div class="card-image">
                         
-                        <img src="https://images.hnbian.cn/FhUvMtkmQN6kyaw9n0h1-hoWULIo" class="responsive-img" alt="Flink系列 13. 介绍Flink中的operator state 和 keyed state">
+                        <img src="https://images.hnbian.cn/FhUvMtkmQN6kyaw9n0h1-hoWULIo" class="responsive-img" alt="Flink系列 13. 介绍Flink中的Operator State 和 Keyed State">
                         
-                        <span class="card-title">Flink系列 13. 介绍Flink中的operator state 和 keyed state</span>
+                        <span class="card-title">Flink系列 13. 介绍Flink中的Operator State 和 Keyed State</span>
                     </div>
                 </a>
                 <div class="card-content article-content">
@@ -1866,7 +1866,7 @@ code[class*="language-"], pre[class*="language-"] { white-space: pre !important;
             <br>
             
             &nbsp;<i class="fas fa-chart-area"></i>&nbsp;站点总字数:&nbsp;<span
-                class="white-color">810.5k</span>&nbsp;字
+                class="white-color">812.8k</span>&nbsp;字
             
             
             

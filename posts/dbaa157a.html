@@ -466,7 +466,7 @@ window 就是将无界流切割成有界流的一种方式，它会将流分发�
         <hr class="clearfix">
         <div class="card-content article-card-content">
             <div id="articleContent">
-                <h2 id="1-window-的概念"><a href="#1-window-的概念" class="headerlink" title="1. window 的概念"></a>1. window 的概念</h2><p><img src="https://images.hnbian.cn/Foi3rVpcCWJFbb5X7L4kPeMCnrmN" alt="有界流与无界流模型"></p>
+                <h2 id="1-window-的概念"><a href="#1-window-的概念" class="headerlink" title="1. window 的概念"></a>1. window 的概念</h2><p><img src="https://images.hnbian.cn/Foi3rVpcCWJFbb5X7L4kPeMCnrmN?imageView2/0/interlace/1/q/70%7Cwatermark/2/text/d3d3LmhuYmlhbi5jbg==/font/5b6u6L2v6ZuF6buR/fontsize/600/fill/IzBDMjU2NA==/dissolve/100/gravity/SouthEast/dx/10/dy/10%7Cimageslim" alt="有界流与无界流模型"></p>
 <ul>
 <li>一般真实的流都是无界的，怎样处理无界的数据？</li>
 <li>可以把无界的流进行切分，得到有限的数据集进行处理，也就是得到有界流。</li>
@@ -475,26 +475,29 @@ window 就是将无界流切割成有界流的一种方式，它会将流分发�
 <h2 id="2-window-类型介绍与测试准备"><a href="#2-window-类型介绍与测试准备" class="headerlink" title="2. window 类型介绍与测试准备"></a>2. window 类型介绍与测试准备</h2><p>Flink 中的窗口操作需要在 KeyBy 之后才能使用，可以使用 <strong>.window(WindowAssigner)</strong> 来定义窗口，然后数据就会被分发到正确的 window 当中，被接下来的算子处理，同时，flink 也提供了更方便的 <strong>.timeWindow</strong> 和 <strong>.countWindow</strong> 方法，用于定义时间窗口和计数窗口。</p>
 <p>窗口分配器 WindowAssigner 是所有窗口类型的父类，他负责将每条数据发送到正确的 Window 当中，.window()方法接收的参数就是一个 WindowAssigner。</p>
 <h3 id="2-1-窗口分类"><a href="#2-1-窗口分类" class="headerlink" title="2.1 窗口分类"></a>2.1 窗口分类</h3><p>Flink 中的窗口大致可以分为：滚动时间窗口、滑动时间窗口、滚动计数窗口、滑动计数窗口、会话窗口与全局窗口。</p>
-<p><img src="https://images.hnbian.cn/Fr4TgcalDvZRf2d8A-t7k5JKh0Zz" alt="Flink 中window 相关类继承图"></p>
+<p><img src="https://images.hnbian.cn/Fr4TgcalDvZRf2d8A-t7k5JKh0Zz?imageView2/0/interlace/1/q/70%7Cwatermark/2/text/d3d3LmhuYmlhbi5jbg==/font/5b6u6L2v6ZuF6buR/fontsize/600/fill/IzBDMjU2NA==/dissolve/100/gravity/SouthEast/dx/10/dy/10%7Cimageslim" alt="Flink 中window 相关类继承图"></p>
 <ul>
-<li>WindowAssigner<ul>
-<li>SlidingEventTimeWindows：滑动事件时间窗口</li>
-<li>SlidingProcessingTimeWindows：滑动处理时间窗口</li>
-<li>SlidingTimeWindows：滑动时间窗口（事件时间）</li>
-<li>TumblingEventTimeWindows：滚动事件时间窗口</li>
-<li>TumblingProcessingTimeWindows：滚动处理时间窗口</li>
-<li>TumblingTimeWindows：滚动时间窗口（事件时间）</li>
-<li>GlobalWindows：全局窗口</li>
+<li>滑动窗口 WindowAssigner<ul>
+<li>SlidingEventTimeWindows：滑动 事件时间 窗口</li>
+<li>SlidingProcessingTimeWindows：滑动 处理时间 窗口</li>
+<li>SlidingTimeWindows：滑动时间窗口（事件时间）标记过期</li>
 </ul>
 </li>
-<li>MergingWindowAssigner<ul>
+<li>滚动窗口 WindowAssigner<ul>
+<li>TumblingEventTimeWindows：滚动事件时间窗口</li>
+<li>TumblingProcessingTimeWindows：滚动处理时间窗口</li>
+<li>TumblingTimeWindows：滚动时间窗口（事件时间）标记过期</li>
+</ul>
+</li>
+<li>全局窗口 GlobalWindows </li>
+<li>会话窗口 MergingWindowAssigner <ul>
 <li>ProcessingTimeSessionWindows：处理时间会话窗口</li>
 <li>EventTimeSessionWindows：事件时间会话窗口</li>
 <li>DynamicEventTimeSessionWindows：动态事件时间会话窗口</li>
 <li>DynamicProcessingTimeSessionWindows：动态处理时间会话窗口</li>
 </ul>
 </li>
-<li>BaseAlignedWindowAssigner </li>
+<li>BaseAlignedWindowAssigner  窗口对齐</li>
 </ul>
 <p>2.2 窗口API说明</p>
 <pre class=" language-scala"><code class="language-scala">stream
@@ -531,7 +534,7 @@ window 就是将无界流切割成有界流的一种方式，它会将流分发�
 <li>时间对齐，窗口长度固定，没有重叠</li>
 <li>每条数据只会被划分到一个窗口中</li>
 </ul>
-<h3 id="3-2-图示"><a href="#3-2-图示" class="headerlink" title="3.2 图示"></a>3.2 图示</h3><p><img src="https://images.hnbian.cn/FrhEsC3Gvt-QURdRBY1DU3oWHrCQ" alt="滚动时间窗口示意图"></p>
+<h3 id="3-2-图示"><a href="#3-2-图示" class="headerlink" title="3.2 图示"></a>3.2 图示</h3><p><img src="https://images.hnbian.cn/FrhEsC3Gvt-QURdRBY1DU3oWHrCQ?imageView2/0/interlace/1/q/70%7Cwatermark/2/text/d3d3LmhuYmlhbi5jbg==/font/5b6u6L2v6ZuF6buR/fontsize/600/fill/IzBDMjU2NA==/dissolve/100/gravity/SouthEast/dx/10/dy/10%7Cimageslim" alt="滚动时间窗口示意图"></p>
 <h3 id="3-3-实现方式"><a href="#3-3-实现方式" class="headerlink" title="3.3 实现方式"></a>3.3 实现方式</h3><ul>
 <li>.timeWindow()：基于 Process Time</li>
 <li>TumblingProcessingTimeWindows：基于 Process Time</li>
@@ -703,7 +706,7 @@ window 就是将无界流切割成有界流的一种方式，它会将流分发�
 <li>滑动窗口是固定窗口的更广义的一种形式，滑动窗口由固定的窗口长度和滑动间隔组成。</li>
 <li>窗口长度固定，窗口间可以有重叠的部分</li>
 </ul>
-<h3 id="4-2-图示"><a href="#4-2-图示" class="headerlink" title="4.2 图示"></a>4.2 图示</h3><p><img src="https://images.hnbian.cn/FpPeQjy3di674ZqsaYTqrHU4hzor" alt="滑动时间窗口示意图"></p>
+<h3 id="4-2-图示"><a href="#4-2-图示" class="headerlink" title="4.2 图示"></a>4.2 图示</h3><p><img src="https://images.hnbian.cn/FpPeQjy3di674ZqsaYTqrHU4hzor?imageView2/0/interlace/1/q/70%7Cwatermark/2/text/d3d3LmhuYmlhbi5jbg==/font/5b6u6L2v6ZuF6buR/fontsize/600/fill/IzBDMjU2NA==/dissolve/100/gravity/SouthEast/dx/10/dy/10%7Cimageslim" alt="滑动时间窗口示意图"></p>
 <h3 id="4-3-实现方式"><a href="#4-3-实现方式" class="headerlink" title="4.3 实现方式"></a>4.3 实现方式</h3><ul>
 <li>.timeWindow()：基于 ProcessTime 的滑动窗口</li>
 <li>SlidingProcessingTimeWindows：基于 ProcessTime 的滑动窗口</li>
@@ -832,7 +835,7 @@ window 就是将无界流切割成有界流的一种方式，它会将流分发�
 <li>由一系列事件组合一个指定时间长度的 timeout 间隙组成，也就是说一定时间没有收到新的数据就会生成一个新的窗口</li>
 <li>特点：无时间对其</li>
 </ul>
-<h3 id="5-2-图示"><a href="#5-2-图示" class="headerlink" title="5.2 图示"></a>5.2 图示</h3><p><img src="https://images.hnbian.cn/Fj5BK59qm3xEVg-lg0__roTXtacw" alt="会话窗口示意图"></p>
+<h3 id="5-2-图示"><a href="#5-2-图示" class="headerlink" title="5.2 图示"></a>5.2 图示</h3><p><img src="https://images.hnbian.cn/Fj5BK59qm3xEVg-lg0__roTXtacw?imageView2/0/interlace/1/q/70%7Cwatermark/2/text/d3d3LmhuYmlhbi5jbg==/font/5b6u6L2v6ZuF6buR/fontsize/600/fill/IzBDMjU2NA==/dissolve/100/gravity/SouthEast/dx/10/dy/10%7Cimageslim" alt="会话窗口示意图"></p>
 <h3 id="5-3-实现方式"><a href="#5-3-实现方式" class="headerlink" title="5.3 实现方式"></a>5.3 实现方式</h3><ul>
 <li>ProcessingTimeSessionWindows：处理时间会话窗口</li>
 <li>EventTimeSessionWindows：事件时间会话窗口</li>
@@ -982,7 +985,7 @@ window 就是将无界流切割成有界流的一种方式，它会将流分发�
 <li>时间对齐，窗口长度固定，没有重叠</li>
 <li>每条数据只会被划分到一个窗口中</li>
 </ul>
-<h3 id="6-2-图示"><a href="#6-2-图示" class="headerlink" title="6.2 图示"></a>6.2 图示</h3><p><img src="https://images.hnbian.cn/FrRLizJBnT9QXcaVyWyX4x6w9Qmx" alt="滚动计数窗口示意图"></p>
+<h3 id="6-2-图示"><a href="#6-2-图示" class="headerlink" title="6.2 图示"></a>6.2 图示</h3><p><img src="https://images.hnbian.cn/FrRLizJBnT9QXcaVyWyX4x6w9Qmx?imageView2/0/interlace/1/q/70%7Cwatermark/2/text/d3d3LmhuYmlhbi5jbg==/font/5b6u6L2v6ZuF6buR/fontsize/600/fill/IzBDMjU2NA==/dissolve/100/gravity/SouthEast/dx/10/dy/10%7Cimageslim" alt="滚动计数窗口示意图"></p>
 <h3 id="6-3-实现方式"><a href="#6-3-实现方式" class="headerlink" title="6.3 实现方式"></a>6.3 实现方式</h3><pre class=" language-scala"><code class="language-scala"><span class="token keyword">import</span> org<span class="token punctuation">.</span>apache<span class="token punctuation">.</span>flink<span class="token punctuation">.</span>streaming<span class="token punctuation">.</span>api<span class="token punctuation">.</span>scala<span class="token punctuation">.</span>_
 
 <span class="token keyword">object</span> TumblingCountWIndow <span class="token punctuation">{</span>
@@ -1014,7 +1017,7 @@ window 就是将无界流切割成有界流的一种方式，它会将流分发�
 <li>滑动窗口是固定窗口的更广义的一种形式，滑动窗口由固定的窗口长度和滑动间隔组成。</li>
 <li>窗口长度固定，窗口间有重叠的部分</li>
 </ul>
-<h3 id="7-2-图示"><a href="#7-2-图示" class="headerlink" title="7.2 图示"></a>7.2 图示</h3><p><img src="https://images.hnbian.cn/Fgibac1_Vj7bCmfSo3PFYNLaaZDT" alt="滑动计数窗口示意图"></p>
+<h3 id="7-2-图示"><a href="#7-2-图示" class="headerlink" title="7.2 图示"></a>7.2 图示</h3><p><img src="https://images.hnbian.cn/Fgibac1_Vj7bCmfSo3PFYNLaaZDT?imageView2/0/interlace/1/q/70%7Cwatermark/2/text/d3d3LmhuYmlhbi5jbg==/font/5b6u6L2v6ZuF6buR/fontsize/600/fill/IzBDMjU2NA==/dissolve/100/gravity/SouthEast/dx/10/dy/10%7Cimageslim" alt="滑动计数窗口示意图"></p>
 <h3 id="7-3-实现方式"><a href="#7-3-实现方式" class="headerlink" title="7.3 实现方式"></a>7.3 实现方式</h3><pre class=" language-scala"><code class="language-scala">
 <span class="token keyword">object</span> SlidingCountWindow <span class="token punctuation">{</span>
   <span class="token keyword">def</span> main<span class="token punctuation">(</span>args<span class="token operator">:</span> Array<span class="token punctuation">[</span><span class="token builtin">String</span><span class="token punctuation">]</span><span class="token punctuation">)</span><span class="token operator">:</span> <span class="token builtin">Unit</span> <span class="token operator">=</span> <span class="token punctuation">{</span>
@@ -1046,7 +1049,7 @@ window 就是将无界流切割成有界流的一种方式，它会将流分发�
 <li>全局窗口会将所有 key 相同的元素分配到同一个窗口中，其通常配合触发器 (trigger) 进行使用。</li>
 <li>如果没有相应触发器，则计算将不会被执行。</li>
 </ul>
-<h3 id="8-2-图示"><a href="#8-2-图示" class="headerlink" title="8.2 图示"></a>8.2 图示</h3><p><img src="https://images.hnbian.cn/FjXjIarSKe1xJwyPrGwvh3gYeLEd" alt="全局窗口示意图"></p>
+<h3 id="8-2-图示"><a href="#8-2-图示" class="headerlink" title="8.2 图示"></a>8.2 图示</h3><p><img src="https://images.hnbian.cn/FjXjIarSKe1xJwyPrGwvh3gYeLEd?imageView2/0/interlace/1/q/70%7Cwatermark/2/text/d3d3LmhuYmlhbi5jbg==/font/5b6u6L2v6ZuF6buR/fontsize/600/fill/IzBDMjU2NA==/dissolve/100/gravity/SouthEast/dx/10/dy/10%7Cimageslim" alt="全局窗口示意图"></p>
 <h3 id="8-3-实现方式"><a href="#8-3-实现方式" class="headerlink" title="8.3 实现方式"></a>8.3 实现方式</h3><pre class=" language-scala"><code class="language-scala"><span class="token keyword">import</span> org<span class="token punctuation">.</span>apache<span class="token punctuation">.</span>flink<span class="token punctuation">.</span>streaming<span class="token punctuation">.</span>api<span class="token punctuation">.</span>scala<span class="token punctuation">.</span>_
 <span class="token keyword">import</span> org<span class="token punctuation">.</span>apache<span class="token punctuation">.</span>flink<span class="token punctuation">.</span>streaming<span class="token punctuation">.</span>api<span class="token punctuation">.</span>windowing<span class="token punctuation">.</span>assigners<span class="token punctuation">.</span>GlobalWindows
 <span class="token keyword">import</span> org<span class="token punctuation">.</span>apache<span class="token punctuation">.</span>flink<span class="token punctuation">.</span>streaming<span class="token punctuation">.</span>api<span class="token punctuation">.</span>windowing<span class="token punctuation">.</span>triggers<span class="token punctuation">.</span>CountTrigger
@@ -1806,7 +1809,7 @@ code[class*="language-"], pre[class*="language-"] { white-space: pre !important;
             <br>
             
             &nbsp;<i class="fas fa-chart-area"></i>&nbsp;站点总字数:&nbsp;<span
-                class="white-color">810.5k</span>&nbsp;字
+                class="white-color">812.8k</span>&nbsp;字
             
             
             

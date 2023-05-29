@@ -463,16 +463,16 @@
         <div class="card-content article-card-content">
             <div id="articleContent">
                 <h2 id="1-介绍"><a href="#1-介绍" class="headerlink" title="1. 介绍"></a>1. 介绍</h2><p>Flink 支持多种部署方式 如 Local、Standalone、Yarn、K8S 等，但是现在企业中大多数的大数据平台都以 Yarn 作为资源管理器，所以 Flink On Yarn 模式也在企业中用的非常多，下面就介绍一下Flink On Yarn 的使用。</p>
-<h2 id="2-Flink-on-yarn任务提交流程图"><a href="#2-Flink-on-yarn任务提交流程图" class="headerlink" title="2. Flink on yarn任务提交流程图"></a>2. Flink on yarn任务提交流程图</h2><p><img src="https://images.hnbian.cn/FpsBU7os7QrGwAqE-8PGJgpxFwOg" alt="Flink On Yarn 任务执行流程图"></p>
+<h2 id="2-Flink-on-yarn任务提交流程图"><a href="#2-Flink-on-yarn任务提交流程图" class="headerlink" title="2. Flink on yarn任务提交流程图"></a>2. Flink on yarn任务提交流程图</h2><p><img src="https://images.hnbian.cn/FpsBU7os7QrGwAqE-8PGJgpxFwOg?imageView2/0/interlace/1/q/70%7Cwatermark/2/text/d3d3LmhuYmlhbi5jbg==/font/5b6u6L2v6ZuF6buR/fontsize/600/fill/IzBDMjU2NA==/dissolve/100/gravity/SouthEast/dx/10/dy/10%7Cimageslim" alt="Flink On Yarn 任务执行流程图"></p>
 <h2 id="3-作业提交方式"><a href="#3-作业提交方式" class="headerlink" title="3. 作业提交方式"></a>3. 作业提交方式</h2><p>Flink 作业在yarn上运行有两种提交方式: </p>
 <ol>
 <li>Session 模式</li>
 <li>Per-Job  模式</li>
 </ol>
 <h3 id="3-1-session-模式"><a href="#3-1-session-模式" class="headerlink" title="3.1 session 模式"></a>3.1 session 模式</h3><p>这种方式需要先启动集群，然后再提交作业, 接着会向yarn申请一块空间, 初始化一个session服务常驻在这块空间, 后续提交的任务都运行在这个session上, 如果session资源使用到达上限则接下来的作业无法提交，只能等待到正在运行的某个作业执行完成,释放了部分资源, 接下来的作业才能正常提交，在session模式下多个 Flink jobmanager 会共享Dispatcher 和 YARN ResourceManager。</p>
-<p><img src="https://images.hnbian.cn/FqBLlD_XFUXyFMANKaqnf-HxoGG9" alt="yarn-session 提交方式"></p>
+<p><img src="https://images.hnbian.cn/FqBLlD_XFUXyFMANKaqnf-HxoGG9?imageView2/0/interlace/1/q/70%7Cwatermark/2/text/d3d3LmhuYmlhbi5jbg==/font/5b6u6L2v6ZuF6buR/fontsize/600/fill/IzBDMjU2NA==/dissolve/100/gravity/SouthEast/dx/10/dy/10%7Cimageslim" alt="yarn-session 提交方式"></p>
 <h3 id="3-2-Per-Job-模式"><a href="#3-2-Per-Job-模式" class="headerlink" title="3.2 Per-Job  模式"></a>3.2 Per-Job  模式</h3><p>Per-Job 模式下，每次提交任务都会创建一个新的的 Flink Yarn-session，不同的 Job之间是资源隔离的，不会互相影响，同样Dispatcher和YarnResourceManager也是该任务独享的，任务完成后释放资源。除非是集群资源用尽，否则不会影响新任务的提交。在线上环境一般采用 Per-Job 模式。</p>
-<p><img src="https://images.hnbian.cn/FhT5ymkX_2VY3ZVE5eqp65aHKU3V" alt="Per-Job  模式"></p>
+<p><img src="https://images.hnbian.cn/FhT5ymkX_2VY3ZVE5eqp65aHKU3V?imageView2/0/interlace/1/q/70%7Cwatermark/2/text/d3d3LmhuYmlhbi5jbg==/font/5b6u6L2v6ZuF6buR/fontsize/600/fill/IzBDMjU2NA==/dissolve/100/gravity/SouthEast/dx/10/dy/10%7Cimageslim" alt="Per-Job  模式"></p>
 <h2 id="4-提交任务的准备工作"><a href="#4-提交任务的准备工作" class="headerlink" title="4. 提交任务的准备工作"></a>4. 提交任务的准备工作</h2><p>这里Hadoop 的环境是之前装好的，如果 Hadoop 环境没有装好可以先把所需环境装好。并启动好环境。</p>
 <h3 id="4-1-配置-hadoop-classpath"><a href="#4-1-配置-hadoop-classpath" class="headerlink" title="4.1 配置 hadoop classpath"></a>4.1 配置 hadoop classpath</h3><pre class=" language-bash"><code class="language-bash"><span class="token punctuation">[</span>root@node2 ~<span class="token punctuation">]</span><span class="token comment" spellcheck="true"># vim /etc/profile</span>
 
@@ -603,11 +603,11 @@ JobManager Web Interface: <span class="token string">'http://node3:37719'</span>
 <ul>
 <li>查看 yarn 上的 Application</li>
 </ul>
-<p><img src="https://images.hnbian.cn/FkoZXpgs271hYWj9WaIDIYqe2aQ_" alt="yarn-session"></p>
+<p><img src="https://images.hnbian.cn/FkoZXpgs271hYWj9WaIDIYqe2aQ_?imageView2/0/interlace/1/q/70%7Cwatermark/2/text/d3d3LmhuYmlhbi5jbg==/font/5b6u6L2v6ZuF6buR/fontsize/600/fill/IzBDMjU2NA==/dissolve/100/gravity/SouthEast/dx/10/dy/10%7Cimageslim" alt="yarn-session"></p>
 <ul>
 <li>查看 Flink webUI  <a href="http://node3:37719" target="_blank" rel="noopener">http://node3:37719</a> </li>
 </ul>
-<p><img src="https://images.hnbian.cn/Fghpw0HNxBMXQKmf27R-sGL7QZbK" alt="Flink webUI"></p>
+<p><img src="https://images.hnbian.cn/Fghpw0HNxBMXQKmf27R-sGL7QZbK?imageView2/0/interlace/1/q/70%7Cwatermark/2/text/d3d3LmhuYmlhbi5jbg==/font/5b6u6L2v6ZuF6buR/fontsize/600/fill/IzBDMjU2NA==/dissolve/100/gravity/SouthEast/dx/10/dy/10%7Cimageslim" alt="Flink webUI"></p>
 <h3 id="5-3-提交测试任务"><a href="#5-3-提交测试任务" class="headerlink" title="5.3 提交测试任务"></a>5.3 提交测试任务</h3><ul>
 <li>在 yarn 中启动的 Flink 集群的 ApplicationID 会被保存到 /tmp/.yarn-properties-hdfs 文件中，当向 yarn 中的 flink 集群提交任务时，Flink 程序会先查找该文件内的 ApplicationID.</li>
 </ul>
@@ -663,8 +663,8 @@ Accumulator Results:
 <ul>
 <li>查看 Flink webUI 中的任务情况</li>
 </ul>
-<p><img src="https://images.hnbian.cn/FisyxUz1XvX9YPflTVmZ0nYyfD2O" alt="提交任务之后马上进Flink webUI 能看到 Wordcount 任务正在运行"></p>
-<p><img src="https://images.hnbian.cn/FsVdDr-EvUFnt1KVkDu_bEeXwTq_" alt="查看任务运行流程"></p>
+<p><img src="https://images.hnbian.cn/FisyxUz1XvX9YPflTVmZ0nYyfD2O?imageView2/0/interlace/1/q/70%7Cwatermark/2/text/d3d3LmhuYmlhbi5jbg==/font/5b6u6L2v6ZuF6buR/fontsize/600/fill/IzBDMjU2NA==/dissolve/100/gravity/SouthEast/dx/10/dy/10%7Cimageslim" alt="提交任务之后马上进Flink webUI 能看到 Wordcount 任务正在运行"></p>
+<p><img src="https://images.hnbian.cn/FsVdDr-EvUFnt1KVkDu_bEeXwTq_?imageView2/0/interlace/1/q/70%7Cwatermark/2/text/d3d3LmhuYmlhbi5jbg==/font/5b6u6L2v6ZuF6buR/fontsize/600/fill/IzBDMjU2NA==/dissolve/100/gravity/SouthEast/dx/10/dy/10%7Cimageslim" alt="查看任务运行流程"></p>
 <h3 id="5-4-关闭-yarn-上的-flink-集群"><a href="#5-4-关闭-yarn-上的-flink-集群" class="headerlink" title="5.4 关闭 yarn 上的 flink 集群"></a>5.4 关闭 yarn 上的 flink 集群</h3><pre class=" language-bash"><code class="language-bash"><span class="token punctuation">[</span>hdfs@node2 flink-1.10.2<span class="token punctuation">]</span>$ yarn application -kill application_1608705158439_0048
 20/12/25 10:33:52 INFO client.RMProxy: Connecting to ResourceManager at node1/192.168.0.39:8050
 20/12/25 10:33:53 INFO client.AHSProxy: Connecting to Application History server at node2/192.168.0.38:10200
@@ -830,8 +830,8 @@ Accumulator Results:
 <ul>
 <li>查看 yarn 中的 application </li>
 </ul>
-<p><img src="https://images.hnbian.cn/FpSHsKL4SB9N3XFbeTF-ATeP634m" alt="任务还在等待状态"></p>
-<p><img src="https://images.hnbian.cn/FmofaPh0_yEM3nFLLJTboNb2aZrb" alt="任务执行完成"></p>
+<p><img src="https://images.hnbian.cn/FpSHsKL4SB9N3XFbeTF-ATeP634m?imageView2/0/interlace/1/q/70%7Cwatermark/2/text/d3d3LmhuYmlhbi5jbg==/font/5b6u6L2v6ZuF6buR/fontsize/600/fill/IzBDMjU2NA==/dissolve/100/gravity/SouthEast/dx/10/dy/10%7Cimageslim" alt="任务还在等待状态"></p>
+<p><img src="https://images.hnbian.cn/FmofaPh0_yEM3nFLLJTboNb2aZrb?imageView2/0/interlace/1/q/70%7Cwatermark/2/text/d3d3LmhuYmlhbi5jbg==/font/5b6u6L2v6ZuF6buR/fontsize/600/fill/IzBDMjU2NA==/dissolve/100/gravity/SouthEast/dx/10/dy/10%7Cimageslim" alt="任务执行完成"></p>
 <h3 id="6-3-其他提交命令"><a href="#6-3-其他提交命令" class="headerlink" title="6.3 其他提交命令"></a>6.3 其他提交命令</h3><ul>
 <li>连接指定 host 和 port 的 JobManager（已知一个 Flink 集群，并把任务提交到该集群）：</li>
 </ul>
@@ -1593,7 +1593,7 @@ code[class*="language-"], pre[class*="language-"] { white-space: pre !important;
             <br>
             
             &nbsp;<i class="fas fa-chart-area"></i>&nbsp;站点总字数:&nbsp;<span
-                class="white-color">810.5k</span>&nbsp;字
+                class="white-color">812.8k</span>&nbsp;字
             
             
             

@@ -4,10 +4,10 @@
 
 <head><meta name="generator" content="Hexo 3.9.0">
     <meta charset="utf-8">
-    <meta name="keywords" content="ClickHouse系列教程 2. 离线部署安装介绍, hnbian">
-    <meta name="description" content="1.ClickHouse安装准备工作1.1. 关于版本和系统的选择操作系统：CentOS Linux release 7.6.1810 (Core) 
-ClickHouse: 21.4.3
-1.2 CentOS7 打开文件数限制在 /etc">
+    <meta name="keywords" content="ClickHouse 系列教程 2. 离线部署安装介绍, hnbian">
+    <meta name="description" content="1. ClickHouse 安装准备工作1.1. 关于版本和系统的选择操作系统：CentOS Linux release 7.6.1810 (Core) 
+ ClickHouse : 21.4.3
+1.2 CentOS7 打开文件数限制在 ">
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=no">
     <meta name="renderer" content="webkit|ie-stand|ie-comp">
@@ -15,7 +15,7 @@ ClickHouse: 21.4.3
     <meta name="format-detection" content="telephone=no">
     <meta name="apple-mobile-web-app-capable" content="yes">
     <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
-    <title>ClickHouse系列教程 2. 离线部署安装介绍 | hnbian</title>
+    <title>ClickHouse 系列教程 2. 离线部署安装介绍 | hnbian</title>
     <link rel="icon" type="image/png" href="https://images.hnbian.cn/FvNSAGx7xljxALFh8Fa2DPNFP-JB">
 
     <link rel="stylesheet" type="text/css" href="https://images.hnbian.cn/all.css">
@@ -290,7 +290,7 @@ ClickHouse: 21.4.3
         <div class="row">
             <div class="col s12 m12 l12">
                 <div class="brand">
-                    <h1 class="description center-align post-title">ClickHouse系列教程 2. 离线部署安装介绍</h1>
+                    <h1 class="description center-align post-title">ClickHouse 系列教程 2. 离线部署安装介绍</h1>
                 </div>
             </div>
         </div>
@@ -407,12 +407,12 @@ ClickHouse: 21.4.3
                     
                     <div class="article-tag">
                         
-                            <a href="/tags/clickhouse/">
-                                <span class="chip bg-color">clickhouse</span>
-                            </a>
-                        
                             <a href="/tags/olap/">
                                 <span class="chip bg-color">olap</span>
+                            </a>
+                        
+                            <a href="/tags/ClickHouse/">
+                                <span class="chip bg-color">ClickHouse</span>
                             </a>
                         
                     </div>
@@ -423,8 +423,8 @@ ClickHouse: 21.4.3
                     <div class="post-cate">
                         <i class="fas fa-bookmark fa-fw icon-category"></i>
                         
-                            <a href="/categories/clickhouse/" class="post-category">
-                                clickhouse
+                            <a href="/categories/ClickHouse/" class="post-category">
+                                ClickHouse
                             </a>
                         
                     </div>
@@ -468,8 +468,8 @@ ClickHouse: 21.4.3
         <hr class="clearfix">
         <div class="card-content article-card-content">
             <div id="articleContent">
-                <h2 id="1-ClickHouse安装准备工作"><a href="#1-ClickHouse安装准备工作" class="headerlink" title="1.ClickHouse安装准备工作"></a>1.ClickHouse安装准备工作</h2><h3 id="1-1-关于版本和系统的选择"><a href="#1-1-关于版本和系统的选择" class="headerlink" title="1.1. 关于版本和系统的选择"></a>1.1. 关于版本和系统的选择</h3><p>操作系统：CentOS Linux release 7.6.1810 (Core) </p>
-<p>ClickHouse: 21.4.3</p>
+                <h2 id="1-ClickHouse-安装准备工作"><a href="#1-ClickHouse-安装准备工作" class="headerlink" title="1. ClickHouse 安装准备工作"></a>1. ClickHouse 安装准备工作</h2><h3 id="1-1-关于版本和系统的选择"><a href="#1-1-关于版本和系统的选择" class="headerlink" title="1.1. 关于版本和系统的选择"></a>1.1. 关于版本和系统的选择</h3><p>操作系统：CentOS Linux release 7.6.1810 (Core) </p>
+<p> ClickHouse : 21.4.3</p>
 <h3 id="1-2-CentOS7-打开文件数限制"><a href="#1-2-CentOS7-打开文件数限制" class="headerlink" title="1.2 CentOS7 打开文件数限制"></a>1.2 CentOS7 打开文件数限制</h3><p>在 /etc/security/limits.conf 这个文件的末尾加入一下内容：</p>
 <pre class=" language-shell"><code class="language-shell">sudo vim /etc/security/limits.conf
 * soft nofile 65536
@@ -534,23 +534,23 @@ yum install -y *unixODBC*</code></pre>
 <h3 id="1-6-验证指令集是否支持"><a href="#1-6-验证指令集是否支持" class="headerlink" title="1.6 验证指令集是否支持"></a>1.6 验证指令集是否支持</h3><p>需要验证当前服务器的 CPU 是否支持 SSE 4.2 指令集，因为向量化执行需要用到这项特性：</p>
 <pre class=" language-shell"><code class="language-shell">[root@node3 ~]# grep -q sse4_2 /proc/cpuinfo && echo "SSE 4.2 supported" || echo "SSE 4.2 not supported"
 SSE 4.2 supported</code></pre>
-<h3 id="1-7-下载-rpm-包"><a href="#1-7-下载-rpm-包" class="headerlink" title="1.7 下载 rpm 包"></a>1.7 下载 rpm 包</h3><pre class=" language-shell"><code class="language-shell">[root@node3 opt]# mkdir clickhouse
-[root@node3 opt]# cd clickhouse/
-[root@node3 clickhouse]#  wget https://repo.yandex.ru/clickhouse/rpm/stable/x86_64/clickhouse-server-21.4.3.21-2.noarch.rpm
+<h3 id="1-7-下载-rpm-包"><a href="#1-7-下载-rpm-包" class="headerlink" title="1.7 下载 rpm 包"></a>1.7 下载 rpm 包</h3><pre class=" language-shell"><code class="language-shell">[root@node3 opt]# mkdir  ClickHouse 
+[root@node3 opt]# cd  ClickHouse /
+[root@node3  ClickHouse ]#  wget https://repo.yandex.ru/ ClickHouse /rpm/stable/x86_64/ ClickHouse -server-21.4.3.21-2.noarch.rpm
 
-[root@node3 clickhouse]#  wget https://repo.yandex.ru/clickhouse/rpm/stable/x86_64/clickhouse-common-static-21.4.3.21-2.x86_64.rpm
+[root@node3  ClickHouse ]#  wget https://repo.yandex.ru/ ClickHouse /rpm/stable/x86_64/ ClickHouse -common-static-21.4.3.21-2.x86_64.rpm
 
-[root@node3 clickhouse]#  wget https://repo.yandex.ru/clickhouse/rpm/stable/x86_64/clickhouse-client-21.4.3.21-2.noarch.rpm</code></pre>
-<h2 id="2-单机模式部署"><a href="#2-单机模式部署" class="headerlink" title="2. 单机模式部署"></a>2. 单机模式部署</h2><p>ClickHouse的安装可以使用 yum在线安装，也可以使用 rpm 离线安装的方式！<br>具体信息见官网文档：<a href="https://clickhouse.tech/#quick-start" target="_blank" rel="noopener">https://clickhouse.tech/#quick-start</a></p>
-<h3 id="2-1-安装rpm包"><a href="#2-1-安装rpm包" class="headerlink" title="2.1 安装rpm包"></a>2.1 安装rpm包</h3><pre class=" language-bash"><code class="language-bash">rpm -ivh clickhouse-common-static-21.4.3.21-2.x86_64.rpm
+[root@node3  ClickHouse ]#  wget https://repo.yandex.ru/ ClickHouse /rpm/stable/x86_64/ ClickHouse -client-21.4.3.21-2.noarch.rpm</code></pre>
+<h2 id="2-单机模式部署"><a href="#2-单机模式部署" class="headerlink" title="2. 单机模式部署"></a>2. 单机模式部署</h2><p> ClickHouse 的安装可以使用 yum在线安装，也可以使用 rpm 离线安装的方式！<br>具体信息见官网文档：https:// ClickHouse .tech/#quick-start</p>
+<h3 id="2-1-安装rpm包"><a href="#2-1-安装rpm包" class="headerlink" title="2.1 安装rpm包"></a>2.1 安装rpm包</h3><pre class=" language-bash"><code class="language-bash">rpm -ivh  ClickHouse -common-static-21.4.3.21-2.x86_64.rpm
 
-rpm -ivh clickhouse-server-21.4.3.21-2.noarch.rpm
+rpm -ivh  ClickHouse -server-21.4.3.21-2.noarch.rpm
 
-rpm -ivh clickhouse-client-21.4.3.21-2.noarch.rpm</code></pre>
+rpm -ivh  ClickHouse -client-21.4.3.21-2.noarch.rpm</code></pre>
 <h3 id="2-2-修改端口"><a href="#2-2-修改端口" class="headerlink" title="2.2 修改端口"></a>2.2 修改端口</h3><pre><code>
-# clickhouse 默认使用 9000 端口，但是这个端口与 HDFS 发生冲突，所以将其修改为 9977
+#  ClickHouse  默认使用 9000 端口，但是这个端口与 HDFS 发生冲突，所以将其修改为 9977
 
-vim /etc/clickhouse-server/config.xml
+vim /etc/ ClickHouse -server/config.xml
 
 # 1. 将 &lt;tcp_port&gt;9000&lt;/tcp_port&gt; 端口修改为 9977
 &lt;tcp_port&gt;9977&lt;/tcp_port&gt;
@@ -568,66 +568,66 @@ vim /etc/clickhouse-server/config.xml
 </tr>
 </thead>
 <tbody><tr>
-<td>/etc/clickhouse-server</td>
+<td>/etc/ ClickHouse -server</td>
 <td>服务端的配置文件目录，包括全局配置config.xml和用户配置users.xml</td>
 </tr>
 <tr>
-<td>/var/lib/clickhouse</td>
+<td>/var/lib/ ClickHouse</td>
 <td>默认数据存储目录，通常会修改默认路径配置，将数据保存到大容量磁盘挂载路径</td>
 </tr>
 <tr>
-<td>/var/log/clickhouse-server</td>
+<td>/var/log/ ClickHouse -server</td>
 <td>默认日志保存目录，通常会修改路径配置将日志保存到大容量磁盘挂载的路径</td>
 </tr>
 </tbody></table>
 <h3 id="2-4-配置文件"><a href="#2-4-配置文件" class="headerlink" title="2.4 配置文件"></a>2.4 配置文件</h3><ul>
-<li>/etc/security/limits.d/clickhouse.conf：文件句柄数量的配置</li>
+<li>/etc/security/limits.d/ ClickHouse .conf：文件句柄数量的配置</li>
 </ul>
-<pre class=" language-bash"><code class="language-bash"><span class="token punctuation">[</span>root@node3 ~<span class="token punctuation">]</span><span class="token comment" spellcheck="true"># cat /etc/security/limits.d/clickhouse.conf</span>
-clickhouse    soft    nofile    262144
-clickhouse    hard    nofile    262144
+<pre class=" language-bash"><code class="language-bash"><span class="token punctuation">[</span>root@node3 ~<span class="token punctuation">]</span><span class="token comment" spellcheck="true"># cat /etc/security/limits.d/ ClickHouse .conf</span>
+ ClickHouse     soft    nofile    262144
+ ClickHouse     hard    nofile    262144
 <span class="token comment" spellcheck="true"># 该配置也可以通过config.xml的max_open_files修改</span></code></pre>
 <ul>
-<li>/etc/cron.d/clickhouse-server：cron定时任务配置</li>
+<li>/etc/cron.d/ ClickHouse -server：cron定时任务配置</li>
 </ul>
-<pre class=" language-bash"><code class="language-bash"><span class="token comment" spellcheck="true"># 用于恢复因异常原因中断的ClickHouse服务进程</span>
-<span class="token punctuation">[</span>root@node3 ~<span class="token punctuation">]</span><span class="token comment" spellcheck="true"># cat /etc/cron.d/clickhouse-server</span>
-<span class="token comment" spellcheck="true">#*/10 * * * * root (which service > /dev/null 2>&amp;1 &amp;&amp; (service clickhouse-server condstart ||:)) || /etc/init.d/clickhouse-server condstart > /dev/null 2>&amp;1</span>
+<pre class=" language-bash"><code class="language-bash"><span class="token comment" spellcheck="true"># 用于恢复因异常原因中断的 ClickHouse 服务进程</span>
+<span class="token punctuation">[</span>root@node3 ~<span class="token punctuation">]</span><span class="token comment" spellcheck="true"># cat /etc/cron.d/ ClickHouse -server</span>
+<span class="token comment" spellcheck="true">#*/10 * * * * root (which service > /dev/null 2>&amp;1 &amp;&amp; (service  ClickHouse -server condstart ||:)) || /etc/init.d/ ClickHouse -server condstart > /dev/null 2>&amp;1</span>
 
 <span class="token comment" spellcheck="true"># 在默认的情况下，</span>
-<span class="token comment" spellcheck="true"># 每隔10秒就会使用condstart尝试启动一次ClickHouse服务，</span>
-<span class="token comment" spellcheck="true"># condstart命令的是检查ClickHouse服务状态，</span>
-<span class="token comment" spellcheck="true"># 如果ClickHouse服务正在运行，则跳过；如果没有运行，则通过start启动</span>
+<span class="token comment" spellcheck="true"># 每隔10秒就会使用condstart尝试启动一次 ClickHouse 服务，</span>
+<span class="token comment" spellcheck="true"># condstart命令的是检查 ClickHouse 服务状态，</span>
+<span class="token comment" spellcheck="true"># 如果 ClickHouse 服务正在运行，则跳过；如果没有运行，则通过start启动</span>
 </code></pre>
 <ul>
-<li>/usr/bin/clickhouse：主程序的可执行文件</li>
-<li>/usr/bin/clickhouseclient：一个指向ClickHouse可执行文件的软链接，供客户端连接使用</li>
-<li>/usr/bin/clickhouseserver：一个指向ClickHouse可执行文件的软链接，供服务端启动使用</li>
-<li>/usr/bin/clickhousecompressor：内置提供的压缩工具，可用于数据的正压反解</li>
+<li>/usr/bin/ ClickHouse ：主程序的可执行文件</li>
+<li>/usr/bin/ ClickHouse client：一个指向 ClickHouse 可执行文件的软链接，供客户端连接使用</li>
+<li>/usr/bin/ ClickHouse server：一个指向 ClickHouse 可执行文件的软链接，供服务端启动使用</li>
+<li>/usr/bin/ ClickHouse compressor：内置提供的压缩工具，可用于数据的正压反解</li>
 </ul>
-<h3 id="2-3-启动-clickhouse并验证"><a href="#2-3-启动-clickhouse并验证" class="headerlink" title="2.3 启动 clickhouse并验证"></a>2.3 启动 clickhouse并验证</h3><pre class=" language-shell"><code class="language-shell"># 启动服务
-[root@node3 clickhouse]# systemctl start clickhouse-server.service
+<h3 id="2-3-启动-ClickHouse-并验证"><a href="#2-3-启动-ClickHouse-并验证" class="headerlink" title="2.3 启动  ClickHouse 并验证"></a>2.3 启动  ClickHouse 并验证</h3><pre class=" language-shell"><code class="language-shell"># 启动服务
+[root@node3  ClickHouse ]# systemctl start  ClickHouse -server.service
 
 # 验证服务是否启动成功
-[root@node3 clickhouse]# netstat -nltp | grep clickhouse
-tcp6       0      0 :::9977                 :::*                    LISTEN      19971/clickhouse-se
-tcp6       0      0 :::8123                 :::*                    LISTEN      19971/clickhouse-se
-tcp6       0      0 :::9004                 :::*                    LISTEN      19971/clickhouse-se
-tcp6       0      0 :::9009                 :::*                    LISTEN      19971/clickhouse-se
-[root@node3 clickhouse]#
-[root@node3 clickhouse]#
-[root@node3 clickhouse]# ps -aux | grep clickhouse
-clickho+ 19970  0.0  0.0 477408 22868 ?        Ss   11:35   0:00 clickhouse-watchdog        --config=/etc/clickhouse-server/config.xml --pid-file=/run/clickhouse-server/clickhouse-server.pid
-clickho+ 19971  1.2  0.8 1395324 270444 ?      SLl  11:35   0:03 /usr/bin/clickhouse-server --config=/etc/clickhouse-server/config.xml --pid-file=/run/clickhouse-server/clickhouse-server.pid
-root     22516  0.0  0.0 112728  1000 pts/0    S+   11:40   0:00 grep --color=auto clickhouse
+[root@node3  ClickHouse ]# netstat -nltp | grep  ClickHouse 
+tcp6       0      0 :::9977                 :::*                    LISTEN      19971/ ClickHouse -se
+tcp6       0      0 :::8123                 :::*                    LISTEN      19971/ ClickHouse -se
+tcp6       0      0 :::9004                 :::*                    LISTEN      19971/ ClickHouse -se
+tcp6       0      0 :::9009                 :::*                    LISTEN      19971/ ClickHouse -se
+[root@node3  ClickHouse ]#
+[root@node3  ClickHouse ]#
+[root@node3  ClickHouse ]# ps -aux | grep  ClickHouse 
+clickho+ 19970  0.0  0.0 477408 22868 ?        Ss   11:35   0:00  ClickHouse -watchdog        --config=/etc/ ClickHouse -server/config.xml --pid-file=/run/ ClickHouse -server/ ClickHouse -server.pid
+clickho+ 19971  1.2  0.8 1395324 270444 ?      SLl  11:35   0:03 /usr/bin/ ClickHouse -server --config=/etc/ ClickHouse -server/config.xml --pid-file=/run/ ClickHouse -server/ ClickHouse -server.pid
+root     22516  0.0  0.0 112728  1000 pts/0    S+   11:40   0:00 grep --color=auto  ClickHouse 
 
 # 关闭服务
-systemctl stop clickhouse-server.service</code></pre>
-<h2 id="3-命令行介绍"><a href="#3-命令行介绍" class="headerlink" title="3. 命令行介绍"></a>3. 命令行介绍</h2><h3 id="3-1-基本使用"><a href="#3-1-基本使用" class="headerlink" title="3.1 基本使用"></a>3.1 基本使用</h3><pre class=" language-sql"><code class="language-sql"><span class="token comment" spellcheck="true">-- 启动 clickhouse 命令行</span>
-<span class="token punctuation">[</span>root<span class="token variable">@node3</span> clickhouse<span class="token punctuation">]</span><span class="token comment" spellcheck="true"># clickhouse-client --host=localhost --port=9977</span>
-ClickHouse client version <span class="token number">21.4</span><span class="token punctuation">.</span><span class="token number">3.21</span> <span class="token punctuation">(</span>official build<span class="token punctuation">)</span><span class="token punctuation">.</span>
+systemctl stop  ClickHouse -server.service</code></pre>
+<h2 id="3-命令行介绍"><a href="#3-命令行介绍" class="headerlink" title="3. 命令行介绍"></a>3. 命令行介绍</h2><h3 id="3-1-基本使用"><a href="#3-1-基本使用" class="headerlink" title="3.1 基本使用"></a>3.1 基本使用</h3><pre class=" language-sql"><code class="language-sql"><span class="token comment" spellcheck="true">-- 启动  ClickHouse  命令行</span>
+<span class="token punctuation">[</span>root<span class="token variable">@node3</span>  ClickHouse <span class="token punctuation">]</span><span class="token comment" spellcheck="true">#  ClickHouse -client --host=localhost --port=9977</span>
+ ClickHouse  client version <span class="token number">21.4</span><span class="token punctuation">.</span><span class="token number">3.21</span> <span class="token punctuation">(</span>official build<span class="token punctuation">)</span><span class="token punctuation">.</span>
 Connecting <span class="token keyword">to</span> localhost:<span class="token number">9977</span> <span class="token keyword">as</span> <span class="token keyword">user</span> <span class="token keyword">default</span><span class="token punctuation">.</span>
-Connected <span class="token keyword">to</span> ClickHouse server version <span class="token number">21.4</span><span class="token punctuation">.</span><span class="token number">3</span> revision <span class="token number">54447</span><span class="token punctuation">.</span>
+Connected <span class="token keyword">to</span>  ClickHouse  server version <span class="token number">21.4</span><span class="token punctuation">.</span><span class="token number">3</span> revision <span class="token number">54447</span><span class="token punctuation">.</span>
 <span class="token comment" spellcheck="true">-- 创建库</span>
 <span class="token keyword">show</span> <span class="token keyword">databases</span><span class="token punctuation">;</span>
 
@@ -652,7 +652,7 @@ Connected <span class="token keyword">to</span> ClickHouse server version <span 
 └────────┘
 
 <span class="token comment" spellcheck="true">-- 插入数据</span>
-<span class="token keyword">insert</span> <span class="token keyword">into</span> test01 <span class="token keyword">values</span> <span class="token punctuation">(</span><span class="token number">1</span><span class="token punctuation">,</span> <span class="token string">'hello'</span><span class="token punctuation">)</span><span class="token punctuation">,</span> <span class="token punctuation">(</span><span class="token number">2</span><span class="token punctuation">,</span> <span class="token string">'world'</span><span class="token punctuation">)</span><span class="token punctuation">,</span> <span class="token punctuation">(</span><span class="token number">3</span><span class="token punctuation">,</span> <span class="token string">'clickhouse'</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+<span class="token keyword">insert</span> <span class="token keyword">into</span> test01 <span class="token keyword">values</span> <span class="token punctuation">(</span><span class="token number">1</span><span class="token punctuation">,</span> <span class="token string">'hello'</span><span class="token punctuation">)</span><span class="token punctuation">,</span> <span class="token punctuation">(</span><span class="token number">2</span><span class="token punctuation">,</span> <span class="token string">'world'</span><span class="token punctuation">)</span><span class="token punctuation">,</span> <span class="token punctuation">(</span><span class="token number">3</span><span class="token punctuation">,</span> <span class="token string">' ClickHouse '</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
 
 <span class="token comment" spellcheck="true">-- 查询数据</span>
 <span class="token keyword">select</span> id<span class="token punctuation">,</span> name <span class="token keyword">from</span> test01<span class="token punctuation">;</span>
@@ -660,7 +660,7 @@ Connected <span class="token keyword">to</span> ClickHouse server version <span 
 ┌─id─┬─name───────┐
 │  <span class="token number">1</span> │ hello      │
 │  <span class="token number">2</span> │ world      │
-│  <span class="token number">3</span> │ clickhouse │
+│  <span class="token number">3</span> │  ClickHouse  │
 └────┴────────────┘
 
 <span class="token comment" spellcheck="true">-- 统计查询</span>
@@ -670,9 +670,9 @@ Connected <span class="token keyword">to</span> ClickHouse server version <span 
 │     <span class="token number">3</span> │
 └───────┘
 
-<span class="token comment" spellcheck="true">-- 退出 clickhouse 命令行</span>
+<span class="token comment" spellcheck="true">-- 退出  ClickHouse  命令行</span>
 quit</code></pre>
-<h3 id="3-2-clickhouse-client-相关参数"><a href="#3-2-clickhouse-client-相关参数" class="headerlink" title="3.2 clickhouse-client 相关参数"></a>3.2 clickhouse-client 相关参数</h3><style>
+<h3 id="3-2-ClickHouse-client-相关参数"><a href="#3-2-ClickHouse-client-相关参数" class="headerlink" title="3.2  ClickHouse -client 相关参数"></a>3.2  ClickHouse -client 相关参数</h3><style>
 table th:first-of-type {
     width: 10%;
 }
@@ -721,7 +721,7 @@ table th:nth-of-type(2) {
 <td>在非交互式执行时，会打印每条SQL的执行时间</td>
 </tr>
 </tbody></table>
-<h3 id="3-3-查看历史记录"><a href="#3-3-查看历史记录" class="headerlink" title="3.3 查看历史记录"></a>3.3 查看历史记录</h3><pre class=" language-bash"><code class="language-bash"><span class="token function">cat</span> ~/.clickhouse-client-history</code></pre>
+<h3 id="3-3-查看历史记录"><a href="#3-3-查看历史记录" class="headerlink" title="3.3 查看历史记录"></a>3.3 查看历史记录</h3><pre class=" language-bash"><code class="language-bash"><span class="token function">cat</span> ~/. ClickHouse -client-history</code></pre>
 <h3 id="3-4-导入数据"><a href="#3-4-导入数据" class="headerlink" title="3.4 导入数据"></a>3.4 导入数据</h3><ol>
 <li>准备导入的数据文件</li>
 </ol>
@@ -737,7 +737,7 @@ table th:nth-of-type(2) {
 <ol start="3">
 <li>导入数据</li>
 </ol>
-<pre class=" language-bash"><code class="language-bash"><span class="token function">cat</span> data.csv <span class="token operator">|</span> clickhouse-client --port<span class="token operator">=</span>9977 --query <span class="token string">" INSERT INTO db1.test_csv FORMAT CSV "</span></code></pre>
+<pre class=" language-bash"><code class="language-bash"><span class="token function">cat</span> data.csv <span class="token operator">|</span>  ClickHouse -client --port<span class="token operator">=</span>9977 --query <span class="token string">" INSERT INTO db1.test_csv FORMAT CSV "</span></code></pre>
 <ol start="4">
 <li>确认操作</li>
 </ol>
@@ -751,18 +751,18 @@ table th:nth-of-type(2) {
 │  <span class="token number">2</span> │ xiaohong   │
 └────┴────────────┘</code></pre>
 <h3 id="3-5-导出数据"><a href="#3-5-导出数据" class="headerlink" title="3.5 导出数据"></a>3.5 导出数据</h3><pre class=" language-bash"><code class="language-bash"><span class="token comment" spellcheck="true"># 导入数据</span>
-<span class="token punctuation">[</span>root@node3 opt<span class="token punctuation">]</span><span class="token comment" spellcheck="true"># clickhouse-client --port=9977 --query " select * from db1.test_csv " > /opt/test_csv.csv</span>
+<span class="token punctuation">[</span>root@node3 opt<span class="token punctuation">]</span><span class="token comment" spellcheck="true">#  ClickHouse -client --port=9977 --query " select * from db1.test_csv " > /opt/test_csv.csv</span>
 <span class="token punctuation">[</span>root@node3 opt<span class="token punctuation">]</span><span class="token comment" spellcheck="true">#</span>
 <span class="token punctuation">[</span>root@node3 opt<span class="token punctuation">]</span><span class="token comment" spellcheck="true">#</span>
 <span class="token punctuation">[</span>root@node3 opt<span class="token punctuation">]</span><span class="token comment" spellcheck="true"># cat test_csv.csv</span>
 10    name
 1    xioaming
 2    xiaohong</code></pre>
-<h2 id="4-内置工具"><a href="#4-内置工具" class="headerlink" title="4. 内置工具"></a>4. 内置工具</h2><p>ClickHouse除了提供基础的服务端与客户端程序之外，还内置了clickhouse-local和clickhouse-benchmark两种实用工具，现在分别说明它们的作用。</p>
-<h3 id="4-1-clickhouse-local"><a href="#4-1-clickhouse-local" class="headerlink" title="4.1 clickhouse-local"></a>4.1 clickhouse-local</h3><p>clickhouse-local可以独立运行大部分SQL查询，不需要依赖任何ClickHouse的服务端程序，它可以理解成是ClickHouse服务的单机版微内核，是一个轻量级的应用程序。clickhouse-local只能够使用File表引擎，它的数据与同机运行的ClickHouse服务也是完全隔离的，相互之间并不能访问。</p>
-<p>clickhouselocal是非交互式运行的，每次执行都需要指定数据来源，例如通过stdin标准输入，以echo打印作为数据来源：</p>
+<h2 id="4-内置工具"><a href="#4-内置工具" class="headerlink" title="4. 内置工具"></a>4. 内置工具</h2><p> ClickHouse  除了提供基础的服务端与客户端程序之外，还内置了 ClickHouse-local 和  ClickHouse-benchmark两种实用工具，现在分别说明它们的作用。</p>
+<h3 id="4-1-ClickHouse-local"><a href="#4-1-ClickHouse-local" class="headerlink" title="4.1  ClickHouse -local"></a>4.1  ClickHouse -local</h3><p> ClickHouse -local 可以独立运行大部分SQL查询，不需要依赖任何  ClickHouse  的服务端程序，它可以理解成是 ClickHouse 服务的单机版微内核，是一个轻量级的应用程序。 ClickHouse-local只能够使用File表引擎，它的数据与同机运行的 ClickHouse 服务也是完全隔离的，相互之间并不能访问。</p>
+<p> ClickHouse local是非交互式运行的，每次执行都需要指定数据来源，例如通过stdin标准输入，以echo打印作为数据来源：</p>
 <ul>
-<li><p>clickhouselocal 参数简介:</p>
+<li><p>ClickHouse local 参数简介:</p>
 <p>完整的参数列表可以通过help查阅。</p>
 </li>
 </ul>
@@ -795,16 +795,16 @@ table th:nth-of-type(2) {
 </tr>
 </tbody></table>
 <pre class=" language-bash"><code class="language-bash"><span class="token comment" spellcheck="true"># 使用 -S -H 简写 定义表结构并查询数据</span>
-<span class="token keyword">echo</span> -e <span class="token string">"1\n2\n3"</span> <span class="token operator">|</span> clickhouse-local -S <span class="token string">"id Int64 "</span> -N <span class="token string">"test_table"</span> -q <span class="token string">"SELECT id FROM test_table;"</span>
+<span class="token keyword">echo</span> -e <span class="token string">"1\n2\n3"</span> <span class="token operator">|</span>  ClickHouse -local -S <span class="token string">"id Int64 "</span> -N <span class="token string">"test_table"</span> -q <span class="token string">"SELECT id FROM test_table;"</span>
 
 <span class="token comment" spellcheck="true"># 使用 --structure  --table 定义表结构并查询数据 </span>
-<span class="token keyword">echo</span> -e <span class="token string">"1\n2\n3"</span> <span class="token operator">|</span> clickhouse-local --structure <span class="token string">"id Int64 "</span> --table <span class="token string">"test_table"</span> -q <span class="token string">"SELECT id FROM test_table;"</span>
+<span class="token keyword">echo</span> -e <span class="token string">"1\n2\n3"</span> <span class="token operator">|</span>  ClickHouse -local --structure <span class="token string">"id Int64 "</span> --table <span class="token string">"test_table"</span> -q <span class="token string">"SELECT id FROM test_table;"</span>
 
 <span class="token comment" spellcheck="true"># 使用DDL 定义表结构并查询数据</span>
-<span class="token keyword">echo</span> -e <span class="token string">"1\n2\n3"</span> <span class="token operator">|</span> clickhouse-local -q <span class="token string">"CREATE TABLE test_table (id Int64 ) ENGINE = File( CSV, stdin );SELECT id FROM test_table;"</span>
+<span class="token keyword">echo</span> -e <span class="token string">"1\n2\n3"</span> <span class="token operator">|</span>  ClickHouse -local -q <span class="token string">"CREATE TABLE test_table (id Int64 ) ENGINE = File( CSV, stdin );SELECT id FROM test_table;"</span>
 
 <span class="token comment" spellcheck="true"># 使用外部数据作为数据源</span>
-<span class="token punctuation">[</span>root@node3 opt<span class="token punctuation">]</span><span class="token comment" spellcheck="true"># clickhouse-local  --file "/opt/data.csv" -S " id Int64,name String" --input-format "CSV" -N "test_table"  -q "SELECT * FROM test_table;"</span>
+<span class="token punctuation">[</span>root@node3 opt<span class="token punctuation">]</span><span class="token comment" spellcheck="true">#  ClickHouse -local  --file "/opt/data.csv" -S " id Int64,name String" --input-format "CSV" -N "test_table"  -q "SELECT * FROM test_table;"</span>
 10    name
 1    xioaming
 2    xiaohong
@@ -812,7 +812,7 @@ table th:nth-of-type(2) {
 <ul>
 <li>借助操作系统的命令，实现对系统用户内存用量的查询：</li>
 </ul>
-<pre class=" language-bash"><code class="language-bash"><span class="token punctuation">[</span>root@node3 opt<span class="token punctuation">]</span><span class="token comment" spellcheck="true"># ps aux |  tail -n +2 | awk '{ printf("%s\t%s\n",$1,$4) }' | clickhouse-local -S "user String,memory Float64" -q "SELECT user,round( sum(memory),2) as memoryTotal FROM table GROUP BY user ORDER BY memoryTotal DESC FORMAT Pretty"</span>
+<pre class=" language-bash"><code class="language-bash"><span class="token punctuation">[</span>root@node3 opt<span class="token punctuation">]</span><span class="token comment" spellcheck="true"># ps aux |  tail -n +2 | awk '{ printf("%s\t%s\n",$1,$4) }' |  ClickHouse -local -S "user String,memory Float64" -q "SELECT user,round( sum(memory),2) as memoryTotal FROM table GROUP BY user ORDER BY memoryTotal DESC FORMAT Pretty"</span>
 ──────────────────────────
 │ user     │ memoryTotal │
 ├──────────┼─────────────┤
@@ -833,7 +833,7 @@ table th:nth-of-type(2) {
 │ yarn     │         2.7 │
 ──────────────────────────
 <span class="token punctuation">..</span><span class="token punctuation">..</span>.</code></pre>
-<h3 id="4-2-clickhouse-benchmark"><a href="#4-2-clickhouse-benchmark" class="headerlink" title="4.2 clickhouse-benchmark"></a>4.2 clickhouse-benchmark</h3><p>clickhouse-benchmark是基准测试的小工具，它可以自动运行SQL查询，并生成相应的运行指标报告。</p>
+<h3 id="4-2-ClickHouse-benchmark"><a href="#4-2-ClickHouse-benchmark" class="headerlink" title="4.2  ClickHouse -benchmark"></a>4.2  ClickHouse -benchmark</h3><p> ClickHouse -benchmark是基准测试的小工具，它可以自动运行SQL查询，并生成相应的运行指标报告。</p>
 <ul>
 <li><p>参数说明</p>
 <p>完整的参数列表，可以通过help查阅。</p>
@@ -860,7 +860,7 @@ table th:nth-of-type(2) {
 </tr>
 <tr>
 <td><code>-h/--host</code></td>
-<td>服务端地址，默认值是localhost。clickhousebenchmark支持对比测试，此时需要通过此参数声明两个服务端的地址</td>
+<td>服务端地址，默认值是localhost。 ClickHouse benchmark支持对比测试，此时需要通过此参数声明两个服务端的地址</td>
 </tr>
 <tr>
 <td><code>--confidence</code></td>
@@ -870,7 +870,7 @@ table th:nth-of-type(2) {
 <ul>
 <li>使用示例</li>
 </ul>
-<pre class=" language-bash"><code class="language-bash"><span class="token punctuation">[</span>root@node3 opt<span class="token punctuation">]</span><span class="token comment" spellcheck="true"># echo " SELECT * FROM system.numbers LIMIT 100 " | clickhouse-benchmark  --port=9977  -i 5</span>
+<pre class=" language-bash"><code class="language-bash"><span class="token punctuation">[</span>root@node3 opt<span class="token punctuation">]</span><span class="token comment" spellcheck="true"># echo " SELECT * FROM system.numbers LIMIT 100 " |  ClickHouse -benchmark  --port=9977  -i 5</span>
 <span class="token comment" spellcheck="true"># 1个查询测试</span>
 Loaded 1 queries.
 
@@ -909,7 +909,7 @@ SELECT * FROM system.numbers LIMIT 100<span class="token punctuation">;</span>
 SELECT * FROM system.numbers LIMIT 200<span class="token punctuation">;</span>
 
 <span class="token comment" spellcheck="true"># 2. 执行测试</span>
-<span class="token punctuation">[</span>root@node3 opt<span class="token punctuation">]</span><span class="token comment" spellcheck="true"># clickhouse-benchmark --port=9977 -r 1 -i 5 &lt; /opt/multisqls</span>
+<span class="token punctuation">[</span>root@node3 opt<span class="token punctuation">]</span><span class="token comment" spellcheck="true">#  ClickHouse -benchmark --port=9977 -r 1 -i 5 &lt; /opt/multisqls</span>
 <span class="token comment" spellcheck="true"># 2 个查询测试</span>
 Loaded 2 queries.
 
@@ -937,7 +937,7 @@ localhost:9977, queries 5, QPS: 419.066, RPS: 58669.259, MiB/s: 0.448, result RP
 </ul>
 <pre class=" language-bash"><code class="language-bash"><span class="token comment" spellcheck="true"># 使用h参数指定了两个相同的服务地址（在真实场景中应该声明两个不同的服务），基准测试会分别执行2次，生成相应的指标报告：</span>
 
-<span class="token punctuation">[</span>root@node3 opt<span class="token punctuation">]</span><span class="token comment" spellcheck="true"># clickhouse-benchmark  -h node3 --port=9977 -h node3 --port=9977 -r 1 -i 5 &lt; /opt/multisqls</span>
+<span class="token punctuation">[</span>root@node3 opt<span class="token punctuation">]</span><span class="token comment" spellcheck="true">#  ClickHouse -benchmark  -h node3 --port=9977 -h node3 --port=9977 -r 1 -i 5 &lt; /opt/multisqls</span>
 Loaded 2 queries.
 
 Queries executed: 5 <span class="token punctuation">(</span>250.000%<span class="token punctuation">)</span>.
@@ -962,31 +962,31 @@ node3:9977, queries 3, QPS: 534.366, RPS: 71248.834, MiB/s: 0.544, result RPS: 7
 99.900%        0.002 sec.    0.003 sec.
 99.990%        0.002 sec.    0.003 sec.
 
-<span class="token comment" spellcheck="true"># 在对比测试中，clickhousebenchmark会通过抽样的方式比较两组查询指标的差距，在默认的情况下，置信区间为99.5%：</span>
+<span class="token comment" spellcheck="true"># 在对比测试中， ClickHouse benchmark会通过抽样的方式比较两组查询指标的差距，在默认的情况下，置信区间为99.5%：</span>
 No difference proven at 99.5% confidence</code></pre>
 <h2 id="5-JDBC-连接"><a href="#5-JDBC-连接" class="headerlink" title="5. JDBC 连接"></a>5. JDBC 连接</h2><ol>
 <li>添加依赖</li>
 </ol>
-<pre class=" language-xml"><code class="language-xml"><span class="token comment" spellcheck="true">&lt;!-- https://mvnrepository.com/artifact/ru.yandex.clickhouse/clickhouse-jdbc --></span>
+<pre class=" language-xml"><code class="language-xml"><span class="token comment" spellcheck="true">&lt;!-- https://mvnrepository.com/artifact/ru.yandex. ClickHouse / ClickHouse -jdbc --></span>
 <span class="token tag"><span class="token tag"><span class="token punctuation">&lt;</span>dependency</span><span class="token punctuation">></span></span>
-    <span class="token tag"><span class="token tag"><span class="token punctuation">&lt;</span>groupId</span><span class="token punctuation">></span></span>ru.yandex.clickhouse<span class="token tag"><span class="token tag"><span class="token punctuation">&lt;/</span>groupId</span><span class="token punctuation">></span></span>
-    <span class="token tag"><span class="token tag"><span class="token punctuation">&lt;</span>artifactId</span><span class="token punctuation">></span></span>clickhouse-jdbc<span class="token tag"><span class="token tag"><span class="token punctuation">&lt;/</span>artifactId</span><span class="token punctuation">></span></span>
+    <span class="token tag"><span class="token tag"><span class="token punctuation">&lt;</span>groupId</span><span class="token punctuation">></span></span>ru.yandex. ClickHouse <span class="token tag"><span class="token tag"><span class="token punctuation">&lt;/</span>groupId</span><span class="token punctuation">></span></span>
+    <span class="token tag"><span class="token tag"><span class="token punctuation">&lt;</span>artifactId</span><span class="token punctuation">></span></span> ClickHouse -jdbc<span class="token tag"><span class="token tag"><span class="token punctuation">&lt;/</span>artifactId</span><span class="token punctuation">></span></span>
     <span class="token tag"><span class="token tag"><span class="token punctuation">&lt;</span>version</span><span class="token punctuation">></span></span>0.3.0<span class="token tag"><span class="token tag"><span class="token punctuation">&lt;/</span>version</span><span class="token punctuation">></span></span>
 <span class="token tag"><span class="token tag"><span class="token punctuation">&lt;/</span>dependency</span><span class="token punctuation">></span></span></code></pre>
 <ol start="2">
 <li>URL</li>
 </ol>
-<p>单节点：JDBC URL 为 jdbc:clickhouse://&lt;host&gt;:&lt;port&gt;[/&lt;database&gt;]</p>
-<p>高可用：jdbc:clickhouse://&lt;firsthost&gt;:&lt;port&gt;,&lt;secondhost&gt;:&lt;port&gt;[,…]/&lt;database&gt;</p>
+<p>单节点：JDBC URL 为 jdbc: ClickHouse ://&lt;host&gt;:&lt;port&gt;[/&lt;database&gt;]</p>
+<p>高可用：jdbc: ClickHouse ://&lt;firsthost&gt;:&lt;port&gt;,&lt;secondhost&gt;:&lt;port&gt;[,…]/&lt;database&gt;</p>
 <pre class=" language-java"><code class="language-java"><span class="token keyword">import</span> java<span class="token punctuation">.</span>sql<span class="token punctuation">.</span>*<span class="token punctuation">;</span>
 
 <span class="token keyword">public</span> <span class="token keyword">class</span> <span class="token class-name">JDBCTest</span> <span class="token punctuation">{</span>
     <span class="token keyword">public</span> <span class="token keyword">static</span> <span class="token keyword">void</span> <span class="token function">main</span><span class="token punctuation">(</span>String<span class="token punctuation">[</span><span class="token punctuation">]</span> args<span class="token punctuation">)</span> <span class="token punctuation">{</span>
         <span class="token comment" spellcheck="true">//初始化驱动</span>
         <span class="token keyword">try</span> <span class="token punctuation">{</span>
-            Class<span class="token punctuation">.</span><span class="token function">forName</span><span class="token punctuation">(</span><span class="token string">"ru.yandex.clickhouse.ClickHouseDriver"</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+            Class<span class="token punctuation">.</span><span class="token function">forName</span><span class="token punctuation">(</span><span class="token string">"ru.yandex. ClickHouse . ClickHouse Driver"</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
             <span class="token comment" spellcheck="true">// url</span>
-            String url<span class="token operator">=</span><span class="token string">"jdbc:clickhouse://node3:8123/db1"</span><span class="token punctuation">;</span>
+            String url<span class="token operator">=</span><span class="token string">"jdbc: ClickHouse ://node3:8123/db1"</span><span class="token punctuation">;</span>
             <span class="token comment" spellcheck="true">// 使用默认用户</span>
             String user<span class="token operator">=</span><span class="token string">"default"</span><span class="token punctuation">;</span>
             <span class="token comment" spellcheck="true">// 默认密码为空</span>
@@ -1009,7 +1009,7 @@ No difference proven at 99.5% confidence</code></pre>
 <span class="token number">10</span><span class="token operator">-</span>name
 <span class="token number">1</span><span class="token operator">-</span>xioaming
 <span class="token number">2</span><span class="token operator">-</span>xiaohong</code></pre>
-<h2 id="3-集群模式部署"><a href="#3-集群模式部署" class="headerlink" title="3. 集群模式部署"></a>3. 集群模式部署</h2><h3 id="3-1-zookeeper-安装"><a href="#3-1-zookeeper-安装" class="headerlink" title="3.1 zookeeper 安装"></a>3.1 zookeeper 安装</h3><p>clickhouse 集群模式部署需要依赖 zookeeper，需要把 zookeeper 预先安装。</p>
+<h2 id="3-集群模式部署"><a href="#3-集群模式部署" class="headerlink" title="3. 集群模式部署"></a>3. 集群模式部署</h2><h3 id="3-1-zookeeper-安装"><a href="#3-1-zookeeper-安装" class="headerlink" title="3.1 zookeeper 安装"></a>3.1 zookeeper 安装</h3><p> ClickHouse  集群模式部署需要依赖 zookeeper，需要把 zookeeper 预先安装。</p>
 <p>这里不做 zookeeper 安装的介绍，不知道怎么安装可以看这个文档：<a href="https://www.hnbian.cn/posts/3f857bc8.html#toc-heading-11">https://www.hnbian.cn/posts/3f857bc8.html#toc-heading-11</a></p>
 <p>这里已经部署过了 zookeeper 环境如下：</p>
 <table>
@@ -1032,33 +1032,33 @@ No difference proven at 99.5% confidence</code></pre>
 <td>2181</td>
 </tr>
 </tbody></table>
-<h3 id="3-2-分发并安装rpm包"><a href="#3-2-分发并安装rpm包" class="headerlink" title="3.2 分发并安装rpm包"></a>3.2 分发并安装rpm包</h3><p>我准备了三台服务器，已经安装了一台，其他两台服务器也都需要安装clickhouse</p>
-<pre class=" language-bash"><code class="language-bash"><span class="token punctuation">[</span>root@node3 opt<span class="token punctuation">]</span><span class="token comment" spellcheck="true"># cd clickhouse/</span>
-<span class="token punctuation">[</span>root@node3 clickhouse<span class="token punctuation">]</span><span class="token comment" spellcheck="true">#</span>
-<span class="token punctuation">[</span>root@node3 clickhouse<span class="token punctuation">]</span><span class="token comment" spellcheck="true"># ll</span>
--rw-r--r-- 1 root root     54368 4月  12 23:41 clickhouse-client-21.4.3.21-2.noarch.rpm
--rw-r--r-- 1 root root 128449273 4月  12 23:41 clickhouse-common-static-21.4.3.21-2.x86_64.rpm
--rw-r--r-- 1 root root     77604 4月  12 23:41 clickhouse-server-21.4.3.21-2.noarch.rpm
-<span class="token punctuation">[</span>root@node3 clickhouse<span class="token punctuation">]</span><span class="token comment" spellcheck="true"># cd ..</span>
-<span class="token punctuation">[</span>root@node3 opt<span class="token punctuation">]</span><span class="token comment" spellcheck="true"># scp -r clickhouse/ node1:/opt/</span>
+<h3 id="3-2-分发并安装rpm包"><a href="#3-2-分发并安装rpm包" class="headerlink" title="3.2 分发并安装rpm包"></a>3.2 分发并安装rpm包</h3><p>我准备了三台服务器，已经安装了一台，其他两台服务器也都需要安装 ClickHouse </p>
+<pre class=" language-bash"><code class="language-bash"><span class="token punctuation">[</span>root@node3 opt<span class="token punctuation">]</span><span class="token comment" spellcheck="true"># cd  ClickHouse /</span>
+<span class="token punctuation">[</span>root@node3  ClickHouse <span class="token punctuation">]</span><span class="token comment" spellcheck="true">#</span>
+<span class="token punctuation">[</span>root@node3  ClickHouse <span class="token punctuation">]</span><span class="token comment" spellcheck="true"># ll</span>
+-rw-r--r-- 1 root root     54368 4月  12 23:41  ClickHouse -client-21.4.3.21-2.noarch.rpm
+-rw-r--r-- 1 root root 128449273 4月  12 23:41  ClickHouse -common-static-21.4.3.21-2.x86_64.rpm
+-rw-r--r-- 1 root root     77604 4月  12 23:41  ClickHouse -server-21.4.3.21-2.noarch.rpm
+<span class="token punctuation">[</span>root@node3  ClickHouse <span class="token punctuation">]</span><span class="token comment" spellcheck="true"># cd ..</span>
+<span class="token punctuation">[</span>root@node3 opt<span class="token punctuation">]</span><span class="token comment" spellcheck="true"># scp -r  ClickHouse / node1:/opt/</span>
 <span class="token punctuation">..</span>.
 <span class="token punctuation">[</span>root@node3 opt<span class="token punctuation">]</span><span class="token comment" spellcheck="true">#</span>
-<span class="token punctuation">[</span>root@node3 opt<span class="token punctuation">]</span><span class="token comment" spellcheck="true"># scp -r clickhouse/ node2:/opt/</span>
+<span class="token punctuation">[</span>root@node3 opt<span class="token punctuation">]</span><span class="token comment" spellcheck="true"># scp -r  ClickHouse / node2:/opt/</span>
 <span class="token punctuation">..</span>.
 
 <span class="token comment" spellcheck="true"># 分别在 node1、node2 安装 rpm 包</span>
 
-rpm -ivh clickhouse-common-static-21.4.3.21-2.x86_64.rpm
+rpm -ivh  ClickHouse -common-static-21.4.3.21-2.x86_64.rpm
 
-rpm -ivh clickhouse-server-21.4.3.21-2.noarch.rpm
+rpm -ivh  ClickHouse -server-21.4.3.21-2.noarch.rpm
 
-rpm -ivh clickhouse-client-21.4.3.21-2.noarch.rpm</code></pre>
+rpm -ivh  ClickHouse -client-21.4.3.21-2.noarch.rpm</code></pre>
 <h3 id="3-2-修改配置文件config-xml"><a href="#3-2-修改配置文件config-xml" class="headerlink" title="3.2 修改配置文件config.xml"></a>3.2 修改配置文件config.xml</h3><pre class=" language-shell"><code class="language-shell"># 在单节点部署中修改了config.xml 文件中的端口号，
-# 将这个文件分发到其余 clickhouse 节点中
-scp -r /etc/clickhouse-server/config.xml node1:/etc/clickhouse-server/
-scp -r /etc/clickhouse-server/config.xml node2:/etc/clickhouse-server/
+# 将这个文件分发到其余  ClickHouse  节点中
+scp -r /etc/ ClickHouse -server/config.xml node1:/etc/ ClickHouse -server/
+scp -r /etc/ ClickHouse -server/config.xml node2:/etc/ ClickHouse -server/
 
-vim /etc/clickhouse-server/config.xml
+vim /etc/ ClickHouse -server/config.xml
 先修改 tcp_port 为 9977， 因为这个端口和 HDFS 的冲突了
 <tcp_port>9977</tcp_port>
 listen_host 表示能监听的主机，:: 表示任意主机都可以访问
@@ -1067,14 +1067,14 @@ listen_host 表示能监听的主机，:: 表示任意主机都可以访问
 <!-- <listen_host>127.0.0.1</listen_host> -->
 所有节点同步：
 
-scp -r /etc/clickhouse-server/config.xml bigdata04:/etc/clickhouse-server/
-scp -r /etc/clickhouse-server/config.xml bigdata05:/etc/clickhouse-server/</code></pre>
+scp -r /etc/ ClickHouse -server/config.xml bigdata04:/etc/ ClickHouse -server/
+scp -r /etc/ ClickHouse -server/config.xml bigdata05:/etc/ ClickHouse -server/</code></pre>
 <h3 id="3-3-在四台机器的etc目录下新建metrika-xml文件"><a href="#3-3-在四台机器的etc目录下新建metrika-xml文件" class="headerlink" title="3.3 在四台机器的etc目录下新建metrika.xml文件"></a>3.3 在四台机器的etc目录下新建metrika.xml文件</h3><pre class=" language-xml"><code class="language-xml">vim /etc/metrika.xml
 
 <span class="token tag"><span class="token tag"><span class="token punctuation">&lt;</span>yandex</span><span class="token punctuation">></span></span>
-  <span class="token tag"><span class="token tag"><span class="token punctuation">&lt;</span>clickhouse_remote_servers</span><span class="token punctuation">></span></span>
+  &lt; ClickHouse _remote_servers>
     <span class="token comment" spellcheck="true">&lt;!-- 3分片1副本 --></span>
-    <span class="token tag"><span class="token tag"><span class="token punctuation">&lt;</span>clickhouse_4shards_1replicas</span><span class="token punctuation">></span></span>
+    &lt; ClickHouse _4shards_1replicas>
       <span class="token tag"><span class="token tag"><span class="token punctuation">&lt;</span>shard</span><span class="token punctuation">></span></span>
           <span class="token comment" spellcheck="true">&lt;!-- 数据自动同步 --></span>
           <span class="token tag"><span class="token tag"><span class="token punctuation">&lt;</span>internal_replication</span><span class="token punctuation">></span></span>true<span class="token tag"><span class="token tag"><span class="token punctuation">&lt;/</span>internal_replication</span><span class="token punctuation">></span></span>
@@ -1097,8 +1097,8 @@ scp -r /etc/clickhouse-server/config.xml bigdata05:/etc/clickhouse-server/</code
           <span class="token tag"><span class="token tag"><span class="token punctuation">&lt;</span>port</span><span class="token punctuation">></span></span>9977<span class="token tag"><span class="token tag"><span class="token punctuation">&lt;/</span>port</span><span class="token punctuation">></span></span>
         <span class="token tag"><span class="token tag"><span class="token punctuation">&lt;/</span>replica</span><span class="token punctuation">></span></span>
       <span class="token tag"><span class="token tag"><span class="token punctuation">&lt;/</span>shard</span><span class="token punctuation">></span></span>
-    <span class="token tag"><span class="token tag"><span class="token punctuation">&lt;/</span>clickhouse_4shards_1replicas</span><span class="token punctuation">></span></span>
-  <span class="token tag"><span class="token tag"><span class="token punctuation">&lt;/</span>clickhouse_remote_servers</span><span class="token punctuation">></span></span>
+    &lt;/ ClickHouse _4shards_1replicas>
+  &lt;/ ClickHouse _remote_servers>
 
   <span class="token comment" spellcheck="true">&lt;!-- zookeeper 自动同步 --></span>
   <span class="token tag"><span class="token tag"><span class="token punctuation">&lt;</span>zookeeper-servers</span><span class="token punctuation">></span></span>
@@ -1125,13 +1125,13 @@ scp -r /etc/clickhouse-server/config.xml bigdata05:/etc/clickhouse-server/</code
       <span class="token tag"><span class="token tag"><span class="token punctuation">&lt;</span>ip</span><span class="token punctuation">></span></span>::/0<span class="token tag"><span class="token tag"><span class="token punctuation">&lt;/</span>ip</span><span class="token punctuation">></span></span>
   <span class="token tag"><span class="token tag"><span class="token punctuation">&lt;/</span>networks</span><span class="token punctuation">></span></span>
   <span class="token comment" spellcheck="true">&lt;!-- 配置压缩 --></span>
-  <span class="token tag"><span class="token tag"><span class="token punctuation">&lt;</span>clickhouse_compression</span><span class="token punctuation">></span></span>
+  &lt; ClickHouse _compression>
     <span class="token tag"><span class="token tag"><span class="token punctuation">&lt;</span>case</span><span class="token punctuation">></span></span>
       <span class="token tag"><span class="token tag"><span class="token punctuation">&lt;</span>min_part_size</span><span class="token punctuation">></span></span>10000000000<span class="token tag"><span class="token tag"><span class="token punctuation">&lt;/</span>min_part_size</span><span class="token punctuation">></span></span>
       <span class="token tag"><span class="token tag"><span class="token punctuation">&lt;</span>min_part_size_ratio</span><span class="token punctuation">></span></span>0.01<span class="token tag"><span class="token tag"><span class="token punctuation">&lt;/</span>min_part_size_ratio</span><span class="token punctuation">></span></span>
       <span class="token tag"><span class="token tag"><span class="token punctuation">&lt;</span>method</span><span class="token punctuation">></span></span>lz4<span class="token tag"><span class="token tag"><span class="token punctuation">&lt;/</span>method</span><span class="token punctuation">></span></span>
     <span class="token tag"><span class="token tag"><span class="token punctuation">&lt;/</span>case</span><span class="token punctuation">></span></span>
-  <span class="token tag"><span class="token tag"><span class="token punctuation">&lt;/</span>clickhouse_compression</span><span class="token punctuation">></span></span>
+  &lt;/ ClickHouse _compression>
 <span class="token tag"><span class="token tag"><span class="token punctuation">&lt;/</span>yandex</span><span class="token punctuation">></span></span></code></pre>
 <p>需要根据不同的机器做不同的修改。<br>所有节点同步：</p>
 <pre class=" language-shell"><code class="language-shell">scp -r /etc/metrika.xml node1:/etc/
@@ -1140,18 +1140,18 @@ scp -r /etc/metrika.xml node2:/etc/</code></pre>
 zkServer.sh start
 
 #启动服务端：
-nohup clickhouse-server --config-file=/etc/clickhouse-server/config.xml
-1>~/logs/clickhouse_std.log 2>~/logs/clickhouse_err.log &
+nohup  ClickHouse -server --config-file=/etc/ ClickHouse -server/config.xml
+1>~/logs/ ClickHouse _std.log 2>~/logs/ ClickHouse _err.log &
 #检查启动是否OK：
-netstat -nltp | grep clickhouse
+netstat -nltp | grep  ClickHouse 
 # 启动客户端：
-clickhouse-client --host=... --port=... --user=... --password=... -m
+ ClickHouse -client --host=... --port=... --user=... --password=... -m
 </code></pre>
 <p>客户端命令参数解释：<br>username：用户名<br>password：密码<br>ip：服务器IP<br>port：端口<br>-m：允许多行查询</p>
 <p>启动本地多行查询客户端：</p>
-<pre class=" language-shell"><code class="language-shell">clickhouse-client --host=localhost --port=9977 -m
-clickhouse-client --host=bigdata02 --port=9977 --user=bigdata --password=bigdata -m</code></pre>
-<h3 id="3-5-检查进程"><a href="#3-5-检查进程" class="headerlink" title="3.5 检查进程"></a>3.5 检查进程</h3><pre class=" language-shell"><code class="language-shell">ps -aux | grep clickhouse</code></pre>
+<pre class=" language-shell"><code class="language-shell"> ClickHouse -client --host=localhost --port=9977 -m
+ ClickHouse -client --host=bigdata02 --port=9977 --user=bigdata --password=bigdata -m</code></pre>
+<h3 id="3-5-检查进程"><a href="#3-5-检查进程" class="headerlink" title="3.5 检查进程"></a>3.5 检查进程</h3><pre class=" language-shell"><code class="language-shell">ps -aux | grep  ClickHouse </code></pre>
 <h2 id="4-版本升级"><a href="#4-版本升级" class="headerlink" title="4. 版本升级"></a>4. 版本升级</h2><p>在使用离线RPM安装包安装后，可以直接通过rpm命令升级：</p>
 <pre class=" language-bash"><code class="language-bash"><span class="token comment" spellcheck="true">#cd/chbase/setup</span>
 <span class="token comment" spellcheck="true">#rpmUvh./*</span>
@@ -1159,26 +1159,26 @@ clickhouse-client --host=bigdata02 --port=9977 --user=bigdata --password=bigdata
 <span class="token comment" spellcheck="true">#######################[100%]</span>
 ……</code></pre>
 <p>在升级的过程中，原有的config.xml等配置均会被保留。基于其他安装方法的升级方案，请参阅官方手册。</p>
-<h2 id="4-卸载-clickhouse"><a href="#4-卸载-clickhouse" class="headerlink" title="4. 卸载 clickhouse"></a>4. 卸载 clickhouse</h2><pre class=" language-shell"><code class="language-shell"># 查询是否安装 clickhouse：
-rpm -qa | grep clickhouse
-# 卸载 clickhouse：
-rpm -e clickhouse-client-20.5.4.40-2.noarch --nodeps
-rpm -e clickhouse-server-20.5.4.40-2.noarch --nodeps
-rpm -e clickhouse-common-static-20.5.4.40-2.x86_64 --nodeps
+<h2 id="4-卸载-ClickHouse"><a href="#4-卸载-ClickHouse" class="headerlink" title="4. 卸载  ClickHouse"></a>4. 卸载  ClickHouse</h2><pre class=" language-shell"><code class="language-shell"># 查询是否安装  ClickHouse ：
+rpm -qa | grep  ClickHouse 
+# 卸载  ClickHouse ：
+rpm -e  ClickHouse -client-20.5.4.40-2.noarch --nodeps
+rpm -e  ClickHouse -server-20.5.4.40-2.noarch --nodeps
+rpm -e  ClickHouse -common-static-20.5.4.40-2.x86_64 --nodeps
 # 删除数据目录：
-rm -rf /var/lib/clickhouse
+rm -rf /var/lib/ ClickHouse 
 # 删除集群配置文件：
 rm -rf /etc/metrika.xml
 # 删除配置文件：
-rm -rf /etc/clickhouse-*
+rm -rf /etc/ ClickHouse -*
 # 删除日志文件：
-rm -rf /var/log/clickhouse-server
-# 删除 zookeeper 上 clickhouse 的数据：
-rmr /clickhouse
+rm -rf /var/log/ ClickHouse -server
+# 删除 zookeeper 上  ClickHouse  的数据：
+rmr / ClickHouse 
 # 也可以进行全局寻找：然后执行删除操作
-find / -name 'clickhouse'
+find / -name ' ClickHouse '
 </code></pre>
-<h2 id="5-ClickHouse-的-Client-参数介绍"><a href="#5-ClickHouse-的-Client-参数介绍" class="headerlink" title="5. ClickHouse 的 Client 参数介绍"></a>5. ClickHouse 的 Client 参数介绍</h2><table>
+<h2 id="5-ClickHouse-的-Client-参数介绍"><a href="#5-ClickHouse-的-Client-参数介绍" class="headerlink" title="5.  ClickHouse  的 Client 参数介绍"></a>5.  ClickHouse  的 Client 参数介绍</h2><table>
 <thead>
 <tr>
 <th>参数</th>
@@ -1239,11 +1239,11 @@ find / -name 'clickhouse'
 </tr>
 </tbody></table>
 <p>默认情况下，配置文件的搜索顺序如下：</p>
-<pre class=" language-shell"><code class="language-shell">./clickhouse-client.xml
-~/.clickhouse-client/config.xml
-/etc/clickhouse-client/config.xml</code></pre>
+<pre class=" language-shell"><code class="language-shell">./ ClickHouse -client.xml
+~/. ClickHouse -client/config.xml
+/etc/ ClickHouse -client/config.xml</code></pre>
 <h2 id="6-设置用户和密码"><a href="#6-设置用户和密码" class="headerlink" title="6. 设置用户和密码"></a>6. 设置用户和密码</h2><p>进入到配置文件目录，修改配置配置文件：</p>
-<pre class=" language-shell"><code class="language-shell">vim /etc/clickhouse-server/users.xml
+<pre class=" language-shell"><code class="language-shell">vim /etc/ ClickHouse -server/users.xml
 系统默认使用 default 用户登录 无密码。 现在我们配置用户 bigdata 密码为 bigdata
 配置一个用户：你配置的 bigdata 就是用户名， <password> 这个标签中的值，就是密码
 
@@ -1257,13 +1257,13 @@ find / -name 'clickhouse'
 </bigdata>
 </code></pre>
 <p>所有节点同步：</p>
-<pre class=" language-shell"><code class="language-shell">scp -r /etc/clickhouse-server/users.xml node1:/etc/clickhouse-server/
-scp -r /etc/clickhouse-server/users.xml node2:/etc/clickhouse-server/
+<pre class=" language-shell"><code class="language-shell">scp -r /etc/ ClickHouse -server/users.xml node1:/etc/ ClickHouse -server/
+scp -r /etc/ ClickHouse -server/users.xml node2:/etc/ ClickHouse -server/
 
 #启动客户端连接：
-clickhouse-client --host=bigdata02 --port=9977 --user=bigdata --password=bigdata -m</code></pre>
-<h2 id="8-注意事项"><a href="#8-注意事项" class="headerlink" title="8. 注意事项"></a>8. 注意事项</h2><p>clickhouse: 每个节点在安装的时候，都是独立的。<br>每个节点的 clickhouse 都是单独的服务器在运行，在有需要的时候，可以通过配置文件，把他们联合起来变成一个集群。甚至还可以，把你准备的所有的服务器，配置成多个集群。就算你配置成集群了，每个服务器依然还是单独运行的。</p>
-<p>如果你创建了一张表，这张表的引擎是分布式的引擎，那么这个表所存储在那个集群里面的那个集群里面的机器，就是一个集群了。每个 clickhouse 中的部分表是单机的， 部分表是分布式的。<br>clickhouse 既是单独运行的，游离于集群之外，被包含在集群之类的表：分为单机的表和分布式的表</p>
+ ClickHouse -client --host=bigdata02 --port=9977 --user=bigdata --password=bigdata -m</code></pre>
+<h2 id="8-注意事项"><a href="#8-注意事项" class="headerlink" title="8. 注意事项"></a>8. 注意事项</h2><p> ClickHouse : 每个节点在安装的时候，都是独立的。<br>每个节点的  ClickHouse  都是单独的服务器在运行，在有需要的时候，可以通过配置文件，把他们联合起来变成一个集群。甚至还可以，把你准备的所有的服务器，配置成多个集群。就算你配置成集群了，每个服务器依然还是单独运行的。</p>
+<p>如果你创建了一张表，这张表的引擎是分布式的引擎，那么这个表所存储在那个集群里面的那个集群里面的机器，就是一个集群了。每个  ClickHouse  中的部分表是单机的， 部分表是分布式的。<br> ClickHouse  既是单独运行的，游离于集群之外，被包含在集群之类的表：分为单机的表和分布式的表</p>
 <script type="text/javascript" src="https://cdn.jsdelivr.net/npm/kity@2.0.4/dist/kity.min.js"></script><script type="text/javascript" src="https://cdn.jsdelivr.net/npm/kityminder-core@1.4.50/dist/kityminder.core.min.js"></script><script defer="true" type="text/javascript" src="https://cdn.jsdelivr.net/npm/hexo-simple-mindmap@0.2.0/dist/mindmap.min.js"></script><link rel="stylesheet" type="text/css" href="https://cdn.jsdelivr.net/npm/hexo-simple-mindmap@0.2.0/dist/mindmap.min.css">
             </div>
             <hr/>
@@ -1327,12 +1327,12 @@ clickhouse-client --host=bigdata02 --port=9977 --user=bigdata --password=bigdata
                     
                         <div class="article-tag">
                             
-                                <a href="/tags/clickhouse/">
-                                    <span class="chip bg-color">clickhouse</span>
-                                </a>
-                            
                                 <a href="/tags/olap/">
                                     <span class="chip bg-color">olap</span>
+                                </a>
+                            
+                                <a href="/tags/ClickHouse/">
+                                    <span class="chip bg-color">ClickHouse</span>
                                 </a>
                             
                         </div>
@@ -2016,7 +2016,7 @@ code[class*="language-"], pre[class*="language-"] { white-space: pre !important;
             <br>
             
             &nbsp;<i class="fas fa-chart-area"></i>&nbsp;站点总字数:&nbsp;<span
-                class="white-color">810.5k</span>&nbsp;字
+                class="white-color">812.8k</span>&nbsp;字
             
             
             

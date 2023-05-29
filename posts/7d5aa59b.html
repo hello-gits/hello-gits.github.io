@@ -8,7 +8,7 @@
     <meta name="description" content="1. Timer 介绍
 Timer（定时器）是 Flink 提供的用于 Processing Time 或 Event Time 变化的机制。
 
-Timer是 Flink 内部的定时器，与 key 和 timestamp 相关，相同的 ke">
+Timer 是 Flink 内部的定时器，与 key 和 timestamp 相关，相同的 k">
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=no">
     <meta name="renderer" content="webkit|ie-stand|ie-comp">
@@ -442,7 +442,7 @@ Timer是 Flink 内部的定时器，与 key 和 timestamp 相关，相同的 ke"
                 
                 <div class="info-break-policy">
                     <i class="far fa-file-word fa-fw"></i>文章字数:&nbsp;&nbsp;
-                    979
+                    991
                 </div>
                 
 
@@ -468,7 +468,7 @@ Timer是 Flink 内部的定时器，与 key 和 timestamp 相关，相同的 ke"
                 <h2 id="1-Timer-介绍"><a href="#1-Timer-介绍" class="headerlink" title="1. Timer 介绍"></a>1. Timer 介绍</h2><ul>
 <li><p>Timer（定时器）是 Flink 提供的用于 Processing Time 或 Event Time 变化的机制。</p>
 </li>
-<li><p>Timer是 Flink 内部的定时器，与 key 和 timestamp 相关，相同的 key 和 timestamp 只有一个与之对应的 timer。</p>
+<li><p>Timer 是 Flink 内部的定时器，与 key 和 timestamp 相关，相同的 key 和 timestamp 只有一个与之对应的 timer。</p>
 </li>
 <li><p>Timer 本质上是通过 ScheduledThreadPoolExecutor.schedule 来实现的</p>
 </li>
@@ -480,10 +480,10 @@ Timer是 Flink 内部的定时器，与 key 和 timestamp 相关，相同的 ke"
  */</span>
 public interface TimerService <span class="token punctuation">{</span>
 
-   <span class="token comment" spellcheck="true">/** Error string for {@link UnsupportedOperationException} on registering timers. */</span>
+   <span class="token comment" spellcheck="true">/** 注册计时器时的 {@link UnsupportedOperationException} 错误字符串 */</span>
    <span class="token builtin">String</span> UNSUPPORTED_REGISTER_TIMER_MSG <span class="token operator">=</span> <span class="token string">"Setting timers is only supported on a keyed streams."</span><span class="token punctuation">;</span>
 
-   <span class="token comment" spellcheck="true">/** Error string for {@link UnsupportedOperationException} on deleting timers. */</span>
+   <span class="token comment" spellcheck="true">/** 删除计时器时的 {@link UnsupportedOperationException} 错误字符串 */</span>
    <span class="token builtin">String</span> UNSUPPORTED_DELETE_TIMER_MSG <span class="token operator">=</span> <span class="token string">"Deleting timers is only supported on a keyed streams."</span><span class="token punctuation">;</span>
 
    <span class="token comment" spellcheck="true">/** 返回当前的 processing time */</span>
@@ -522,10 +522,10 @@ public interface TimerService <span class="token punctuation">{</span>
     */</span>
    void deleteEventTimeTimer<span class="token punctuation">(</span>long time<span class="token punctuation">)</span><span class="token punctuation">;</span>
 <span class="token punctuation">}</span></code></pre>
-<h2 id="3-Timer-使用场景"><a href="#3-Timer-使用场景" class="headerlink" title="3.Timer 使用场景"></a>3.Timer 使用场景</h2><h3 id="3-1-KeyedProcessFunction中使用-Timer"><a href="#3-1-KeyedProcessFunction中使用-Timer" class="headerlink" title="3.1 KeyedProcessFunction中使用 Timer"></a>3.1 KeyedProcessFunction中使用 Timer</h3><p>在大多数情况下，使用 Timer 的方式就是在 KeyedProcessFunction 的 processElement() 方法中注册Timer，然后覆写其onTimer()方法作为Timer触发时的回调逻辑。当到达触发条件时触发 onTimer() 方法，对于时间语义不同的场景，注册 Timer 的方法会稍有不同。</p>
+<h2 id="3-Timer-使用场景"><a href="#3-Timer-使用场景" class="headerlink" title="3. Timer 使用场景"></a>3. Timer 使用场景</h2><h3 id="3-1-KeyedProcessFunction中使用-Timer"><a href="#3-1-KeyedProcessFunction中使用-Timer" class="headerlink" title="3.1 KeyedProcessFunction中使用 Timer"></a>3.1 KeyedProcessFunction中使用 Timer</h3><p>在大多数情况下，使用 Timer 的方式就是在 KeyedProcessFunction 的 processElement() 方法中注册 Timer，然后覆写其 onTimer() 方法作为Timer触发时的回调逻辑。当到达触发条件时触发 onTimer() 方法，对于时间语义不同的场景，注册 Timer 的方法会稍有不同。</p>
 <ul>
-<li>Processing Time：调用Context.timerService().registerProcessingTimeTimer()注册 Timer。onTimer()在系统时间戳达到Timer设定的时间戳时触发。</li>
-<li>Event Time：调用Context.timerService().registerEventTimeTimer()注册。onTimer()在Flink内部水印达到或超过Timer设定的时间戳时触发。</li>
+<li>Processing Time：调用 Context.timerService().registerProcessingTimeTimer() 注册 Timer。onTimer() 在系统时间戳达到Timer设定的时间戳时触发。</li>
+<li>Event Time：调用 Context.timerService().registerEventTimeTimer() 注册。onTimer() 在 Flink 内部WaterMark 达到或超过 Timer 设定的时间戳时触发。</li>
 </ul>
 <pre class=" language-scala"><code class="language-scala"><span class="token keyword">import</span> com<span class="token punctuation">.</span>hnbian<span class="token punctuation">.</span>flink<span class="token punctuation">.</span>common<span class="token punctuation">.</span>Obj1
 <span class="token keyword">import</span> org<span class="token punctuation">.</span>apache<span class="token punctuation">.</span>flink<span class="token punctuation">.</span>streaming<span class="token punctuation">.</span>api<span class="token punctuation">.</span>functions<span class="token punctuation">.</span>KeyedProcessFunction
@@ -1076,9 +1076,9 @@ public interface TimerService <span class="token punctuation">{</span>
                 <a href="/posts/1dadc314.html">
                     <div class="card-image">
                         
-                        <img src="https://images.hnbian.cn/FhUvMtkmQN6kyaw9n0h1-hoWULIo" class="responsive-img" alt="Flink系列 13. 介绍Flink中的operator state 和 keyed state">
+                        <img src="https://images.hnbian.cn/FhUvMtkmQN6kyaw9n0h1-hoWULIo" class="responsive-img" alt="Flink系列 13. 介绍Flink中的Operator State 和 Keyed State">
                         
-                        <span class="card-title">Flink系列 13. 介绍Flink中的operator state 和 keyed state</span>
+                        <span class="card-title">Flink系列 13. 介绍Flink中的Operator State 和 Keyed State</span>
                     </div>
                 </a>
                 <div class="card-content article-content">
@@ -1305,7 +1305,7 @@ code[class*="language-"], pre[class*="language-"] { white-space: pre !important;
             <br>
             
             &nbsp;<i class="fas fa-chart-area"></i>&nbsp;站点总字数:&nbsp;<span
-                class="white-color">810.5k</span>&nbsp;字
+                class="white-color">812.8k</span>&nbsp;字
             
             
             

@@ -4,7 +4,7 @@
 
 <head><meta name="generator" content="Hexo 3.9.0">
     <meta charset="utf-8">
-    <meta name="keywords" content="Flink系列 13. 介绍Flink中的operator state 和 keyed state, hnbian">
+    <meta name="keywords" content="Flink系列 13. 介绍Flink中的Operator State 和 Keyed State, hnbian">
     <meta name="description" content="1. Flink State 介绍1.1 什么是 State（状态）
 由一个任务维护，并且用来计算某个结果的所有数据，就属于这个任务的状态
 可以认为状态就是一个本地变量，可以被任务的业务逻辑访问
@@ -17,7 +17,7 @@
     <meta name="format-detection" content="telephone=no">
     <meta name="apple-mobile-web-app-capable" content="yes">
     <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
-    <title>Flink系列 13. 介绍Flink中的operator state 和 keyed state | hnbian</title>
+    <title>Flink系列 13. 介绍Flink中的Operator State 和 Keyed State | hnbian</title>
     <link rel="icon" type="image/png" href="https://images.hnbian.cn/FvNSAGx7xljxALFh8Fa2DPNFP-JB">
 
     <link rel="stylesheet" type="text/css" href="https://images.hnbian.cn/all.css">
@@ -292,7 +292,7 @@
         <div class="row">
             <div class="col s12 m12 l12">
                 <div class="brand">
-                    <h1 class="description center-align post-title">Flink系列 13. 介绍Flink中的operator state 和 keyed state</h1>
+                    <h1 class="description center-align post-title">Flink系列 13. 介绍Flink中的Operator State 和 Keyed State</h1>
                 </div>
             </div>
         </div>
@@ -443,14 +443,14 @@
                 
                 <div class="info-break-policy">
                     <i class="far fa-file-word fa-fw"></i>文章字数:&nbsp;&nbsp;
-                    8.7k
+                    9.1k
                 </div>
                 
 
                 
                 <div class="info-break-policy">
                     <i class="far fa-clock fa-fw"></i>阅读时长:&nbsp;&nbsp;
-                    39 分
+                    40 分
                 </div>
                 
 				
@@ -475,7 +475,7 @@
 <li>Flink 会进行状态的管理，包括状态一致性、故障处理以及高效的存储和访问，以便开发人员可以专注于应用的业务逻辑。</li>
 </ul>
 <p>Flink 内置的很多算子，数据源 source，数据存储 sink 都是有状态的，流中的数据都是 buffer records，会保存一定的元素或者元数据。例如: ProcessWindowFunction 会缓存输入流的数据，ProcessFunction 会保存设置的定时器信息等等。</p>
-<p><img src="https://images.hnbian.cn/FibzpBKj-1NICHpW2HvX3_eHmrrz" alt="Flink 状态图示"></p>
+<p><img src="https://images.hnbian.cn/FibzpBKj-1NICHpW2HvX3_eHmrrz?imageView2/0/interlace/1/q/70%7Cwatermark/2/text/d3d3LmhuYmlhbi5jbg==/font/5b6u6L2v6ZuF6buR/fontsize/600/fill/IzBDMjU2NA==/dissolve/100/gravity/SouthEast/dx/10/dy/10%7Cimageslim" alt="Flink 状态图示"></p>
 <h3 id="1-2-有状态与无状态的计算"><a href="#1-2-有状态与无状态的计算" class="headerlink" title="1.2 有状态与无状态的计算"></a>1.2 有状态与无状态的计算</h3><p>流式计算分为<strong>无状态</strong>和<strong>有状态</strong>两种情况。</p>
 <ul>
 <li><p><strong>无状态的计算</strong> ：观察每个独立事件，每次只转换一条输入记录，并且仅根据最新的输入记录输出结果。例如，流处理应用程序从传感器接收温度读数，并在温度超过 90 度时发出警告。</p>
@@ -491,14 +491,14 @@
 </ul>
 </li>
 </ul>
-<p>下图展示了无状态流处理和有状态流处理的主要区别。无状态流处理分别接收每条数据记录，然后根据最新输入的数据生成输出数据。有状态流处理会维护状态，并基于最新输入的记录和当前的状态值生成输出记录。</p>
-<p><img src="https://images.hnbian.cn/FsauoMoA_-zidaQJEojouRFbYx_r" alt="有状态和无状态的流处理"></p>
+<p>下图展示了 无状态流处理 和 有状态流处理 的 主要区别。无状态流处理分别接收每条数据记录，然后根据最新输入的数据生成输出数据。有状态流处理会维护状态，并基于最新输入的记录和当前的状态值生成输出记录。</p>
+<p><img src="https://images.hnbian.cn/FsauoMoA_-zidaQJEojouRFbYx_r?imageView2/0/interlace/1/q/70%7Cwatermark/2/text/d3d3LmhuYmlhbi5jbg==/font/5b6u6L2v6ZuF6buR/fontsize/600/fill/IzBDMjU2NA==/dissolve/100/gravity/SouthEast/dx/10/dy/10%7Cimageslim" alt="有状态和无状态的流处理"></p>
 <p>尽管无状态的计算很重要，但是流处理对有状态的计算更感兴趣。事实上，正确地实现有状态的计算比实现无状态的计算难得多。旧的流处理系统并不支持有状态的计算，而新一代的流处理系统则将状态及其正确性视为重中之重。</p>
-<h2 id="2-状态描述"><a href="#2-状态描述" class="headerlink" title="2. 状态描述"></a>2. 状态描述</h2><p>StateDescriptor 是所有状态描述符的基类。 Flink 通过 StateDescriptor 定义状态，包括状态的名称，存储数据的类型，序列化器等基础信息。</p>
+<h2 id="2-状态描述（StateDescriptor）"><a href="#2-状态描述（StateDescriptor）" class="headerlink" title="2. 状态描述（StateDescriptor）"></a>2. 状态描述（StateDescriptor）</h2><p>StateDescriptor 是所有状态描述符的基类。 Flink 通过 StateDescriptor 定义状态，包括状态的名称，存储数据的类型，序列化器等基础信息。</p>
 <p>2.1 StateDescriptor 种类</p>
-<p>使用不同类型的StateDescriptor 可以创建出不同类型的状态，flink 中提供了  ListStateDescriptor、MapStateDescriptor、ValueStateDescriptor、AggregatingStateDescriptor、ReducingStateDescriptor 、FoldingStateDescriptor(废弃) 状态描述符供使用。他们都继承自 StateDescriptor。</p>
-<p><img src="https://images.hnbian.cn/FjBjlX0Uoa4BaU-2AliZ4WBOYsdk" alt="状态描述符类继承图"></p>
-<h3 id="2-2-源码"><a href="#2-2-源码" class="headerlink" title="2.2 源码"></a>2.2 源码</h3><pre class=" language-scala"><code class="language-scala">public <span class="token keyword">abstract</span> <span class="token keyword">class</span> StateDescriptor<span class="token operator">&lt;</span>S <span class="token keyword">extends</span> State<span class="token punctuation">,</span> T<span class="token operator">></span> implements Serializable <span class="token punctuation">{</span>
+<p>使用不同类型的 StateDescriptor 可以创建出不同类型的状态，flink 中提供了  ListStateDescriptor、MapStateDescriptor、ValueStateDescriptor、AggregatingStateDescriptor、ReducingStateDescriptor 、FoldingStateDescriptor(废弃) 状态描述符供使用。他们都继承自 StateDescriptor。</p>
+<p><img src="https://images.hnbian.cn/FjBjlX0Uoa4BaU-2AliZ4WBOYsdk?imageView2/0/interlace/1/q/70%7Cwatermark/2/text/d3d3LmhuYmlhbi5jbg==/font/5b6u6L2v6ZuF6buR/fontsize/600/fill/IzBDMjU2NA==/dissolve/100/gravity/SouthEast/dx/10/dy/10%7Cimageslim" alt="状态描述符类继承图"></p>
+<h3 id="2-2-StateDescriptor源码"><a href="#2-2-StateDescriptor源码" class="headerlink" title="2.2 StateDescriptor源码"></a>2.2 StateDescriptor源码</h3><pre class=" language-scala"><code class="language-scala">public <span class="token keyword">abstract</span> <span class="token keyword">class</span> StateDescriptor<span class="token operator">&lt;</span>S <span class="token keyword">extends</span> State<span class="token punctuation">,</span> T<span class="token operator">></span> implements Serializable <span class="token punctuation">{</span>
     <span class="token keyword">private</span> static <span class="token keyword">final</span> Logger LOG <span class="token operator">=</span> LoggerFactory<span class="token punctuation">.</span>getLogger<span class="token punctuation">(</span>StateDescriptor<span class="token punctuation">.</span><span class="token keyword">class</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
 
     <span class="token comment" spellcheck="true">/**
@@ -540,7 +540,7 @@
     <span class="token comment" spellcheck="true">// --------构造函数----------------------------------------------------------------</span>
 
     <span class="token comment" spellcheck="true">/**
-     * 构造函数1：使用给定的名称和类型的序列化器创建一个新的StateDescriptor 
+     * 构造函数1：使用给定的名称和类型的序列化器创建一个新的 StateDescriptor 
      * @param name StateDescriptor的名称
      * @param serializer 状态中值的类型序列化器
      * @param defaultValue 在请求状态之前未设置值的情况下将设置的默认值。
@@ -556,7 +556,7 @@
     <span class="token punctuation">}</span>
 
     <span class="token comment" spellcheck="true">/**
-     * 构造函数2： 创建具有给定名称和给定类型信息的新StateDescriptor 
+     * 构造函数2： 创建具有给定名称和给定类型信息的新 StateDescriptor 
      * @param name StateDescriptor的名称
      * @param typeInfo 状态值的类型信息
      * @param defaultValue 在请求状态之前未设置值的情况下将设置的默认值。
@@ -569,7 +569,7 @@
     <span class="token punctuation">}</span>
 
     <span class="token comment" spellcheck="true">/**
-     * 构造函数3：创建具有给定名称和给定类型信息的新StateDescriptor 。
+     * 构造函数3：创建具有给定名称和给定类型信息的新 StateDescriptor 。
      *
      * &lt;p>如果此构造函数失败（因为无法通过类描述类型），
      * 请考虑使用StateDescriptor(String, TypeInformation, Object)构造函数
@@ -618,8 +618,8 @@
     <span class="token punctuation">}</span>
 
     <span class="token comment" spellcheck="true">/**
-     * 返回可用于在状态中序列化值的TypeSerializer 。 
-     * 请注意，序列化程序可能会延迟初始化，并且只能保证在调用initializeSerializerUnlessSet(ExecutionConfig)之后存在。
+     * 返回可用于在状态中序列化值的 TypeSerializer 。 
+     * 请注意，序列化程序可能会延迟初始化，并且只能保证在调用 initializeSerializerUnlessSet(ExecutionConfig) 之后存在。
      */</span>
     public TypeSerializer<span class="token operator">&lt;</span>T<span class="token operator">></span> getSerializer<span class="token punctuation">(</span><span class="token punctuation">)</span> <span class="token punctuation">{</span>
         TypeSerializer<span class="token operator">&lt;</span>T<span class="token operator">></span> serializer <span class="token operator">=</span> serializerAtomicReference<span class="token punctuation">.</span>get<span class="token punctuation">(</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
@@ -661,7 +661,7 @@
 
     <span class="token comment" spellcheck="true">/**
      * 返回可查询的状态名称。
-     * @return Queryable 可查询的状态名称；如果未设置，则为null
+     * @return Queryable 可查询的状态名称；如果未设置，则为 null
      */</span>
     <span class="token annotation punctuation">@Nullable</span>
     public <span class="token builtin">String</span> getQueryableStateName<span class="token punctuation">(</span><span class="token punctuation">)</span> <span class="token punctuation">{</span>
@@ -702,7 +702,7 @@
 
     <span class="token comment" spellcheck="true">/**
      * 检查序列化器是否已初始化。 
-     * 如果序列化器的初始化是延迟的，以允许通过initializeSerializerUnlessSet(ExecutionConfig)使用ExecutionConfig对序列化器进行参数化
+     * 如果序列化器的初始化是延迟的，以允许通过 initializeSerializerUnlessSet(ExecutionConfig) 使用 ExecutionConfig 对序列化器进行参数化
      *
      * @return True 如果序列化器已初始化，则为true，否则为false
      */</span>
@@ -822,7 +822,7 @@
         <span class="token punctuation">}</span>
     <span class="token punctuation">}</span>
 <span class="token punctuation">}</span></code></pre>
-<h3 id="2-3-分类介绍"><a href="#2-3-分类介绍" class="headerlink" title="2.3 分类介绍"></a>2.3 分类介绍</h3><ul>
+<h3 id="2-3-StateDescriptor-分类"><a href="#2-3-StateDescriptor-分类" class="headerlink" title="2.3 StateDescriptor 分类"></a>2.3 StateDescriptor 分类</h3><ul>
 <li><p>ListStateDescriptor：可用于描述 ListState 类型状态</p>
 </li>
 <li><p>MapStateDescriptor：可用于描述 MapState 类型状态</p>
@@ -834,7 +834,8 @@
 <li><p>ReducingStateDescriptor：可用于描述 ReducingState 类型状态</p>
 </li>
 </ul>
-<h2 id="3-状态的分类"><a href="#3-状态的分类" class="headerlink" title="3. 状态的分类"></a>3. 状态的分类</h2><h3 id="3-1-Managed-State-和-Raw-State"><a href="#3-1-Managed-State-和-Raw-State" class="headerlink" title="3.1 Managed State 和 Raw State"></a>3.1 Managed State 和 Raw State</h3><p>从开发与管理的角度，flink 状态可以分为 托管状态（Managed State）和原生状态（Raw State），Managed State是由Flink管理的，存储、恢复和优化等操作都由 flink 去执行。Raw State是开发者自己管理的，需要自己序列化。</p>
+<h2 id="3-状态的分类"><a href="#3-状态的分类" class="headerlink" title="3. 状态的分类"></a>3. 状态的分类</h2><h3 id="3-1-Managed-State-和-Raw-State"><a href="#3-1-Managed-State-和-Raw-State" class="headerlink" title="3.1 Managed State 和 Raw State"></a>3.1 Managed State 和 Raw State</h3><p>Flink 状态主要分为托管状态（Managed State）和原始状态（Raw State）。托管状态是由 Flink 自动管理的，这包括状态的存储、恢复以及优化等操作。托管状态包括值状态(Value State)，列表状态(List State)，映射状态(Map State)等类型，这些类型的状态在 Flink 的检查点和保存点机制中，Flink 会负责处理这些状态的快照和恢复。</p>
+<p>相反，原始状态（Raw State）是由用户管理的，用户需要自己定义状态的序列化和反序列化过程。这通常适用于一些特殊的情况，例如用户需要自定义序列化机制，或者需要对状态的存储和恢复有更精细的控制。虽然用户需要自己处理状态的序列化和反序列化，但 Flink 仍然提供了一些基础的支持和接口，以帮助用户更好地处理原始状态。</p>
 <table>
 <thead>
 <tr>
@@ -845,7 +846,7 @@
 </thead>
 <tbody><tr>
 <td>状态管理方式</td>
-<td>由Flink Runtime托管，状态是自动存储、自动恢复的</td>
+<td>由 Flink Runtime 托管，状态是自动存储、自动恢复的</td>
 <td>用户自定义的状态，自己管理</td>
 </tr>
 <tr>
@@ -860,13 +861,15 @@
 </tr>
 </tbody></table>
 <p>通常在 DataStream 上的状态推荐使用托管的状态，当实现一个用 户自定义的operator时，会使用到原始状态。</p>
-<h3 id="3-2-operator-state-和-keyed-state"><a href="#3-2-operator-state-和-keyed-state" class="headerlink" title="3.2 operator state 和 keyed state"></a>3.2 operator state 和 keyed state</h3><p>Managed State 状态可以继续划分为 operator state 和 keyed state 两类： </p>
-<ul>
-<li>operator state（算子状态）：算子状态的作用范围限定为算子任务</li>
-<li>keyed state（键控状态）：根据输入数据流中的键（key） 来维护访问</li>
+<h3 id="3-2-Operator-State-和-Keyed-State"><a href="#3-2-Operator-State-和-Keyed-State" class="headerlink" title="3.2 Operator State 和 Keyed State"></a>3.2 Operator State 和 Keyed State</h3><ul>
+<li>Flink 的状态主要分为两种类型：Operator State 和 Keyed State。<ol>
+<li><strong>Operator State</strong>：Operator State 是每个并行操作符实例的私有状态，它是在分布式计算中一个任务的本地状态。比如说，我们在做数据重平衡时，就会用到 Operator State，因为这个过程中需要对数据进行缓存，并在适当的时候进行释放。如果一个流计算任务由多个并行子任务组成，每个子任务都会有一个独立的 Operator State。对于 Operator State，Flink 并不知道其内部的数据结构，只负责其存储和恢复。</li>
+<li><strong>Keyed State</strong>：Keyed State 是当在 KeyedStream 上运行操作符时使用的状态。在 Flink 中，Keyed State 是绑定到数据流中的特定键（Key）的。这意味着 Flink 维护了数据流中每一个 key 的状态。当处理一个新的元素时，Flink 会将状态的键设置为该元素的键，然后调用对应的处理函数。Keyed State 的一个典型应用场景是计算每个键的滚动聚合。</li>
+</ol>
+</li>
 </ul>
-<h4 id="3-2-1-keyed-state-介绍"><a href="#3-2-1-keyed-state-介绍" class="headerlink" title="3.2.1 keyed state 介绍"></a>3.2.1 keyed state 介绍</h4><p>keyed state（键控状态）是根据输入数据流中定义的键（key）来维护和访问的。Flink 为每个键值维护一个状态实例，并将具有相同键的所有数据，都分区到同一个算子任务中，这个任务会维护和处理这个key 对应的状态。当任务处理一条数据时，它会自动将状态的访问范围限定为当前数据的 key。因此，具有相同 key 的所有数据都会访问相同的状态。Keyed State 很类似于一个分布式的key-value map 数据结构，只能用于 KeyedStream（ keyBy 算子处理之后）。</p>
-<p><img src="https://images.hnbian.cn/FincBCZtRCvi4brX-AiXso-hTD31" alt="keyed state 示意图"></p>
+<h4 id="3-2-1-Keyed-State-介绍"><a href="#3-2-1-Keyed-State-介绍" class="headerlink" title="3.2.1 Keyed State 介绍"></a>3.2.1 Keyed State 介绍</h4><p>Keyed State（键控状态）是根据输入数据流中定义的键（key）来维护和访问的。Flink 为每个键值维护一个状态实例，并将具有相同键的所有数据，都分区到同一个算子任务中，这个任务会维护和处理这个key 对应的状态。当任务处理一条数据时，它会自动将状态的访问范围限定为当前数据的 key。因此，具有相同 key 的所有数据都会访问相同的状态。Keyed State 很类似于一个分布式的 key-value map 数据结构，只能用于 KeyedStream（ keyBy 算子处理之后）。</p>
+<p><img src="https://images.hnbian.cn/FincBCZtRCvi4brX-AiXso-hTD31?imageView2/0/interlace/1/q/70%7Cwatermark/2/text/d3d3LmhuYmlhbi5jbg==/font/5b6u6L2v6ZuF6buR/fontsize/600/fill/IzBDMjU2NA==/dissolve/100/gravity/SouthEast/dx/10/dy/10%7Cimageslim" alt="Keyed State 示意图"></p>
 <p>Keyed State 有五种类型：</p>
 <ol>
 <li>ValueState ：值状态，保存单个类型为 T 的值</li>
@@ -875,24 +878,24 @@
 <li>ReducingState ：聚合状态</li>
 <li>AggregatingState：聚合状态</li>
 </ol>
-<h4 id="3-2-2-Operator-state-介绍"><a href="#3-2-2-Operator-state-介绍" class="headerlink" title="3.2.2 Operator state 介绍"></a>3.2.2 Operator state 介绍</h4><p>KeyedState 是在进行 KeyBy 之后进行状态操作时使用的状态类型，那么像 Source、Sink算子是不会进行 KeyBy 操作的，当这类算子也需要用到状态，应该怎么操作呢？这时候就需要使用 Operator State（<strong>算子状态</strong>）。Operator State 是绑定在 Operator 的并行度实例上的，也就是说一个并行度一个状态。</p>
+<h4 id="3-2-2-Operator-State-介绍"><a href="#3-2-2-Operator-State-介绍" class="headerlink" title="3.2.2 Operator State 介绍"></a>3.2.2 Operator State 介绍</h4><p>KeyedState 是在进行 KeyBy 之后进行状态操作时使用的状态类型，那么像 Source、Sink算子是不会进行 KeyBy 操作的，当这类算子也需要用到状态，应该怎么操作呢？这时候就需要使用 Operator State（<strong>算子状态</strong>）。Operator State 是绑定在 Operator 的并行度实例上的，也就是说一个并行度一个状态。</p>
 <p>例如当消费 kafka 数据的 Kafka Source 并行度为 3 时，默认每个并行度都是从一个 Kafka 的 topic 的某个分区中消费数据，而每个 kafka Source 为了保证在极端情况下也不丢失数据，就不能将 partition 对应的 offset 保存到默认的 zookeeper 中，而是需要将这些数据保存在状态中，自己来维护这部分数据。当并行度发生调整时，需要在 Operator 的并行度上重新分配状态。</p>
 <p>在流数据开发的大多数场景中，我们都不需要使用 Operator State ，Operator State 的实现主要是针对一些没有 Keyed 操作的 Source 和 Sink 而设计的。</p>
-<p>Operator state 的作用范围限定为算子任务。这意味着由同一并行任务所处理的所有数据都可以访问到相同的状态，状态对于同一任务而言是共享的。算子状态不能由相同或不同算子的另一个任务访问。</p>
-<p><img src="https://images.hnbian.cn/Fkybzxx3_r1zTL9DSrAGqv-BiHu4" alt="Operator state 示意图"></p>
-<p><img src="https://images.hnbian.cn/FpR-sYBVAkPFGOxtLZdh5vY8lG-s" alt="Operator state 示意图"></p>
+<p>Operator State 的作用范围限定为算子任务。这意味着由同一并行任务所处理的所有数据都可以访问到相同的状态，状态对于同一任务而言是共享的。算子状态不能由相同或不同算子的另一个任务访问。</p>
+<p><img src="https://images.hnbian.cn/Fkybzxx3_r1zTL9DSrAGqv-BiHu4?imageView2/0/interlace/1/q/70%7Cwatermark/2/text/d3d3LmhuYmlhbi5jbg==/font/5b6u6L2v6ZuF6buR/fontsize/600/fill/IzBDMjU2NA==/dissolve/100/gravity/SouthEast/dx/10/dy/10%7Cimageslim" alt="Operator State 示意图"></p>
+<p><img src="https://images.hnbian.cn/FpR-sYBVAkPFGOxtLZdh5vY8lG-s?imageView2/0/interlace/1/q/70%7Cwatermark/2/text/d3d3LmhuYmlhbi5jbg==/font/5b6u6L2v6ZuF6buR/fontsize/600/fill/IzBDMjU2NA==/dissolve/100/gravity/SouthEast/dx/10/dy/10%7Cimageslim" alt="Operator State 示意图"></p>
 <p>Flink 为算子状态提供三种基本数据结构：</p>
 <ol>
-<li>列表状态（ List state ）：状态是一个 <strong>可序列化</strong> 对象的集合 <code>List</code>，彼此独立，方便在改变并发后进行状态的重新分派。 换句话说，这些对象是重新分配 non-keyed state 的最细粒度。根据状态的不同访问方式，有如下两种重新分配的模式：</li>
+<li>列表状态（ List state ）：状态是一个 <strong>可序列化</strong> 对象的集合 <code>List</code>，彼此独立，方便在改变并发后进行状态的重新分派。 换句话说，这些对象是重新分配 non-Keyed State 的最细粒度。根据状态的不同访问方式，有如下两种重新分配的模式：</li>
 </ol>
 <ul>
 <li><strong>Even-split redistribution:</strong> 每个算子都保存一个列表形式的状态集合，整个状态由所有的列表拼接而成。当作业恢复或重新分配的时候，整个状态会按照算子的并发度进行均匀分配。 比如说，算子 A 的并发读为 1，包含两个元素 <code>element1</code> 和 <code>element2</code>，当并发读增加为 2 时，<code>element1</code> 会被分到并发 0 上，<code>element2</code> 则会被分到并发 1 上。</li>
 </ul>
-<p><img src="https://images.hnbian.cn/FutIWkcvlRoqETMl83Kr9YtHI1zF" alt="Even-split redistribution图示"></p>
+<p><img src="https://images.hnbian.cn/FutIWkcvlRoqETMl83Kr9YtHI1zF?imageView2/0/interlace/1/q/70%7Cwatermark/2/text/d3d3LmhuYmlhbi5jbg==/font/5b6u6L2v6ZuF6buR/fontsize/600/fill/IzBDMjU2NA==/dissolve/100/gravity/SouthEast/dx/10/dy/10%7Cimageslim" alt="Even-split redistribution图示"></p>
 <ul>
 <li><strong>Union redistribution:</strong> 每个算子保存一个列表形式的状态集合。整个状态由所有的列表拼接而成。当作业恢复或重新分配时，每个算子都将获得所有的状态数据。Union redistribution 模式下 checkpoint metadata会存储每个operator 的 subTask 的offset信息。如果List State的基数较大时，不要使用这种方式的redistribution。因为容易引起OOM。</li>
 </ul>
-<p><img src="https://images.hnbian.cn/Fhb6sy3U8Cyc6M3F6nCAi2WJWCtn" alt="Union redistribution图示"></p>
+<p><img src="https://images.hnbian.cn/Fhb6sy3U8Cyc6M3F6nCAi2WJWCtn?imageView2/0/interlace/1/q/70%7Cwatermark/2/text/d3d3LmhuYmlhbi5jbg==/font/5b6u6L2v6ZuF6buR/fontsize/600/fill/IzBDMjU2NA==/dissolve/100/gravity/SouthEast/dx/10/dy/10%7Cimageslim" alt="Union redistribution图示"></p>
 <ul>
 <li><p>调用不同的获取状态对象的接口，会使用不同的状态分配算法。比如 <code>getUnionListState(descriptor)</code> 会使用 union redistribution 算法， 而 <code>getListState(descriptor)</code> 则简单的使用 even-split redistribution 算法。</p>
 </li>
@@ -902,7 +905,7 @@
 <ol start="2">
 <li>广播状态（ Broadcast state ）：如果一个算子有多项任务，而它的每项任务状态又都相同，那么这种特殊情况最适合应用广播状态。</li>
 </ol>
-<h2 id="4-keyed-state-使用示例"><a href="#4-keyed-state-使用示例" class="headerlink" title="4. keyed state 使用示例"></a>4. keyed state 使用示例</h2><h3 id="4-1-ValueState"><a href="#4-1-ValueState" class="headerlink" title="4.1 ValueState"></a>4.1 ValueState</h3><ul>
+<h2 id="4-Keyed-State-使用示例"><a href="#4-Keyed-State-使用示例" class="headerlink" title="4. Keyed State 使用示例"></a>4. Keyed State 使用示例</h2><h3 id="4-1-ValueState"><a href="#4-1-ValueState" class="headerlink" title="4.1 ValueState"></a>4.1 ValueState</h3><ul>
 <li><p>单值状态：ValueState [T] 保存单个的值，值的类型为 T</p>
 </li>
 <li><p>获取状态值：ValueState.value()</p>
@@ -1043,7 +1046,7 @@
 <li><p>移除某个key对应的数据：MapState.remove(key: K)</p>
 </li>
 </ul>
-<p><img src="https://images.hnbian.cn/FtIii2G0tGfYLiZ4fobIBOt1AIX0" alt="MapState 相关方法"></p>
+<p><img src="https://images.hnbian.cn/FtIii2G0tGfYLiZ4fobIBOt1AIX0?imageView2/0/interlace/1/q/70%7Cwatermark/2/text/d3d3LmhuYmlhbi5jbg==/font/5b6u6L2v6ZuF6buR/fontsize/600/fill/IzBDMjU2NA==/dissolve/100/gravity/SouthEast/dx/10/dy/10%7Cimageslim" alt="MapState 相关方法"></p>
 <pre class=" language-scala"><code class="language-scala"><span class="token keyword">import</span> com<span class="token punctuation">.</span>hnbian<span class="token punctuation">.</span>flink<span class="token punctuation">.</span>common<span class="token punctuation">.</span>Obj1
 <span class="token keyword">import</span> org<span class="token punctuation">.</span>apache<span class="token punctuation">.</span>flink<span class="token punctuation">.</span>api<span class="token punctuation">.</span>common<span class="token punctuation">.</span>state<span class="token punctuation">.</span><span class="token punctuation">{</span>MapState<span class="token punctuation">,</span> MapStateDescriptor<span class="token punctuation">}</span>
 <span class="token keyword">import</span> org<span class="token punctuation">.</span>apache<span class="token punctuation">.</span>flink<span class="token punctuation">.</span>api<span class="token punctuation">.</span>scala<span class="token punctuation">.</span>typeutils<span class="token punctuation">.</span>Types
@@ -1318,12 +1321,18 @@
     out<span class="token punctuation">.</span>collect<span class="token punctuation">(</span>list<span class="token punctuation">.</span>toString<span class="token punctuation">(</span><span class="token punctuation">)</span><span class="token punctuation">)</span>
   <span class="token punctuation">}</span>
 <span class="token punctuation">}</span></code></pre>
-<h2 id="5-Operator-state-使用示例"><a href="#5-Operator-state-使用示例" class="headerlink" title="5. Operator state 使用示例"></a>5. Operator state 使用示例</h2><p>要在自定义的函数或算子中使用Operator state，可以实现 CheckpointedFunction  接口，这是一个比较通用的接口，既可以管理 Operator State，也可以管理 Keyed State，灵活性比较强。</p>
+<h2 id="5-Operator-State-使用示例"><a href="#5-Operator-State-使用示例" class="headerlink" title="5. Operator State 使用示例"></a>5. Operator State 使用示例</h2><p>要在自定义的函数或算子中使用Operator State，可以实现 CheckpointedFunction  接口，这是一个比较通用的接口，既可以管理 Operator State，也可以管理 Keyed State，灵活性比较强。</p>
 <h3 id="5-1-CheckpointedFunction-接口介绍"><a href="#5-1-CheckpointedFunction-接口介绍" class="headerlink" title="5.1 CheckpointedFunction 接口介绍"></a>5.1 CheckpointedFunction 接口介绍</h3><p>CheckpointedFunction 状态转换功能的核心接口，状态转换功能是指在各个流记录之间维护状态的功能。 虽然存在更多轻量级的接口作为各种类型状态的快捷方式，但此接口在管理键控状态和操作员状态方面提供了最大的灵活性。快捷方式部分说明了设置状态函数的常用轻量级方法，这些方法通常代替该接口表示的完整抽象使用。</p>
 <ul>
 <li>初始化</li>
 </ul>
-<p>在分布式执行过程中创建转换函数的并行实例时，会调用initializeState(FunctionInitializationContext) 。 该方法提供对FunctionInitializationContext访问，而FunctionInitializationContext则提供给OperatorStateStore和KeyedStateStore 。OperatorStateStore和KeyedStateStore允许访问应存储状态的数据结构，以便Flink透明地管理和检查状态，例如org.apache.flink.api.common.state.ValueState或org.apache.flink.api.common.state.ListState 。</p>
+<p>当创建转换函数的并行实例进行分布式执行时，</p>
+<p>会调用 <code>initializeState(FunctionInitializationContext)</code> 方法。</p>
+<p>这个方法提供了对 <code>FunctionInitializationContext</code> 的访问，</p>
+<p>而 <code>FunctionInitializationContext</code> 又提供了对 <code>OperatorStateStore</code> 和 <code>KeyedStateStore</code> 的访问。</p>
+<p><code>OperatorStateStore</code> 和 <code>KeyedStateStore</code> 是可以访问应存储状态的数据结构，</p>
+<p>这使得 Flink 能够透明地管理和检查状态，</p>
+<p>例如 <code>org.apache.flink.api.common.state.ValueState</code> 或 <code>org.apache.flink.api.common.state.ListState</code>。</p>
 <ul>
 <li>快照</li>
 </ul>
@@ -1366,7 +1375,7 @@
 <span class="token punctuation">}</span></code></pre>
 <p>进行 checkpoint 时会调用 <code>snapshotState()</code>。 用户自定义函数初始化时会调用 <code>initializeState()</code>，初始化包括第一次自定义函数初始化和从之前的 checkpoint 恢复。 因此 <code>initializeState()</code> 不仅是定义不同状态类型初始化的地方，也需要包括状态恢复的逻辑。</p>
 <h3 id="5-2-ListCheckpointed-接口介绍"><a href="#5-2-ListCheckpointed-接口介绍" class="headerlink" title="5.2 ListCheckpointed 接口介绍"></a>5.2 ListCheckpointed 接口介绍</h3><p>ListCheckpointed 接口是 CheckpointedFunction 接口的一个简化版本，只支持均匀分布的ListState，并在还原时使用偶数拆分的重新分配方案。不支持全量广播的UnionListState，</p>
-<p>该接口可以实现状态重分配功能，当operator的并行度发生更改时，会对状态进行重新分配。operator state 的状态重新分配始终通过检查点，因此转换功能看起来像故障/恢复组合，其中恢复以不同的并行度进行。</p>
+<p>该接口可以实现状态重分配功能，当operator的并行度发生更改时，会对状态进行重新分配。Operator State 的状态重新分配始终通过检查点，因此转换功能看起来像故障/恢复组合，其中恢复以不同的并行度进行。</p>
 <p>从概念上讲，检查点中的状态是并行转换函数实例返回的所有列表的串联列表。 从检查点还原时，该列表分为分配给每个并行功能实例的子列表。</p>
 <p>下图说明了状态重新分配，该函数以并行性运行共有三个 subTask前两个并行实例返回带有两个状态元素的列表，第三个并行实例返回带有以个状态元素</p>
 <p><img src="https://images.hnbian.cn/Fnqvl6xnx7veD7cVu0QYdxFBJvEg?imageView2/0/interlace/1/q/70%7Cwatermark/2/text/d3d3LmhuYmlhbi5jbg==/font/5b6u6L2v6ZuF6buR/fontsize/600/fill/IzBDMjU2NA==/dissolve/100/gravity/SouthEast/dx/10/dy/10%7Cimageslim" alt></p>
@@ -1522,8 +1531,8 @@
 
     <span class="token comment" spellcheck="true">/**
     * initializeState 方法接收一个 FunctionInitializationContext 参数，
-    * 会用来初始化 non-keyed state 的 “容器”。
-    * 这些容器是一个 ListState 用于在 checkpoint 时保存 non-keyed state 对象。
+    * 会用来初始化 non-Keyed State 的 “容器”。
+    * 这些容器是一个 ListState 用于在 checkpoint 时保存 non-Keyed State 对象。
     * @param context
     */</span>
   <span class="token keyword">override</span> <span class="token keyword">def</span> initializeState<span class="token punctuation">(</span>context<span class="token operator">:</span> FunctionInitializationContext<span class="token punctuation">)</span><span class="token operator">:</span> <span class="token builtin">Unit</span> <span class="token operator">=</span> <span class="token punctuation">{</span>
@@ -1565,11 +1574,11 @@
 <ol>
 <li>启动 Flink 集群，将代码打包提交任务到 flink 集群，然后查看结果</li>
 </ol>
-<p><img src="https://images.hnbian.cn/FobI6cJm8zyJGKnpnZIxZl9jK0G3" alt="提交 flink任务"></p>
+<p><img src="https://images.hnbian.cn/FobI6cJm8zyJGKnpnZIxZl9jK0G3?imageView2/0/interlace/1/q/70%7Cwatermark/2/text/d3d3LmhuYmlhbi5jbg==/font/5b6u6L2v6ZuF6buR/fontsize/600/fill/IzBDMjU2NA==/dissolve/100/gravity/SouthEast/dx/10/dy/10%7Cimageslim" alt="提交 flink任务"></p>
 <ol start="2">
 <li>查看打印的日志</li>
 </ol>
-<p><img src="https://images.hnbian.cn/FjExo7f0qLvHjBfEbWyUxH_S9vDx" alt="查看运行时日志，之后关闭任务"></p>
+<p><img src="https://images.hnbian.cn/FjExo7f0qLvHjBfEbWyUxH_S9vDx?imageView2/0/interlace/1/q/70%7Cwatermark/2/text/d3d3LmhuYmlhbi5jbg==/font/5b6u6L2v6ZuF6buR/fontsize/600/fill/IzBDMjU2NA==/dissolve/100/gravity/SouthEast/dx/10/dy/10%7Cimageslim" alt="查看运行时日志，之后关闭任务"></p>
 <ol start="3">
 <li>查看 checkpoint 保存的状态数据</li>
 </ol>
@@ -1589,8 +1598,8 @@
 <ol start="4">
 <li>关闭程序，并从 checkpoint 恢复程序状态</li>
 </ol>
-<p><img src="https://images.hnbian.cn/Fmb6NBCG_GGWIJ90qy6YXN6_I5gp" alt="恢复状态提交任务"></p>
-<p><img src="https://images.hnbian.cn/Fnz_VQu87yvOoKSWwjOxQLIqkzfI" alt="查看状态恢复情况"></p>
+<p><img src="https://images.hnbian.cn/Fmb6NBCG_GGWIJ90qy6YXN6_I5gp?imageView2/0/interlace/1/q/70%7Cwatermark/2/text/d3d3LmhuYmlhbi5jbg==/font/5b6u6L2v6ZuF6buR/fontsize/600/fill/IzBDMjU2NA==/dissolve/100/gravity/SouthEast/dx/10/dy/10%7Cimageslim" alt="恢复状态提交任务"></p>
+<p><img src="https://images.hnbian.cn/Fnz_VQu87yvOoKSWwjOxQLIqkzfI?imageView2/0/interlace/1/q/70%7Cwatermark/2/text/d3d3LmhuYmlhbi5jbg==/font/5b6u6L2v6ZuF6buR/fontsize/600/fill/IzBDMjU2NA==/dissolve/100/gravity/SouthEast/dx/10/dy/10%7Cimageslim" alt="查看状态恢复情况"></p>
 <h3 id="5-4-Broadcast-state-使用示例"><a href="#5-4-Broadcast-state-使用示例" class="headerlink" title="5.4 Broadcast state 使用示例"></a>5.4 Broadcast state 使用示例</h3><p>Broadcast State(广播状态)，可以将一个流中的数据广播到下游算子的每个 task中，使得这些数据再所有的 task 中共享，比如用于配置的一些数据，通过Broadcast state，我们可以让下游的每一个task，配置保持一致，当配置有修改时也能够使用Broadcast State 对下游每个 task 中的相关配置进行变更。</p>
 <p>Broadcast State比较适合这种场景，假设我们做一个规则匹配事件处理系统，规则是一个低吞吐的流、而事件是一个高吞吐的流。我们可以将规则以Broadcast State的方式发送到下游每一个任务中，然后当有事件需要处理时，可以从广播中读取之前的规则，进行处理。</p>
 <p>Broadcast State是一个Map结构，它比较适合于一个broadcast stream、另外一个不是broadcast stream的两个流进行相关操作的场景。</p>
@@ -2224,7 +2233,7 @@ Flink 实时计算数据场景下，有时需要启动 checkpoint 保存数据�
                             1. Timer 介绍
 Timer（定时器）是 Flink 提供的用于 Processing Time 或 Event Time 变化的机制。
 
-Timer是 Flink 内部的定时器，与 key 和 timestamp 相关，相同的 ke
+Timer 是 Flink 内部的定时器，与 key 和 timestamp 相关，相同的 k
                         
                     </div>
                     <div class="publish-info">
@@ -2393,7 +2402,7 @@ code[class*="language-"], pre[class*="language-"] { white-space: pre !important;
             <br>
             
             &nbsp;<i class="fas fa-chart-area"></i>&nbsp;站点总字数:&nbsp;<span
-                class="white-color">810.5k</span>&nbsp;字
+                class="white-color">812.8k</span>&nbsp;字
             
             
             

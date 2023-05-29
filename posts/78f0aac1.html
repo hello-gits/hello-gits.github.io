@@ -446,7 +446,7 @@ ClickHouse拥有非常庞大的表引擎体">
                 
                 <div class="info-break-policy">
                     <i class="far fa-file-word fa-fw"></i>文章字数:&nbsp;&nbsp;
-                    5.2k
+                    5.3k
                 </div>
                 
 
@@ -506,12 +506,12 @@ ClickHouse拥有非常庞大的表引擎体">
   name1 <span class="token punctuation">[</span><span class="token keyword">type</span><span class="token punctuation">]</span> <span class="token punctuation">[</span><span class="token keyword">DEFAULT</span><span class="token operator">|</span>MATERIALIZED<span class="token operator">|</span>ALIAS expr<span class="token punctuation">]</span><span class="token punctuation">,</span>
   name2 <span class="token punctuation">[</span><span class="token keyword">type</span><span class="token punctuation">]</span> <span class="token punctuation">[</span><span class="token keyword">DEFAULT</span><span class="token operator">|</span>MATERIALIZED<span class="token operator">|</span>ALIAS expr<span class="token punctuation">]</span><span class="token punctuation">,</span>
   <span class="token punctuation">.</span><span class="token punctuation">.</span><span class="token punctuation">.</span>
-<span class="token punctuation">)</span> <span class="token keyword">ENGINE</span> <span class="token operator">=</span> MergeTree<span class="token punctuation">(</span><span class="token punctuation">)</span>
-<span class="token punctuation">[</span><span class="token keyword">PARTITION</span> <span class="token keyword">BY</span> expr<span class="token punctuation">]</span>
-<span class="token punctuation">[</span><span class="token keyword">ORDER</span> <span class="token keyword">BY</span> expr<span class="token punctuation">]</span>
-<span class="token punctuation">[</span><span class="token keyword">PRIMARY</span> <span class="token keyword">KEY</span> expr<span class="token punctuation">]</span>
-<span class="token punctuation">[</span>SAMPLE <span class="token keyword">BY</span> expr<span class="token punctuation">]</span>
-<span class="token punctuation">[</span>SETTINGS name<span class="token operator">=</span><span class="token keyword">value</span><span class="token punctuation">,</span> <span class="token punctuation">.</span><span class="token punctuation">.</span><span class="token punctuation">.</span><span class="token punctuation">]</span></code></pre>
+<span class="token punctuation">)</span> <span class="token keyword">ENGINE</span> <span class="token operator">=</span> MergeTree<span class="token punctuation">(</span><span class="token punctuation">)</span> <span class="token comment" spellcheck="true">/*表引擎*/</span>
+<span class="token punctuation">[</span><span class="token keyword">PARTITION</span> <span class="token keyword">BY</span> expr<span class="token punctuation">]</span>  <span class="token comment" spellcheck="true">/*分区表达式*/</span>
+<span class="token punctuation">[</span><span class="token keyword">ORDER</span> <span class="token keyword">BY</span> expr<span class="token punctuation">]</span>      <span class="token comment" spellcheck="true">/*排序表达式*/</span> 
+<span class="token punctuation">[</span><span class="token keyword">PRIMARY</span> <span class="token keyword">KEY</span> expr<span class="token punctuation">]</span>   <span class="token comment" spellcheck="true">/*主键，可选一个到多个列*/</span>
+<span class="token punctuation">[</span>SAMPLE <span class="token keyword">BY</span> expr<span class="token punctuation">]</span>     <span class="token comment" spellcheck="true">/*采样表达式*/</span>
+<span class="token punctuation">[</span>SETTINGS name<span class="token operator">=</span><span class="token keyword">value</span><span class="token punctuation">,</span> <span class="token punctuation">.</span><span class="token punctuation">.</span><span class="token punctuation">.</span><span class="token punctuation">]</span> <span class="token comment" spellcheck="true">/*其他配置， 如查询缓存，数据压缩等*/</span></code></pre>
 <p>MergeTree表引擎除了常规参数之外，还拥有一些独有的配置选项。接下来会着重介绍其中几个重要的参数，包括它们的使用方法和工作原理。但是在此之前，还是先介绍一遍它们的作用。</p>
 <h3 id="2-1-ORDER-BY"><a href="#2-1-ORDER-BY" class="headerlink" title="2.1 ORDER BY"></a>2.1 ORDER BY</h3><ul>
 <li><strong>排序键</strong></li>
@@ -619,10 +619,6 @@ settings index_granularity <span class="token operator">=</span> <span class="to
 </ul>
 <h2 id="3-存储结构"><a href="#3-存储结构" class="headerlink" title="3. 存储结构"></a>3. 存储结构</h2><p>MergeTree表引擎的表是拥有物理存储的，数据会按照分区目录的形式保存在磁盘上，完整物理结构分为3个层级，依次是数据表目录、分区目录及各分区下具体的数据文件。如下图所示：</p>
 <img src="https://images.hnbian.cn/FrIQ4PZRORHwZA7S0zg7M0_ZrQhA?imageView2/0/interlace/1/q/70%7Cwatermark/2/text/d3d3LmhuYmlhbi5jbg==/font/5b6u6L2v6ZuF6buR/fontsize/600/fill/IzBDMjU2NA==/dissolve/100/gravity/SouthEast/dx/10/dy/10%7Cimageslim" alt="存储结构" style="zoom:50%;">
-
-
-
-
 
 
 
@@ -1444,12 +1440,12 @@ Traceback (most recent call last):
                         <span class="chip bg-color">exception</span>
                     </a>
                     
-                    <a href="/tags/others/">
-                        <span class="chip bg-color">others</span>
-                    </a>
-                    
                     <a href="/tags/ambari/">
                         <span class="chip bg-color">ambari</span>
+                    </a>
+                    
+                    <a href="/tags/others/">
+                        <span class="chip bg-color">others</span>
                     </a>
                     
                     <a href="/tags/kafka/">
@@ -1656,7 +1652,7 @@ code[class*="language-"], pre[class*="language-"] { white-space: pre !important;
             <br>
             
             &nbsp;<i class="fas fa-chart-area"></i>&nbsp;站点总字数:&nbsp;<span
-                class="white-color">810.5k</span>&nbsp;字
+                class="white-color">812.8k</span>&nbsp;字
             
             
             

@@ -463,20 +463,20 @@
         <div class="card-content article-card-content">
             <div id="articleContent">
                 <h2 id="1-窗口函数（window-function）介绍"><a href="#1-窗口函数（window-function）介绍" class="headerlink" title="1. 窗口函数（window function）介绍"></a>1. 窗口函数（window function）介绍</h2><p>定义完窗口分配器（WindowAssigner）之后，我们就需要指定要在每个窗口上执行的计算。这是Window Fucntion的职责，一旦系统确定窗口已准备好进行处理，就可以处理每个窗口的元素。</p>
-<p>窗口函数可以分为 增量聚合函数 和全窗口函数两类：</p>
+<p>窗口函数可以分为 增量聚合函数 和 全窗口函数两类：</p>
 <ol>
 <li>增量聚合函数(incremental aggregatement functions)<ul>
-<li>介绍：每条数据到来就进行计算，保持一个简单的状态,应用场景相对简单，适用于增量聚合的操作，可以更有效地执行，因为Flink可以在每个窗口元素到达时以递增方式聚合它们</li>
+<li>介绍：每条数据到来就进行计算，保持一个简单的状态，应用场景相对简单，适用于增量聚合的操作，可以更有效地执行，因为Flink 可以在每个窗口元素到达时以递增方式聚合它们</li>
 <li>相关函数有 ReduceFunction、AggegateFunction、FoldFunction</li>
 </ul>
 </li>
 <li>全窗口函数（full window function）<ul>
-<li>全窗口函数会获取一个包含窗口中的所有元素的 Iterable 以及有关元素所属的窗口的其他元信息，这使得它不能够像增量聚合函数一样快速高效的执行，不过可以通过将ProcessWindowFunction与ReduceFunction，AggregateFunction或FoldFunction结合使用来获得窗口元素的增量聚合以及ProcessWindowFunction接收的其他窗口元数据，从而减轻这种情况。</li>
-<li>相关函数有ProcessWindowFunction</li>
+<li>全窗口函数会获取一个包含窗口中的所有元素的 Iterable 以及有关元素所属的窗口的其他元信息，这使得它不能够像增量聚合函数一样快速高效的执行，不过可以通过将 ProcessWindowFunction 与 ReduceFunction，AggregateFunction或FoldFunction结合使用来获得窗口元素的增量聚合以及ProcessWindowFunction接收的其他窗口元数据，从而减轻这种情况。</li>
+<li>相关函数有 ProcessWindowFunction</li>
 </ul>
 </li>
 </ol>
-<h2 id="2-ReduceFunction"><a href="#2-ReduceFunction" class="headerlink" title="2. ReduceFunction"></a>2. ReduceFunction</h2><p>ReduceFunction 将窗口输入数据中的两个元素组合在一起以产生相同类型的输出元素。Flink使用ReduceFunction来逐步聚合窗口中的元素。</p>
+<h2 id="2-ReduceFunction"><a href="#2-ReduceFunction" class="headerlink" title="2. ReduceFunction"></a>2. ReduceFunction</h2><p>ReduceFunction 将窗口输入数据中的两个元素组合在一起以产生相同类型的输出元素。Flink 使用 ReduceFunction来逐步聚合窗口中的元素。</p>
 <pre class=" language-scala"><code class="language-scala"><span class="token keyword">import</span> com<span class="token punctuation">.</span>hnbian<span class="token punctuation">.</span>flink<span class="token punctuation">.</span>common<span class="token punctuation">.</span>Obj1
 <span class="token keyword">import</span> org<span class="token punctuation">.</span>apache<span class="token punctuation">.</span>flink<span class="token punctuation">.</span>api<span class="token punctuation">.</span>common<span class="token punctuation">.</span>functions<span class="token punctuation">.</span>ReduceFunction
 <span class="token keyword">import</span> org<span class="token punctuation">.</span>apache<span class="token punctuation">.</span>flink<span class="token punctuation">.</span>api<span class="token punctuation">.</span>scala<span class="token punctuation">.</span>createTypeInformation
@@ -608,7 +608,7 @@
     <span class="token keyword">val</span> folder <span class="token operator">=</span> <span class="token keyword">new</span> ScalaFoldFunction<span class="token punctuation">[</span>T<span class="token punctuation">,</span> R<span class="token punctuation">]</span><span class="token punctuation">(</span>cleanFun<span class="token punctuation">)</span>
     fold<span class="token punctuation">(</span>initialValue<span class="token punctuation">,</span> folder<span class="token punctuation">)</span>
   <span class="token punctuation">}</span></code></pre>
-<h2 id="5-WindowFunction"><a href="#5-WindowFunction" class="headerlink" title="5. WindowFunction"></a>5. WindowFunction</h2><p>WindowFunction 能够比前面几种函数更加灵活的计算窗口内的数据，但是这样的代价是牺牲了一部分的性能开销，因为WindowFunction 的窗口化 transformation 之前，必须在内部缓存一个包含窗口中所有element的Iterable，及这些element所属的窗口的额外元信息(meta information)。不过我们可以使用 WindowFunction 结合 ReduceFunction 或者 AggregateFunction 在适当的提高性能。</p>
+<h2 id="5-WindowFunction"><a href="#5-WindowFunction" class="headerlink" title="5. WindowFunction"></a>5. WindowFunction</h2><p>WindowFunction 能够比前面几种函数更加灵活的计算窗口内的数据，但是这样的代价是牺牲了一部分的性能开销，因为WindowFunction 的窗口化 transformation 之前，必须在内部缓存一个包含窗口中所有 element 的 Iterable，及这些 element 所属的窗口的额外元信息(meta information)。不过我们可以使用 WindowFunction 结合 ReduceFunction 或者 AggregateFunction 在适当的提高性能。</p>
 <pre class=" language-scala"><code class="language-scala"><span class="token keyword">import</span> java<span class="token punctuation">.</span>text<span class="token punctuation">.</span>SimpleDateFormat
 <span class="token keyword">import</span> org<span class="token punctuation">.</span>apache<span class="token punctuation">.</span>flink<span class="token punctuation">.</span>streaming<span class="token punctuation">.</span>api<span class="token punctuation">.</span>scala<span class="token punctuation">.</span>_
 <span class="token keyword">import</span> org<span class="token punctuation">.</span>apache<span class="token punctuation">.</span>flink<span class="token punctuation">.</span>streaming<span class="token punctuation">.</span>api<span class="token punctuation">.</span>scala<span class="token punctuation">.</span>function<span class="token punctuation">.</span>WindowFunction
@@ -1555,7 +1555,7 @@ code[class*="language-"], pre[class*="language-"] { white-space: pre !important;
             <br>
             
             &nbsp;<i class="fas fa-chart-area"></i>&nbsp;站点总字数:&nbsp;<span
-                class="white-color">810.5k</span>&nbsp;字
+                class="white-color">812.8k</span>&nbsp;字
             
             
             

@@ -405,12 +405,12 @@
                     
                     <div class="article-tag">
                         
-                            <a href="/tags/hadoop/">
-                                <span class="chip bg-color">hadoop</span>
-                            </a>
-                        
                             <a href="/tags/hdfs/">
                                 <span class="chip bg-color">hdfs</span>
+                            </a>
+                        
+                            <a href="/tags/hadoop/">
+                                <span class="chip bg-color">hadoop</span>
                             </a>
                         
                     </div>
@@ -480,7 +480,7 @@
 <ul>
 <li>方案 2（192 个小文件，每个 1M 的小文件）。</li>
 </ul>
-<p><img src="https://images.hnbian.cn/202305020007152.png?imageView2/0/interlace/1/q/70%7Cwatermark/2/text/d3d3LmhuYmlhbi5jbg==/font/5b6u6L2v6ZuF6buR/fontsize/600/fill/IzBDMjU2NA==/dissolve/100/gravity/SouthEast/dx/10/dy/10%7Cimageslim" alt="image-20230502000738110"></p>
+<p><img src="https://images.hnbian.cn/202305020007152.png?imageView2/0/interlace/1/q/70%7Cwatermark/2/text/d3d3LmhuYmlhbi5jbg==/font/5b6u6L2v6ZuF6buR/fontsize/600/fill/IzBDMjU2NA==/dissolve/100/gravity/SouthEast/dx/10/dy/10%7Cimageslim" alt></p>
 <p>从上面的图示中可以看到， 同样是 192M 的文件，一个大文件与一堆小文件相比，在 Namenode 堆上需要的内存相差 100 倍以上。</p>
 <h2 id="3-对存储层的影响"><a href="#3-对存储层的影响" class="headerlink" title="3. 对存储层的影响"></a>3. 对存储层的影响</h2><p>当 NameNode 重启时，它必须将文件系统元数据从本地磁盘加载到内存中。这意味着，如果 NameNode 的元数据很大，重启速度会非常慢。NameNode 还必须跟踪集群上的 block 位置的变化，太多的小文件也会导致 NameNode 在 DataNode 耗尽磁盘上的数据空间之前，就先耗尽内存中的元数据空间。DataNode 还会通过网络向 NameNode 报告块的变化；更多的 block 意味着要通过网络发送更多的元数据变更。</p>
 <p>更多的文件意味着更多的读取请求需要请求 NameNode，这可能最终会堵塞 NameNode 的容量，增加 RPC 队列和处理延迟，进而导致性能和响应能力下降。按照经验，RPC 工作负载接近 40K~50K 的 RPCs/s 是比较高的。</p>
@@ -713,12 +713,12 @@
                     
                         <div class="article-tag">
                             
-                                <a href="/tags/hadoop/">
-                                    <span class="chip bg-color">hadoop</span>
-                                </a>
-                            
                                 <a href="/tags/hdfs/">
                                     <span class="chip bg-color">hdfs</span>
+                                </a>
+                            
+                                <a href="/tags/hadoop/">
+                                    <span class="chip bg-color">hadoop</span>
                                 </a>
                             
                         </div>
@@ -1392,7 +1392,7 @@ code[class*="language-"], pre[class*="language-"] { white-space: pre !important;
             <br>
             
             &nbsp;<i class="fas fa-chart-area"></i>&nbsp;站点总字数:&nbsp;<span
-                class="white-color">810.5k</span>&nbsp;字
+                class="white-color">812.8k</span>&nbsp;字
             
             
             

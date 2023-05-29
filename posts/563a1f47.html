@@ -474,7 +474,7 @@
 <p>在这两个流程中，离线训练是最有技术挑战的工作（在线预估流程很多工作可以复用离线训练流程的工作），所以下文主要介绍离线训练流程。</p>
 <p><img src="https://images.hnbian.cn/202303142354418.png?imageView2/0/interlace/1/q/70%7Cwatermark/2/text/d3d3LmhuYmlhbi5jbg==/font/5b6u6L2v6ZuF6buR/fontsize/600/fill/IzBDMjU2NA==/dissolve/100/gravity/SouthEast/dx/10/dy/10%7Cimageslim" alt></p>
 <h3 id="2-2-什么是模型（model）？"><a href="#2-2-什么是模型（model）？" class="headerlink" title="2.2 什么是模型（model）？"></a>2.2 什么是模型（model）？</h3><p>模型，是机器学习中的一个重要概念，简单的讲，指特征空间到输出空间的映射；一般由模型的假设函数和参数w组成（下面公式就是Logistic Regression模型的一种表达，在训练模型的章节做稍详细的解释）；一个模型的假设空间（hypothesis space），指给定模型所有可能w对应的输出空间组成的集合。工业界常用的模型有Logistic Regression（简称LR）、Gradient Boosting Decision Tree（简称GBDT）、Support Vector Machine（简称SVM）、Deep Neural Network（简称DNN）等。</p>
-<p><img src="https://images.hnbian.cn/202303142354668.png" alt></p>
+<p><img src="https://images.hnbian.cn/202303142354668.png?imageView2/0/interlace/1/q/70%7Cwatermark/2/text/d3d3LmhuYmlhbi5jbg==/font/5b6u6L2v6ZuF6buR/fontsize/600/fill/IzBDMjU2NA==/dissolve/100/gravity/SouthEast/dx/10/dy/10%7Cimageslim" alt></p>
 <p>模型训练就是基于训练数据，获得一组参数w，使得特定目标最优，即获得了特征空间到输出空间的最优映射，具体怎么实现，见训练模型章节。</p>
 <h3 id="2-3-为什么要用机器学习解决问题？"><a href="#2-3-为什么要用机器学习解决问题？" class="headerlink" title="2.3 为什么要用机器学习解决问题？"></a>2.3 为什么要用机器学习解决问题？</h3><ul>
 <li>目前处于大数据时代，到处都有成T成P的数据，简单规则处理难以发挥这些数据的价值；</li>
@@ -591,7 +591,7 @@
 <ul>
 <li>Rescaling：<pre><code>      归一化到[0,1] 或 [-1，1]，用类似方式：</code></pre></li>
 </ul>
-<p><img src="https://images.hnbian.cn/202303142355551.png" alt></p>
+<p><img src="https://images.hnbian.cn/202303142355551.png?imageView2/0/interlace/1/q/70%7Cwatermark/2/text/d3d3LmhuYmlhbi5jbg==/font/5b6u6L2v6ZuF6buR/fontsize/600/fill/IzBDMjU2NA==/dissolve/100/gravity/SouthEast/dx/10/dy/10%7Cimageslim" alt></p>
 <p>Standardization： 设 $\mu$ 为 x 分布的均值， $\sigma$ 为 x 分布的标准差；</p>
 <p><img src="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAFUAAAAhBAMAAABaaPq+AAAAMFBMVEX///8AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAv3aB7AAAAD3RSTlMAVGaJRKsi7zLNEJnddrsZA0PJAAAACXBIWXMAAA7EAAAOxAGVKw4bAAABPUlEQVQ4EWNgwAYYlR1VE5AlWB0YXiDzkdhubIXsDUh8Bv4Erl/IfCS2AEsBEg/IdGdgPAAVYYMxoHwG5gAQq+8dELwFsUwZuDeAaCBgvgCh4SSnApwJZkxi4BGAinAuQJViWJ/AgiLyg2H9CqiaZBQJBpYCfYY2ZCGWHwzmTFCBLmQJBgaOjY2GDshCzLMFV6sgC+Bhc8Ici0cNTIo/AcYiTLsTVgJXoQxlCZkIhcEF8TNYEtIFKvArgcsyAuMaArhDQcAALoONYYohyP8fG/gAVDcJQy1OAa5vDA5gScJucGf6wJGA0yBUiW4JYRFUkVEeZgjIajdgCmIX4TbgKoDlM+wqEKKaDAwHWxBcvKwiBoa5F/CqgEuyfWNgeJcA5+JlcACT4WO8KpAkjzGwPOZC4uNjJitqpd6CKwAAyWhIVPU0so8AAAAASUVORK5CYII=" alt></p>
 <p>Scaling to unit length： 归一化到单位长度向量</p>
@@ -604,30 +604,30 @@
 </ul>
 <h2 id="6-训练模型"><a href="#6-训练模型" class="headerlink" title="6. 训练模型"></a>6. 训练模型</h2><p>完成特征抽取和处理后，就可以开始模型训练了，下文以简单且常用的Logistic Regression模型（下称LR模型）为例，进行简单介绍。</p>
 <p>设有m个（x,y）训练数据，其中x为特征向量，y为label，</p>
-<p><img src="https://images.hnbian.cn/202303142356277.png" alt></p>
+<p><img src="https://images.hnbian.cn/202303142356277.png?imageView2/0/interlace/1/q/70%7Cwatermark/2/text/d3d3LmhuYmlhbi5jbg==/font/5b6u6L2v6ZuF6buR/fontsize/600/fill/IzBDMjU2NA==/dissolve/100/gravity/SouthEast/dx/10/dy/10%7Cimageslim" alt></p>
 <p>；w为模型中参数向量，即模型训练中需要学习的对象。</p>
 <p>所谓训练模型，就是选定假说函数和损失函数，基于已有训练数据（x,y），不断调整w，使得损失函数最优，相应的w就是最终学习结果，也就得到相应的模型。</p>
-<h3 id="6-1-模型函数"><a href="#6-1-模型函数" class="headerlink" title="6.1 模型函数"></a>6.1 模型函数</h3><p>1）假说函数，即假设x和y存在一种函数关系：<img src="https://images.hnbian.cn/202303142356113.png" alt></p>
+<h3 id="6-1-模型函数"><a href="#6-1-模型函数" class="headerlink" title="6.1 模型函数"></a>6.1 模型函数</h3><p>1）假说函数，即假设x和y存在一种函数关系：<img src="https://images.hnbian.cn/202303142356113.png?imageView2/0/interlace/1/q/70%7Cwatermark/2/text/d3d3LmhuYmlhbi5jbg==/font/5b6u6L2v6ZuF6buR/fontsize/600/fill/IzBDMjU2NA==/dissolve/100/gravity/SouthEast/dx/10/dy/10%7Cimageslim" alt></p>
 <p>2）损失函数，基于上述假设函数，构建模型损失函数（优化目标），在LR中通常以（x,y）的最大似然估计为目标：</p>
-<p><img src="https://images.hnbian.cn/202303142356635.png" alt></p>
+<p><img src="https://images.hnbian.cn/202303142356635.png?imageView2/0/interlace/1/q/70%7Cwatermark/2/text/d3d3LmhuYmlhbi5jbg==/font/5b6u6L2v6ZuF6buR/fontsize/600/fill/IzBDMjU2NA==/dissolve/100/gravity/SouthEast/dx/10/dy/10%7Cimageslim" alt></p>
 <h3 id="6-2-优化算法"><a href="#6-2-优化算法" class="headerlink" title="6.2 优化算法"></a>6.2 优化算法</h3><ul>
 <li><p>梯度下降（Gradient     Descent）</p>
-<pre><code>      即w沿着损失函数的负梯度方向进行调整，示意图见下图，![](https://images.hnbian.cn/202303142356964.png)</code></pre><p>的梯度即一阶导数（见下式），梯度下降有多种类型，如随机梯度下降或批量梯度下降。</p>
+<pre><code>      即w沿着损失函数的负梯度方向进行调整，示意图见下图，![](https://images.hnbian.cn/202303142356964.png?imageView2/0/interlace/1/q/70%7Cwatermark/2/text/d3d3LmhuYmlhbi5jbg==/font/5b6u6L2v6ZuF6buR/fontsize/600/fill/IzBDMjU2NA==/dissolve/100/gravity/SouthEast/dx/10/dy/10%7Cimageslim)</code></pre><p>的梯度即一阶导数（见下式），梯度下降有多种类型，如随机梯度下降或批量梯度下降。</p>
 </li>
 </ul>
-<p><img src="https://images.hnbian.cn/202303142357726.png" alt></p>
-<p>随机梯度下降（Stochastic Gradient Descent），每一步随机选择一个样本<img src="https://images.hnbian.cn/202303142357417.png" alt></p>
-<p>，计算相应的梯度，并完成w的更新，如下式，<img src="https://images.hnbian.cn/202303142357868.png" alt></p>
-<p>批量梯度下降（Batch Gradient Descent）,每一步都计算训练数据中的所有样本对应的梯度，w沿着这个梯度方向迭代，即<img src="https://images.hnbian.cn/202303142357510.png" alt></p>
+<p><img src="https://images.hnbian.cn/202303142357726.png?imageView2/0/interlace/1/q/70%7Cwatermark/2/text/d3d3LmhuYmlhbi5jbg==/font/5b6u6L2v6ZuF6buR/fontsize/600/fill/IzBDMjU2NA==/dissolve/100/gravity/SouthEast/dx/10/dy/10%7Cimageslim" alt></p>
+<p>随机梯度下降（Stochastic Gradient Descent），每一步随机选择一个样本<img src="https://images.hnbian.cn/202303142357417.png?imageView2/0/interlace/1/q/70%7Cwatermark/2/text/d3d3LmhuYmlhbi5jbg==/font/5b6u6L2v6ZuF6buR/fontsize/600/fill/IzBDMjU2NA==/dissolve/100/gravity/SouthEast/dx/10/dy/10%7Cimageslim" alt></p>
+<p>，计算相应的梯度，并完成w的更新，如下式，<img src="https://images.hnbian.cn/202303142357868.png?imageView2/0/interlace/1/q/70%7Cwatermark/2/text/d3d3LmhuYmlhbi5jbg==/font/5b6u6L2v6ZuF6buR/fontsize/600/fill/IzBDMjU2NA==/dissolve/100/gravity/SouthEast/dx/10/dy/10%7Cimageslim" alt></p>
+<p>批量梯度下降（Batch Gradient Descent）,每一步都计算训练数据中的所有样本对应的梯度，w沿着这个梯度方向迭代，即<img src="https://images.hnbian.cn/202303142357510.png?imageView2/0/interlace/1/q/70%7Cwatermark/2/text/d3d3LmhuYmlhbi5jbg==/font/5b6u6L2v6ZuF6buR/fontsize/600/fill/IzBDMjU2NA==/dissolve/100/gravity/SouthEast/dx/10/dy/10%7Cimageslim" alt></p>
 <p><img src="https://images.hnbian.cn/202303142357370.png?imageView2/0/interlace/1/q/70%7Cwatermark/2/text/d3d3LmhuYmlhbi5jbg==/font/5b6u6L2v6ZuF6buR/fontsize/600/fill/IzBDMjU2NA==/dissolve/100/gravity/SouthEast/dx/10/dy/10%7Cimageslim" alt></p>
 <ul>
 <li>牛顿法（Newton’s     Method）<pre><code>      牛顿法的基本思想是在极小点附近通过对目标函数做二阶Taylor展开，进而找到L(w)的极小点的估计值。形象地讲，在wk处做切线，该切线与L(w)=0的交点即为下一个迭代点wk+1（示意图如下）。w的更新公式如下，其中目标函数的二阶偏导数，即为大名鼎鼎的Hessian矩阵。</code></pre></li>
 </ul>
-<p><img src="https://images.hnbian.cn/202303150001658.png" alt></p>
+<p><img src="https://images.hnbian.cn/202303150001658.png?imageView2/0/interlace/1/q/70%7Cwatermark/2/text/d3d3LmhuYmlhbi5jbg==/font/5b6u6L2v6ZuF6buR/fontsize/600/fill/IzBDMjU2NA==/dissolve/100/gravity/SouthEast/dx/10/dy/10%7Cimageslim" alt></p>
 <p>拟牛顿法（Quasi-Newton Methods）：计算目标函数的二阶偏导数，难度较大，更为复杂的是目标函数的Hessian矩阵无法保持正定；不用二阶偏导数而构造出可以近似Hessian矩阵的逆的正定对称阵，从而在”拟牛顿”的条件下优化目标函数。<br> BFGS： 使用BFGS公式对H(w)进行近似，内存中需要放H(w),内存需要O(m2)级别；<br> L-BFGS：存储有限次数（如k次）的更新矩阵<img src="https://images.hnbian.cn/202303150001703.png" alt>，用这些更新矩阵生成新的H(w),内存降至O(m)级别；<br> OWLQN: 如果在目标函数中引入L1正则化，需要引入虚梯度来解决目标函数不可导问题，OWLQN就是用来解决这个问题。</p>
-<p><img src="https://images.hnbian.cn/202303150002722.png" alt></p>
+<p><img src="https://images.hnbian.cn/202303150002722.png?imageView2/0/interlace/1/q/70%7Cwatermark/2/text/d3d3LmhuYmlhbi5jbg==/font/5b6u6L2v6ZuF6buR/fontsize/600/fill/IzBDMjU2NA==/dissolve/100/gravity/SouthEast/dx/10/dy/10%7Cimageslim" alt></p>
 <p>Coordinate Descent<br> 对于w，每次迭代，固定其他维度不变，只对其一个维度进行搜索，确定最优下降方向（示意图如下），公式表达如下：<img src="https://images.hnbian.cn/202303150002627.png" alt></p>
-<p><img src="https://images.hnbian.cn/202303150002941.png" alt></p>
+<p><img src="https://images.hnbian.cn/202303150002941.png?imageView2/0/interlace/1/q/70%7Cwatermark/2/text/d3d3LmhuYmlhbi5jbg==/font/5b6u6L2v6ZuF6buR/fontsize/600/fill/IzBDMjU2NA==/dissolve/100/gravity/SouthEast/dx/10/dy/10%7Cimageslim" alt></p>
 <h2 id="7-优化模型"><a href="#7-优化模型" class="headerlink" title="7. 优化模型"></a>7. 优化模型</h2><p>经过上文提到的数据筛选和清洗、特征设计和选择、模型训练，就得到了一个模型，但是如果发现效果不好？怎么办？</p>
 <p>【首先】</p>
 <p>反思目标是否可预估，数据和特征是否存在bug。</p>
@@ -1425,7 +1425,7 @@ code[class*="language-"], pre[class*="language-"] { white-space: pre !important;
             <br>
             
             &nbsp;<i class="fas fa-chart-area"></i>&nbsp;站点总字数:&nbsp;<span
-                class="white-color">810.5k</span>&nbsp;字
+                class="white-color">812.8k</span>&nbsp;字
             
             
             

@@ -5,7 +5,7 @@
 <head><meta name="generator" content="Hexo 3.9.0">
     <meta charset="utf-8">
     <meta name="keywords" content="构建数据仓库的分层设计, hnbian">
-    <meta name="description" content="1. 前言数据仓库代表的是一种对数据的管理和使用的方式，它是一整套包括了etl、调度、建模在内的完整的理论体系。现在所谓的大数据更多的是一种数据量级的增大和工具的上的更新。 两者并无冲突，相反，而是一种更好的结合。单纯使用 Hadoop、S">
+    <meta name="description" content="1. 前言数据仓库代表的是一套全面的数据管理和使用策略，包含了诸如ETL、调度和建模等完整的理论体系。而现在的“大数据”更多的是指数据量的增加和工具的更新。这两者并没有冲突，实际上，它们可以更好地结合起来。单纯使用Hadoop、Spark、">
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=no">
     <meta name="renderer" content="webkit|ie-stand|ie-comp">
@@ -435,14 +435,14 @@
                 
                 <div class="info-break-policy">
                     <i class="far fa-file-word fa-fw"></i>文章字数:&nbsp;&nbsp;
-                    4.2k
+                    4.9k
                 </div>
                 
 
                 
                 <div class="info-break-policy">
                     <i class="far fa-clock fa-fw"></i>阅读时长:&nbsp;&nbsp;
-                    14 分
+                    17 分
                 </div>
                 
 				
@@ -458,21 +458,22 @@
         <hr class="clearfix">
         <div class="card-content article-card-content">
             <div id="articleContent">
-                <h2 id="1-前言"><a href="#1-前言" class="headerlink" title="1. 前言"></a>1. 前言</h2><p>数据仓库代表的是一种对数据的管理和使用的方式，它是一整套包括了etl、调度、建模在内的完整的理论体系。现在所谓的大数据更多的是一种数据量级的增大和工具的上的更新。 两者并无冲突，相反，而是一种更好的结合。单纯使用 Hadoop、Spark、Flume 处理处理数据，其实只是学会几种新的工具，这是搞工具的，只是在数据仓库中etl中的一部分。技术的更新往往能领到一个时代的变革，比如Hadoop的诞生，光是深入研究一个大数据组件就要花很大的时间和精力。对于数据的从业者来讲，要始终重视紧跟技术的变革，但是切记数据为王，在追求技术的极致的时候，不要忘了我们是搞数据的。</p>
+                <h2 id="1-前言"><a href="#1-前言" class="headerlink" title="1. 前言"></a>1. 前言</h2><p>数据仓库代表的是一套全面的数据管理和使用策略，包含了诸如ETL、调度和建模等完整的理论体系。而现在的“大数据”更多的是指数据量的增加和工具的更新。这两者并没有冲突，实际上，它们可以更好地结合起来。单纯使用Hadoop、Spark、Flume等工具处理数据，其实只是掌握了几种新的工具，这些工具只是数据仓库中ETL的一部分。</p>
+<p>技术的更新往往能引领一个时代的变革，例如Hadoop的出现。深入研究一个大数据组件就需要投入大量的时间和精力。因此，作为数据专业人士，我们需要始终关注技术的变化。但是，请记住，数据才是核心。在追求技术的极致时，我们不能忘记我们的主要目标是处理数据。</p>
 <p>本文对数据分层的讨论适合下面一些场景</p>
 <ul>
 <li>数据建设刚起步，大部分的数据经过粗暴的数据接入后就直接对接业务。</li>
 <li>数据建设发展到一定阶段，发现数据的使用杂乱无章，各种业务都是从原始数据直接计算而得。</li>
 <li>各种重复计算，严重浪费了计算资源，需要优化性能。</li>
 </ul>
-<h2 id="2-为什么要分层"><a href="#2-为什么要分层" class="headerlink" title="2. 为什么要分层"></a>2. 为什么要分层</h2><p>我们对数据进行分层的主要原因就是希望在管理数据的时候，能对数据有一个更加清晰的掌控。</p>
-<p>详细来讲，主要有下面几个原因：</p>
+<h2 id="2-为什么要分层"><a href="#2-为什么要分层" class="headerlink" title="2. 为什么要分层"></a>2. 为什么要分层</h2><p>我们对数据进行分层的主要目的是为了在管理数据时，能对数据有一个更清晰的脉络，从而更容易掌控。</p>
+<p>详细来说，主要有以下几个原因：</p>
 <ol>
-<li><strong>清洗数据结构：</strong> 每一个数据分层都有它的作用域，这样我们在使用表的时候能更方便地定位和理解。</li>
-<li><strong>数据血缘跟踪：</strong>简单来讲有一张源表出问题，我们希望能够快速准确地定位到问题，并清除它的危害范围。</li>
-<li><strong>减少重复开发：</strong>规范数据分层，开发一些通用的中间层数据，能够减少极大的重复计算。</li>
-<li><strong>把复杂问题简单化：</strong>将一个复杂的任务分解成多个步骤来完成，每层只处理单一的步骤，比较简单和容易理解。而且便于维护数据的准确性。</li>
-<li><strong>屏蔽业务的影响：</strong>不必改一次业务就需要重新接入数据。</li>
+<li><strong>清晰的数据结构：</strong> 每个数据分层都有其作用域，这样我们在使用表的时候能更方便地定位和理解。</li>
+<li><strong>数据血缘追踪：</strong> 简单来说，当一张源表出问题时，我们希望能快速准确地定位问题，并清楚它的影响范围。</li>
+<li><strong>减少重复开发：</strong> 规范数据分层，开发一些通用的中间层数据，能极大地减少重复计算。</li>
+<li><strong>简化复杂问题：</strong> 将一个复杂的任务分解成多个步骤来完成，每层只处理单一的步骤，这样更简单，易于理解，也便于维护数据的准确性。</li>
+<li><strong>屏蔽业务的影响：</strong>不必每次业务变动就需要重新接入数据。</li>
 </ol>
 <h2 id="3-数据仓库分层介绍"><a href="#3-数据仓库分层介绍" class="headerlink" title="3.数据仓库分层介绍"></a>3.数据仓库分层介绍</h2><img src="https://images.hnbian.cn/FreH_swzDXOcRJsjOYHdtgFIwZzY?imageView2/0/interlace/1/q/70%7Cwatermark/2/text/d3d3LmhuYmlhbi5jbg==/font/5b6u6L2v6ZuF6buR/fontsize/600/fill/IzBDMjU2NA==/dissolve/100/gravity/SouthEast/dx/10/dy/10%7Cimageslim" style="zoom:50%;">
 
@@ -482,9 +483,9 @@
 <h3 id="3-1-ODS"><a href="#3-1-ODS" class="headerlink" title="3.1 ODS"></a>3.1 ODS</h3><ul>
 <li><p>ODS 是 Operational Data Store 的简写，即操作数据存储层，或叫数据运营层。</p>
 </li>
-<li><p>ODS层是最接近数据源中数据的一层，数据源中的数据经过抽取、清洗、传输， 也就是传说中的ETL 之后， 装入本层。</p>
+<li><p>ODS 是最接近数据源中数据的一层，数据源经过抽取、清洗、传输， 也就是传说中的 ETL 之后， 装入该层。</p>
 </li>
-<li><p>ODS层的数据，总体上大多是按照源头业务系统的分类方式而分类的。</p>
+<li><p>ODS 的数据，总体上大多是按照源头业务系统的分类方式进行分类的。</p>
 </li>
 </ul>
 <p>例如这一层可能包含的数据表为：</p>
@@ -495,7 +496,7 @@
 <li><strong>银行账户表</strong>（包含银行卡号、持卡人身份证号等） 等</li>
 </ul>
 <p>这里我们可以看到，这一层的数据还具有鲜明的业务数据库的特征，甚至还具有一定的关系数据库中的数据范式的组织形式。</p>
-<p>层的数据却不等同于原始数据。在源数据转入这一层时，要进行数据清洗操作，如：</p>
+<p>ODS 层的数据与原始数据的差别在于。在源数据转入这一层时，要进行数据清洗操作，如：</p>
 <ul>
 <li><strong>去燥：</strong>从原始数据中去掉明显偏离正常水平的数据，如银行刷卡异常信息</li>
 <li><strong>去重：</strong>数据去重，例如银行账户信息、公安局人口信息中均含有认得姓名，但是只保留一份即可）、</li>
@@ -503,23 +504,31 @@
 <li><strong>业务提取、单位统一：</strong>、砍字段，例如用于支撑前端系统工作，但是在数据挖掘中不需要的字段等操作</li>
 </ul>
 <h3 id="3-2-DW"><a href="#3-2-DW" class="headerlink" title="3.2 DW"></a>3.2 DW</h3><ul>
-<li>数据仓库层（DW），是数据仓库的主体。</li>
-<li>DW层从ODS（Operation Data Store）层中获得的数据按照主题建立各种数据模型。</li>
+<li>数据仓库层（DW Data Warehouse ），是数据仓库的主体。</li>
+<li>DW 层从ODS（Operation Data Store）层中获得的数据按照主题建立各种数据模型。</li>
 <li>例如以研究人的旅游消费为主题的数据集中，便可以结合航空公司的登机出行信息，以及银联系统的刷卡记录，进行结合分析，产生数据集。</li>
 <li>在这里我们需要了解四个概念：<strong>维</strong>（dimension）、<strong>事实</strong>（fact）、<strong>指标</strong>（index） 和<strong>粒度</strong>（Granularity）</li>
 </ul>
+<h4 id="3-2-1-DWD-层"><a href="#3-2-1-DWD-层" class="headerlink" title="3.2.1 DWD 层"></a>3.2.1 DWD 层</h4><p>DWD 层（Detail Data Warehouse Data）：也被称为细节数据层，这一层存储了从源系统获取的原始数据的详细记录。这些数据经过了一定程度的清洗和转换，以便在数据仓库中使用，但基本上保留了原始数据的所有细节。这意味着DWD层的数据通常包含大量的字段和记录，这使得它可以为多种不同的分析和报告需求提供支持。但是，由于其数据量大，通常不直接用于复杂的分析和报告。</p>
+<h4 id="3-2-2-DWS层"><a href="#3-2-2-DWS层" class="headerlink" title="3.2.2 DWS层"></a>3.2.2 DWS层</h4><p>DWS层（Summary Data Warehouse Data）：也被称为汇总数据层或者数据服务层，这一层存储了对DWD层数据进行汇总和进一步转换后的数据。这些汇总数据可以是按照不同维度（如时间、地理位置、客户等）进行的汇总，也可以是复杂的数据计算和转换的结果。这一层的数据通常用于高级分析和报告，因为它减少了需要处理的数据量，同时提供了更高层次的业务视角。</p>
+<h4 id="3-2-3-ODS-与-DWS-的区别？"><a href="#3-2-3-ODS-与-DWS-的区别？" class="headerlink" title="3.2.3 ODS 与 DWS 的区别？"></a>3.2.3 ODS 与 DWS 的区别？</h4><p>ODS（Operational Data Store）层和DWD（Detail Data Warehouse Data）层都包含详细的数据记录，但它们的设计目标、数据处理方式和使用场景有所不同：</p>
+<ol>
+<li>ODS层（Operational Data Store）：ODS 是一个面向操作的、集成的、可变的、当前的详细数据的集合，通常用于支持企业的日常运营。ODS层包含的数据通常是实时或近实时的，这意味着它会持续更新以反映最新的业务操作。ODS层的数据通常来自多个源系统，并且经过一定的清洗和转换以提供一致的视图。然而，ODS层并不包含大量的历史数据或进行复杂的数据汇总和计算。</li>
+<li>DWD层（Detail Data Warehouse Data）：DWD是数据仓库的一部分，存储了从源系统（包括ODS）获取的详细数据记录。与ODS层不同，DWD层的数据通常包含大量的历史数据，并且可以用于复杂的数据分析和报告。这些数据经过了更深入的清洗和转换，以便在数据仓库中使用。在DWD层，数据不再实时更新，而是通过批处理方式定期（如每日或每周）更新。</li>
+</ol>
+<p>总的来说，ODS和DWD的主要区别在于数据的实时性、历史性以及它们所支持的业务需求。ODS主要用于支持实时的业务操作，而DWD则主要用于支持历史数据分析和报告。</p>
 <h3 id="3-3-APP-数据产品层"><a href="#3-3-APP-数据产品层" class="headerlink" title="3.3 APP 数据产品层"></a>3.3 APP 数据产品层</h3><ul>
 <li>APP层 即 数据产品层，为数据产品提供使用的结果数据。</li>
-<li>APP层主要是提供给数据产品和数据分析使用的数据，</li>
-<li>APP层的数据一般会存放在es、mysql等系统中供线上系统使用，也可能会存在Hive 或者Druid中供数据分析和数据挖掘使用。</li>
-<li>比如我们经常说的报表数据，或者那种大宽表，一般就属于这一层。</li>
+<li>APP层 主要是提供给数据产品和数据分析使用的数据，</li>
+<li>APP层 的数据一般会存放在 ElasticSearch、MySQL 等系统中供线上系统使用，也可能会存在 Hive 或者 Druid 中供数据分析和数据挖掘使用。</li>
+<li>比如我们经常说的报表数据或者大宽表一般都属于这一层。</li>
 </ul>
 <h2 id="3-数据实践"><a href="#3-数据实践" class="headerlink" title="3. 数据实践"></a>3. 数据实践</h2><p>这三层技术划分，相对来说比较粗粒度，后面我们会专门细分一下。在此之前，先聊一下每一层的数据一般都是怎么流向的。这仅仅简单介绍几个常用的工具，侧重开源界的主流。</p>
-<h3 id="3-1-数据来源层–-gt-ODS-层"><a href="#3-1-数据来源层–-gt-ODS-层" class="headerlink" title="3.1 数据来源层–&gt;ODS 层"></a>3.1 数据来源层–&gt;ODS 层</h3><p>这里其实就是我们现在大数据技术发挥作用的主要战场。我们的数据主要会有两个大的来源：</p>
+<h3 id="3-1-数据来源层-→-ODS-层"><a href="#3-1-数据来源层-→-ODS-层" class="headerlink" title="3.1 数据来源层 → ODS 层"></a>3.1 数据来源层 → ODS 层</h3><p>这里就是我们现在的大数据技术发挥作用的主要战场。我们的数据主要会有两个大的来源：</p>
 <ol>
-<li><p><strong>业务库</strong>，这里经常会使用sqoop 来抽取比如我们每天定时抽取一次。在实施方面，可以考虑canal 监听mysql的binlog ，实时介入即可。</p>
+<li><p><strong>业务库</strong>：这里经常会使用 Sqoop 来抽取比如我们每天定时抽取一次。在实施方面，可以考虑 Canal 监听 MySQL 的 binlog ，实时接入即可。</p>
 </li>
-<li><p><strong>埋点日志</strong>，线上系统会打入各种日志，这些日志一般以文件的形式保存，我们可以选择用flume定时抽取，也可以用spark streaming 或者storm 来实时接入，这时kafka也会是一个关键的角色。</p>
+<li><p><strong>埋点日志</strong>：线上系统会打入各种日志，这些日志一般以文件的形式保存，我们可以选择用 Flume 定时抽取，也可以用Spark Streaming 或者 Storm 来实时接入，这时 Kafka 也会是一个关键的角色。</p>
 </li>
 <li><p>其他数据源会比较多样性，这和具体的业务相关，不再赘述。</p>
 </li>
@@ -528,84 +537,239 @@
 
 
 
-<p><strong>注意</strong>：在这层，理应不是简单的接收数据，而要考虑一定的数据清洗，比如异常字段的处理、字段命名规范化、时间字段的统一等，一般这些很容易被忽略，但确实至关重要的。<strong>特别是后期我们做各种特征自动生成的时候，会十分有用。</strong></p>
-<h3 id="3-2-ODS、DW–-gt-APP层"><a href="#3-2-ODS、DW–-gt-APP层" class="headerlink" title="3.2 ODS、DW–&gt;APP层"></a>3.2 ODS、DW–&gt;APP层</h3><p>这里面也主要分为两种类型：</p>
+<p><strong>注意</strong>：在这层不是简单的接收数据，而要考虑一定的数据清洗，比如异常字段的处理、字段命名规范化、时间字段的统一等，一般这些很容易被忽略，但确实至关重要的。<strong>特别是后期我们做各种特征自动生成的时候，会十分有用。</strong></p>
+<h3 id="4-2-ODS、DW-→-APP层"><a href="#4-2-ODS、DW-→-APP层" class="headerlink" title="4.2 ODS、DW → APP层"></a>4.2 ODS、DW → APP层</h3><p>这里面也主要分为两种类型：</p>
 <ol>
-<li><p>每日定时任务：比如我们典型的日计算任务，每天凌晨算前一天的数据，早上起来看报表。这种任务经常使用Hive、Spark或者MR程序来计算，最终写入Hive、Hbase、Mysql、Es 或者Redis中</p>
+<li><p>每日定时任务：比如我们典型的每日计算任务，每天凌晨算前一天的数据，早上起来看报表。这种任务经常使用Hive、Spark或者MR程序来计算，最终写入Hive、Hbase、Mysql、Es 或Redis中</p>
 </li>
-<li><p>实时数据：这部分主要是各种实时的系统使用，比如我们的实时推荐、实时用户画像、一般我们会使用Spark streaming、Storm 或者flink 来计算，最后虎落入Es、Hbase或者Redis中。</p>
+<li><p>实时数据：这部分主要是各种实时的系统使用，比如我们的实时推荐、实时用户画像、一般我们会使用 Spark streaming、Storm 或者 Flink 来计算，最后会落入 Es、HBase 或者 Redis 中。</p>
 </li>
 </ol>
 <ul>
 <li>举个例子</li>
 </ul>
-<p>早起参与设计的数据分层例子。分析一下当初的想法，以及各种设计缺陷。上原图（此处@Ruby大神。现实是我只是个打酱油的。盗图、盗思想）</p>
-<p>当初设计共分6层，其中去掉元数据后还有5层。下面分析一下当初的一个设计思路。</p>
+<p>早期参与设计的数据分层例子。分析一下当初的想法，以及各种设计缺陷。当初设计共分6层，其中去掉元数据后还有5层。下面分析一下当初的一个设计思路。</p>
 <img src="https://images.hnbian.cn/FkV7QpkfwOB9ESihoQC5L7wYpP9C?imageView2/0/interlace/1/q/70%7Cwatermark/2/text/d3d3LmhuYmlhbi5jbg==/font/5b6u6L2v6ZuF6buR/fontsize/600/fill/IzBDMjU2NA==/dissolve/100/gravity/SouthEast/dx/10/dy/10%7Cimageslim" style="zoom:40%;">
 
 
 
 
 
-<h4 id="3-2-1-缓冲层"><a href="#3-2-1-缓冲层" class="headerlink" title="3.2.1 缓冲层"></a>3.2.1 缓冲层</h4><p>缓冲层（buffer）又称为接口层（stage）,用于存储每天的增量数据和变更数据，比如Canal接收的业务变更日志。</p>
-<p>数据生成方式：直接从kafka接受数据源，需要业务每天生成update、delete、insert数据，只生成insert数据的业务表，数据直接插入明细层。</p>
-<p>讨论方案：只把canal日志直接写入缓冲层，如果其他有拉链数据的业务，也加入缓冲层。</p>
-<p>日志存储方式：使用impala外表，parquet文件格式，方便需要MR处理额数据读取。</p>
-<p>日志删除方式：长久存储，可只存储最近祭坛的数据。讨论方案：直接长久存储</p>
-<p>表schema: 一般按天创建分区</p>
-<p>库与表命名：库名：buffer,表名：初步考虑格式为buffer_日期_业务表名</p>
-<h4 id="3-2-2-明细层"><a href="#3-2-2-明细层" class="headerlink" title="3.2.2 明细层"></a>3.2.2 明细层</h4><p>明细层（ODS Operational Data Store, DWD:data warehouse detail）是数据仓库的细节数据层，是对stage 层数据进行沉淀，减少了抽取的复杂性，同时ODS/DWD的信息模型组织主要遵循企业业务事务处理的形式，将各个专业数据进行加一种，明细层跟stage层的粒度一致，术语分析的公共资源</p>
-<p>日志生成方式：部分数据支架来自kafka，部分数据为接口层数据与历史数据合成。canal日志合成数据的方式有待研究。</p>
-<p>讨论方案：canal 数据的合成方式为：每天把明细层的前天全量数据和昨天数据合成一个新的数据表，覆盖旧表。同时使用历史镜像， 按周/按月/按年存储一个历史镜像到新表。</p>
-<p>日志存储方式：直接使用impala 外表，parquet文件格式，canal合成数据为二次生成数据，建议使用内表，下面几层都是从impala生成的数据，建议都采用内表+静态/动态分区。</p>
-<p>日志删除方式：长久存储。</p>
-<p>表schema:一般按天创建分区，没有时间概念的按具体业务选择分区字段</p>
-<p>库与表命名：库名：ods, 表名：ods_日期_业务表名</p>
-<p>旧数据更新方式：直接覆盖</p>
-<h4 id="3-2-3-轻度汇总层"><a href="#3-2-3-轻度汇总层" class="headerlink" title="3.2.3 轻度汇总层"></a>3.2.3 轻度汇总层</h4><p>概念：轻度汇总层（MID 或DWB ,data warehouse basis）是数据仓库中DWD层和DM层之间的一个过渡层，是对DWD层生产数据进行轻度综合和汇总统计（可以把复杂的清洗，处理包含在内，如根据PV日志生成的会话数据）。轻度综合层与DWD的主要区别在于二者的应用领域不同，DWD的数据源于生产型系统，并未满足一些不可预见的需求而进行产店，轻度综合层则面向分析型应用进行细粒度的统计和沉淀</p>
-<p>数据生成方式：由明细层按照一定的业务需求生成轻度汇总表。明细层需要复杂清洗的数据和需要MR处理的数据也经过处理后接入到轻度汇总层。</p>
-<p>日志存储方式：内表，parquet文件格式。</p>
-<p>日志删除方式：长久存储</p>
-<p>表schema：一般按天创建分区，没有时间概念的额按具体业务选择分区字段。</p>
-<p>库与表名：库名：dwd, 表名：初步考虑格式为：dwd_日期_业务表名</p>
-<p>就数据更新方式：直接覆盖</p>
-<h4 id="3-2-4-主题层"><a href="#3-2-4-主题层" class="headerlink" title="3.2.4 主题层"></a>3.2.4 主题层</h4><p>主题层（DM,data market或DWS data warehouse service）又称数据集市或宽表。按照业务划分，如流量，订单，用户等，生成字段比较多的宽表，用于提供后续的业务查询，OLAP分析，数据分发等。</p>
-<p>数据生成方式：由轻度汇总层和明细层数据计算生成。</p>
-<p>日志存储方式：使用impala内表，parquet文件格式存储。</p>
-<p>日志删除方式：长久存储</p>
-<p>表schema：一般按天创建分区，没有时间概念的按具体业务选择分区字段。</p>
-<p>库名与表名：库名：dm，表名：初步考虑格式为dm_日期_业务表名。</p>
-<p>旧数据更新方式：直接覆盖。</p>
-<h4 id="3-2-5-应用层"><a href="#3-2-5-应用层" class="headerlink" title="3.2.5 应用层"></a>3.2.5 应用层</h4><p>应用层（APP）是根据业务需要，由前面三层数据统计而出的结果。可以直接提供查询展示，或导入mysql中使用。</p>
-<p>数据生成方式：由明细层、轻度汇总层、数据集市层生成，一般要求数据主要来源于集市层。</p>
-<p>日志存储方式：使用impala内表，parquet文件格式存储。</p>
-<p>日志删除方式：长久存储</p>
-<p>表schema：一般按天创建分区，没有时间概念的按具体业务选择分区字段。</p>
-<p>库名与表名：库名：暂定apl，另外根据业务不同，不限定一定要一个库。</p>
-<p>旧数据更新方式：直接覆盖。</p>
-<h2 id="4-更优雅的设计数据分层"><a href="#4-更优雅的设计数据分层" class="headerlink" title="4. 更优雅的设计数据分层"></a>4. 更优雅的设计数据分层</h2><p>前面提到的一种设计其实相对来讲已经很详细了，但是可能会层次有一点多，而且在区分一张表到底该存放在什么位置的时候可能还有一点点疑惑。我们在这里再设计一套数据仓库的分层，同时在前面的基础上加上维度表和一些临时表的考虑，来让我们的方案更加优雅一些。</p>
-<p>下面做了一些小的改动，我们去掉了上一节的Buff层，把数据集市层和轻度汇总层放在同一个层级上，同时独立出来了维度表和临时表。</p>
-<p>这里解释一下DWS、DWD、DIM和TMP的作用</p>
-<p>DWS：轻度汇总层，从ODS层中对用户的行为做一个初步的汇总，抽象出来一些通用的维度：时间、ip、id，并根据这些维度做一些统计值，比如用户每个时间段在不同登陆ip购买的商品数等。这里做一层轻度的汇总会让计算更加高效，在此基础上如果计算仅7天、30天、90天的行为的话会很快。我们希望80%的业务都能通过我们的DWS层计算而不是ODS。</p>
-<p>DWD：这一层主要解决一些数据质量问题和数据的完整度问题。比如用户的资料信息来自于很多不同的表，而且京城出现延迟丢数据等问题，为了方便各个使用方更好地使用数据，我们可以在这一层做一个屏蔽。</p>
-<p>DIM：这一层比较单纯，举个例子就明白，比如国家代码和国家名、地理位置、中文名、国旗图片等信息就存在DIM层中。</p>
-<p>TMP：每一层的计算都会有很多临时表，专设一个DWTMP 层来存储我们数据仓库的临时表。</p>
+<h4 id="4-2-1-缓冲层"><a href="#4-2-1-缓冲层" class="headerlink" title="4.2.1 缓冲层"></a>4.2.1 缓冲层</h4><p>缓冲层（buffer）又称为接口层（Stage），用于存储每天的增量数据和变更数据，比如 Canal 接收的业务变更日志。</p>
+<table>
+<thead>
+<tr>
+<th>方案</th>
+<th>实现</th>
+</tr>
+</thead>
+<tbody><tr>
+<td>数据生成方式</td>
+<td>直接从 Kafka 接收数据源，将每天业务表新增的数据，直接写入明细层。</td>
+</tr>
+<tr>
+<td>讨论方案</td>
+<td>把 Canal 日志直接写入缓冲层，如果其他有拉链数据的业务，也加入缓冲层。</td>
+</tr>
+<tr>
+<td>日志存储方式</td>
+<td>使用  Impala  外表， Parquet 文件格式，方便需要MR处理数据读取。</td>
+</tr>
+<tr>
+<td>日志删除方式</td>
+<td>长久存储，也可只存储最近几天的数据。</td>
+</tr>
+<tr>
+<td>讨论方案</td>
+<td>直接长久存储</td>
+</tr>
+<tr>
+<td>表schema</td>
+<td>Schema 一般与业务表相同，但是会一般按天创建分区</td>
+</tr>
+<tr>
+<td>库与表命名</td>
+<td>库名：buffer，表名：初步考虑格式为buffer-日期-业务表名</td>
+</tr>
+</tbody></table>
+<h4 id="4-2-2-明细层"><a href="#4-2-2-明细层" class="headerlink" title="4.2.2 明细层"></a>4.2.2 明细层</h4><p>明细层（ODS Operational Data Store, DWD:data warehouse detail）是数据仓库的细节数据层，是对stage 层数据进行沉淀，减少了抽取的复杂性，同时ODS/DWD的信息模型组织主要遵循企业业务事务处理的形式，将各个专业数据进行加一种，明细层跟stage层的粒度一致，术语分析的公共资源</p>
+<table>
+<thead>
+<tr>
+<th>方案</th>
+<th>实现</th>
+</tr>
+</thead>
+<tbody><tr>
+<td>日志生成方式</td>
+<td>部分数据直接来自kafka，<br>部分数据为接口层数据与历史数据合成。</td>
+</tr>
+<tr>
+<td>canal 数据的合成</td>
+<td>每天把明细层的前天全量数据和昨天数据合成一个新的数据表，覆盖旧表。<br>同时使用历史镜像， 按周/按月/按年存储一个历史镜像到新表。</td>
+</tr>
+<tr>
+<td>日志存储方式</td>
+<td>直接使用 Impala  外表， Parquet 文件格式。<br>Canal 合成数据为二次生成数据，建议使用内表，<br>下面几层都是从 Impala 生成的数据，建议都采用内表+静态/动态分区。</td>
+</tr>
+<tr>
+<td>日志删除方式</td>
+<td>长久存储。</td>
+</tr>
+<tr>
+<td>表schema</td>
+<td>一般按天创建分区，没有时间概念的按具体业务选择分区字段</td>
+</tr>
+<tr>
+<td>库与表命名</td>
+<td>库名：ods, 表名：ods-日期-业务表名</td>
+</tr>
+<tr>
+<td>旧数据更新方式</td>
+<td>直接覆盖</td>
+</tr>
+</tbody></table>
+<h4 id="4-2-3-轻度汇总层"><a href="#4-2-3-轻度汇总层" class="headerlink" title="4.2.3 轻度汇总层"></a>4.2.3 轻度汇总层</h4><p>概念：轻度汇总层（MID 或DWB ,data warehouse basis）是数据仓库中DWD层和DM层之间的一个过渡层，是对DWD层生产数据进行轻度综合和汇总统计（可以把复杂的清洗，处理包含在内，如根据PV日志生成的会话数据）。轻度综合层与DWD的主要区别在于二者的应用领域不同，DWD的数据源于生产型系统，并未满足一些不可预见的需求而进行产店，轻度综合层则面向分析型应用进行细粒度的统计和沉淀</p>
+<table>
+<thead>
+<tr>
+<th>方案</th>
+<th>实现</th>
+</tr>
+</thead>
+<tbody><tr>
+<td>数据生成方式</td>
+<td>由明细层按照一定的业务需求生成轻度汇总表。<br>明细层需要复杂清洗的数据和需要MR处理的数据也经过处理后接入到轻度汇总层。</td>
+</tr>
+<tr>
+<td>日志存储方式</td>
+<td>内表， Parquet 文件格式。</td>
+</tr>
+<tr>
+<td>日志删除方式</td>
+<td>长久存储</td>
+</tr>
+<tr>
+<td>表schema</td>
+<td>一般按天创建分区，没有时间概念的额按具体业务选择分区字段。</td>
+</tr>
+<tr>
+<td>库与表名</td>
+<td>库名：dwd, 表名：dwd-日期-业务表名</td>
+</tr>
+<tr>
+<td>就数据更新方式</td>
+<td>直接覆盖</td>
+</tr>
+</tbody></table>
+<h4 id="4-2-4-主题层"><a href="#4-2-4-主题层" class="headerlink" title="4.2.4 主题层"></a>4.2.4 主题层</h4><p>主题层（DM,data market或DWS data warehouse service）又称数据集市或宽表。按照业务划分，如流量，订单，用户等，生成字段比较多的宽表，用于提供后续的业务查询，OLAP分析，数据分发等。</p>
+<table>
+<thead>
+<tr>
+<th>方案</th>
+<th>实现</th>
+</tr>
+</thead>
+<tbody><tr>
+<td>数据生成方式</td>
+<td>由轻度汇总层和明细层数据计算生成。</td>
+</tr>
+<tr>
+<td>日志存储方式</td>
+<td>使用 Impala 内表， Parquet 文件格式存储。</td>
+</tr>
+<tr>
+<td>日志删除方式</td>
+<td>长久存储</td>
+</tr>
+<tr>
+<td>表schema</td>
+<td>一般按天创建分区，没有时间概念的按具体业务选择分区字段。</td>
+</tr>
+<tr>
+<td>库名与表名</td>
+<td>库名：dm，表名：dm-日期-业务表名。</td>
+</tr>
+<tr>
+<td>旧数据更新方式</td>
+<td>直接覆盖</td>
+</tr>
+</tbody></table>
+<h4 id="4-2-5-应用层"><a href="#4-2-5-应用层" class="headerlink" title="4.2.5 应用层"></a>4.2.5 应用层</h4><p>应用层（APP）是根据业务需要，由前面三层数据统计而出的结果。可以直接提供查询展示，或导入mysql中使用。</p>
+<table>
+<thead>
+<tr>
+<th>方案</th>
+<th>实现</th>
+</tr>
+</thead>
+<tbody><tr>
+<td>数据生成方式</td>
+<td>由明细层、轻度汇总层、数据集市层生成，一般要求数据主要来源于集市层。</td>
+</tr>
+<tr>
+<td>日志存储方式</td>
+<td>使用 Impala 内表， Parquet 文件格式存储。</td>
+</tr>
+<tr>
+<td>日志删除方式</td>
+<td>长久存储</td>
+</tr>
+<tr>
+<td>表schema</td>
+<td>一般按天创建分区，没有时间概念的按具体业务选择分区字段。</td>
+</tr>
+<tr>
+<td>库名与表名</td>
+<td>库名：暂定apl，另外根据业务不同，不限定一定要一个库。</td>
+</tr>
+<tr>
+<td>旧数据更新方式</td>
+<td>直接覆盖</td>
+</tr>
+</tbody></table>
+<h2 id="5-更优雅的设计数据分层"><a href="#5-更优雅的设计数据分层" class="headerlink" title="5. 更优雅的设计数据分层"></a>5. 更优雅的设计数据分层</h2><p>在我们的先前讨论中，数据仓库的设计已经相当详细，但可能层次过多，以至于在决定将特定表格存放在何处时可能产生一些困惑。因此，我们现在打算对数据仓库的分层进行再设计，在现有基础上考虑加入维度表和临时表，以提升我们的方案的精致性和优雅度。</p>
+<p>下面做了一些小的改动，我们去掉了上一节的 Buff 层，把数据集市层和轻度汇总层放在同一个层级上，同时独立出来了维度表和临时表。</p>
+<p>这里解释一下 DWS、DWD、DIM 和 TMP 的作用</p>
+<table>
+<thead>
+<tr>
+<th>层级</th>
+<th>说明</th>
+</tr>
+</thead>
+<tbody><tr>
+<td>DWS</td>
+<td>轻度汇总层，对 ODS 层中用户的行为做一个初步的汇总，抽象出来一些通用的维度：时间、ip、id，并根据这些维度做一些统计值，比如用户每个时间段在不同登陆ip购买的商品数等。这里做轻度的数据汇总会让计算更加高效，在此基础上如果计算7天、30天、90天的行为的话会很快。我们希望80%的业务都能通过的DWS层计算而不是ODS</td>
+</tr>
+<tr>
+<td>DWD</td>
+<td>明细数据层，这一层主要解决一些数据质量问题和数据的完整度问题。比如用户的资料信息来自于很多不同的表，而且经常出现延迟丢数据等问题，为了方便各使用方更好地使用数据，我们可以在这一层做数量质量保证</td>
+</tr>
+<tr>
+<td>DIM</td>
+<td>维度层（也被称为维度模型或者星型模型）是一种常用的数据组织和表示方式，它是由维度表（Dimension Tables）和事实表（Fact Tables）组成的。<br>维度表主要存放的是描述性或者分类性的数据，也就是我们常说的维度数据。这些数据用于定义和描述事实数据的各个方面或者维度，比如时间（年份、季度、月份、日期、星期）、地理位置（国家、省份、城市）、产品（产品分类、产品名称、产品规格）等。</td>
+</tr>
+<tr>
+<td>TMP</td>
+<td>每一层的计算都会有很多临时表，专设一个TMP 层来存储我们数据仓库的临时表</td>
+</tr>
+</tbody></table>
 <img src="https://images.hnbian.cn/Fgjj-UZrKdTwXQVdaqa_kqwbALcO?imageView2/0/interlace/1/q/70%7Cwatermark/2/text/d3d3LmhuYmlhbi5jbg==/font/5b6u6L2v6ZuF6buR/fontsize/600/fill/IzBDMjU2NA==/dissolve/100/gravity/SouthEast/dx/10/dy/10%7Cimageslim" style="zoom:50%;">
 
 
 
-<h2 id="5-问答"><a href="#5-问答" class="headerlink" title="5.问答"></a>5.问答</h2><p>问：dws 和 dwd 是并行而不是先后顺序？</p>
-<p>答：并行的dw层</p>
+<h2 id="6-问答"><a href="#6-问答" class="headerlink" title="6.问答"></a>6.问答</h2><p>问：dws 和 dwd 是并行而不是先后顺序？</p>
+<p>答：并行的 dw 层</p>
 <p>问：那其实对于同一个数据，这两个过程是串行的？</p>
-<p>答：dws 会做汇总，dwd和ods 的粒度相同，这两层没有依赖关系</p>
-<p>问：对呀，那这样dws里面的数据汇总没有经过数据质量和完整度的处理，或者单独做了这种质量相关的处理，为什么不在dwd智商再做汇总呢？我的疑问其实就是，dws的轻度汇总数据结果，有没有做数据质量的处理？</p>
-<p>答：ods之间到dw就好，没必要经过dwd，我举个例子，你的浏览商品行为，我做一层轻度汇总，就直接放在dws了。但是你的资料表，要从好多表凑成一份，我们从四五分个人资料表中凑出来了一份完整地资料表放在了dwd中，然后在app层，我们要出一个画像表，包含用户资料和用户最近一年的行为，我们就直接从dwd中拿资料，然后再idws的基础上左一层统计， 就成了一个app表</p>
-<p>问：嗯，那最后一个疑问，在现实生产中，可不可能存在计算dws时，会用到dwd表的情况？</p>
-<p>答：不 这样一来就混乱了，dws不会一来dwd，dws只接轻度汇总，业务用的话都取app层。</p>
-<p>问：dws针对的是行为，可以在某些维度上上卷的行为~</p>
-<p>答：你这样理解吧，dws存事实表，dwd维度表</p>
-<h2 id="6-总结"><a href="#6-总结" class="headerlink" title="6.总结"></a>6.总结</h2><p>数据分层是数据仓库非常重要的一个环节，他决定的不仅仅是一个层次的问题。还直接影响到后续的血缘分析、特征自动生成、元数据管理等一系列的建设。因此适于尽早考虑。</p>
-<p>另外每一层的名字不必太过在意。自己按照喜好就好。</p>
+<p>答：dws 会做汇总，dwd 和 ods 的粒度相同，这两层没有依赖关系</p>
+<p>问：那这样 dws 里面的数据汇总没有经过数据质量和完整度的处理，或者单独做了这种质量相关的处理，为什么不在 dwd 之上再做汇总呢？我的疑问其实就是，dws 的轻度汇总数据结果，有没有做数据质量的处理？</p>
+<p>答：ods 直接到 dws 就好，没必要经过 dwd，我举个例子，你的浏览商品行为，我做一层轻度汇总，就直接放在 dws 了。但是你的资料表，要从好多表凑成一份，我们从四五分个人资料表中凑出来了一份完整地资料表放在了dwd中，然后在app层，我们要出一个画像表，包含用户资料和用户最近一年的行为，我们就直接从 dwd 中拿资料，然后再 dws 的基础上做一哥统计， 就成了一个 app 表</p>
+<p>问：最后一个疑问，在现实生产中，可不可能存在计算 dws 时，会用到 dwd表 的情况？</p>
+<p>答：不，dws 不会依赖 dwd，dws 只接轻度汇总，业务用的话都取app层。</p>
+<p>问：dws 针对的是行为，可以在某些维度上上卷的行为</p>
+<p>答：你这样理解吧，dws 存事实表，dwd 维度表</p>
+<h2 id="7-总结"><a href="#7-总结" class="headerlink" title="7.总结"></a>7.总结</h2><p>数据分层在数据仓库中扮演着至关重要的角色，其影响并不仅限于层次结构。它直接影响到后续的血缘分析、特征自动生成、元数据管理等一系列的构建工作。因此，应尽早考虑这个因素。此外，对于每一层的命名，不必过于担心。可以根据个人喜好来决定。</p>
 <script type="text/javascript" src="https://cdn.jsdelivr.net/npm/kity@2.0.4/dist/kity.min.js"></script><script type="text/javascript" src="https://cdn.jsdelivr.net/npm/kityminder-core@1.4.50/dist/kityminder.core.min.js"></script><script defer="true" type="text/javascript" src="https://cdn.jsdelivr.net/npm/hexo-simple-mindmap@0.2.0/dist/mindmap.min.js"></script><link rel="stylesheet" type="text/css" href="https://cdn.jsdelivr.net/npm/hexo-simple-mindmap@0.2.0/dist/mindmap.min.css">
             </div>
             <hr/>
@@ -1337,7 +1501,7 @@ code[class*="language-"], pre[class*="language-"] { white-space: pre !important;
             <br>
             
             &nbsp;<i class="fas fa-chart-area"></i>&nbsp;站点总字数:&nbsp;<span
-                class="white-color">810.5k</span>&nbsp;字
+                class="white-color">812.8k</span>&nbsp;字
             
             
             

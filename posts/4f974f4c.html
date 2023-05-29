@@ -441,14 +441,14 @@
                 
                 <div class="info-break-policy">
                     <i class="far fa-file-word fa-fw"></i>文章字数:&nbsp;&nbsp;
-                    3.1k
+                    3.7k
                 </div>
                 
 
                 
                 <div class="info-break-policy">
                     <i class="far fa-clock fa-fw"></i>阅读时长:&nbsp;&nbsp;
-                    15 分
+                    17 分
                 </div>
                 
 				
@@ -581,7 +581,10 @@ public <span class="token keyword">class</span> GlobalPartitioner<span class="to
     */</span>
   env<span class="token punctuation">.</span>execute<span class="token punctuation">(</span><span class="token punctuation">)</span>
 <span class="token punctuation">}</span></code></pre>
-<h3 id="2-2-ShufflePartitioner"><a href="#2-2-ShufflePartitioner" class="headerlink" title="2.2 ShufflePartitioner"></a>2.2 ShufflePartitioner</h3><h4 id="2-2-1-源码解析"><a href="#2-2-1-源码解析" class="headerlink" title="2.2.1 源码解析"></a>2.2.1 源码解析</h4><pre class=" language-scala"><code class="language-scala"><span class="token keyword">package</span> org<span class="token punctuation">.</span>apache<span class="token punctuation">.</span>flink<span class="token punctuation">.</span>streaming<span class="token punctuation">.</span>runtime<span class="token punctuation">.</span>partitioner<span class="token punctuation">;</span>
+<h3 id="2-2-ShufflePartitioner"><a href="#2-2-ShufflePartitioner" class="headerlink" title="2.2 ShufflePartitioner"></a>2.2 ShufflePartitioner</h3><p><code>ShufflePartitioner</code> 是默认的数据分发策略。在这种策略下，每个数据记录都有相同的概率被发送到下游算子的任何一个并行实例（即任务或子任务）。</p>
+<p><code>ShufflePartitioner</code> 的主要目标是尽可能地均匀地分布数据，以避免某些并行实例处理更多数据而导致的数据倾斜问题。在许多情况下，这样的数据分发方式可以确保各个并行实例的工作负载相对均衡。</p>
+<p>但是，请注意，<code>ShufflePartitioner</code> 并不能保证每个并行实例接收到的数据量完全相等，特别是在数据量较小或并行度较高的情况下。另外，由于<code>ShufflePartitioner</code> 的数据分发是随机的，它不保证同一数据记录总是被发送到同一个并行实例，因此在需要保证数据一致性的场景中，可能需要使用其他的数据分发策略。</p>
+<h4 id="2-2-1-源码解析"><a href="#2-2-1-源码解析" class="headerlink" title="2.2.1 源码解析"></a>2.2.1 源码解析</h4><pre class=" language-scala"><code class="language-scala"><span class="token keyword">package</span> org<span class="token punctuation">.</span>apache<span class="token punctuation">.</span>flink<span class="token punctuation">.</span>streaming<span class="token punctuation">.</span>runtime<span class="token punctuation">.</span>partitioner<span class="token punctuation">;</span>
 
 <span class="token keyword">import</span> org<span class="token punctuation">.</span>apache<span class="token punctuation">.</span>flink<span class="token punctuation">.</span>annotation<span class="token punctuation">.</span>Internal<span class="token punctuation">;</span>
 <span class="token keyword">import</span> org<span class="token punctuation">.</span>apache<span class="token punctuation">.</span>flink<span class="token punctuation">.</span>runtime<span class="token punctuation">.</span>plugable<span class="token punctuation">.</span>SerializationDelegate<span class="token punctuation">;</span>
@@ -707,7 +710,9 @@ public <span class="token keyword">class</span> RebalancePartitioner<span class=
 
   env<span class="token punctuation">.</span>execute<span class="token punctuation">(</span><span class="token punctuation">)</span>
 <span class="token punctuation">}</span></code></pre>
-<h3 id="2-4-RescalePartitioner"><a href="#2-4-RescalePartitioner" class="headerlink" title="2.4 RescalePartitioner"></a>2.4 RescalePartitioner</h3><h4 id="2-4-1-源码解析"><a href="#2-4-1-源码解析" class="headerlink" title="2.4.1 源码解析"></a>2.4.1 源码解析</h4><pre class=" language-scala"><code class="language-scala"><span class="token keyword">package</span> org<span class="token punctuation">.</span>apache<span class="token punctuation">.</span>flink<span class="token punctuation">.</span>streaming<span class="token punctuation">.</span>runtime<span class="token punctuation">.</span>partitioner<span class="token punctuation">;</span>
+<h3 id="2-4-RescalePartitioner"><a href="#2-4-RescalePartitioner" class="headerlink" title="2.4 RescalePartitioner"></a>2.4 RescalePartitioner</h3><p><code>RescalePartitioner</code>是一个特殊的数据分发策略，它在应用于DataStream时会尝试在操作符之间进行重分区。<code>RescalePartitioner</code>不保证一致的数据分布，也就是说，同样的记录可能会被发送到不同的目标并行实例。</p>
+<p><code>RescalePartitioner</code>是一个非常有用的工具，可以帮助开发者在动态调整并行度时保持数据处理的连续性，但在使用时也需要考虑其特性和限制。</p>
+<h4 id="2-4-1-源码解析"><a href="#2-4-1-源码解析" class="headerlink" title="2.4.1 源码解析"></a>2.4.1 源码解析</h4><pre class=" language-scala"><code class="language-scala"><span class="token keyword">package</span> org<span class="token punctuation">.</span>apache<span class="token punctuation">.</span>flink<span class="token punctuation">.</span>streaming<span class="token punctuation">.</span>runtime<span class="token punctuation">.</span>partitioner<span class="token punctuation">;</span>
 
 <span class="token keyword">import</span> org<span class="token punctuation">.</span>apache<span class="token punctuation">.</span>flink<span class="token punctuation">.</span>annotation<span class="token punctuation">.</span>Internal<span class="token punctuation">;</span>
 <span class="token keyword">import</span> org<span class="token punctuation">.</span>apache<span class="token punctuation">.</span>flink<span class="token punctuation">.</span>runtime<span class="token punctuation">.</span>jobgraph<span class="token punctuation">.</span>DistributionPattern<span class="token punctuation">;</span>
@@ -863,7 +868,9 @@ public <span class="token keyword">class</span> ForwardPartitioner<span class="t
   env<span class="token punctuation">.</span>execute<span class="token punctuation">(</span><span class="token punctuation">)</span>
   <span class="token punctuation">}</span>
 </code></pre>
-<h3 id="2-7-KeyGroupStreamPartitioner"><a href="#2-7-KeyGroupStreamPartitioner" class="headerlink" title="2.7 KeyGroupStreamPartitioner"></a>2.7 KeyGroupStreamPartitioner</h3><p>根据key的分组索引选择发送到相对应的分区</p>
+<h3 id="2-7-KeyGroupStreamPartitioner"><a href="#2-7-KeyGroupStreamPartitioner" class="headerlink" title="2.7 KeyGroupStreamPartitioner"></a>2.7 KeyGroupStreamPartitioner</h3><p><code>KeyGroupStreamPartitioner</code>是一种基于键组（Key Group）的数据分区策略。键组是 Flink 为了管理 keyed state 和进行故障恢复而设计的概念。一个 keyed state 由多个键组组成，每个键组对应一部分键的范围。</p>
+<p><code>KeyGroupStreamPartitioner</code>的分区策略是根据数据的键值计算出键组，然后根据键组的编号来决定将数据发送到哪个并行任务。每个并行任务管理一部分键组，因此，<code>KeyGroupStreamPartitioner</code>可以确保具有相同键的数据总是被发送到同一个并行任务。</p>
+<p>这种分区策略在处理 keyed state 的操作，如键控流的操作或者有状态的窗口操作时非常有用。通过确保具有相同键的数据始终在同一个并行任务中处理，可以确保数据的一致性，并使得状态管理和故障恢复更加高效。</p>
 <h4 id="2-7-1-源码解析"><a href="#2-7-1-源码解析" class="headerlink" title="2.7.1 源码解析"></a>2.7.1 源码解析</h4><pre class=" language-scala"><code class="language-scala"><span class="token keyword">package</span> org<span class="token punctuation">.</span>apache<span class="token punctuation">.</span>flink<span class="token punctuation">.</span>streaming<span class="token punctuation">.</span>runtime<span class="token punctuation">.</span>partitioner<span class="token punctuation">;</span>
 
 <span class="token keyword">import</span> org<span class="token punctuation">.</span>apache<span class="token punctuation">.</span>flink<span class="token punctuation">.</span>annotation<span class="token punctuation">.</span>Internal<span class="token punctuation">;</span>
@@ -1806,7 +1813,7 @@ code[class*="language-"], pre[class*="language-"] { white-space: pre !important;
             <br>
             
             &nbsp;<i class="fas fa-chart-area"></i>&nbsp;站点总字数:&nbsp;<span
-                class="white-color">810.5k</span>&nbsp;字
+                class="white-color">812.8k</span>&nbsp;字
             
             
             

@@ -477,7 +477,7 @@ clickhouse 中每个服务器节点都可以被称为一个 shard（分片）。
 <li><p>clickhouse 的数据分片需要结合 DIstributed 表引擎一起使用。DIstributed 表引擎本身不存储任何数据，它能够作为分布式表的一层代理，在集群内部自动展开数据写入、分发、查询、路由等工作。</p>
 </li>
 </ul>
-<img src="https://images.hnbian.cn/FoUwSkYZ9ZhwcYTQIm9LZ4Mzimid" alt=" " style="zoom:50%;">
+<img src="https://images.hnbian.cn/FoUwSkYZ9ZhwcYTQIm9LZ4Mzimid?imageView2/0/interlace/1/q/70%7Cwatermark/2/text/d3d3LmhuYmlhbi5jbg==/font/5b6u6L2v6ZuF6buR/fontsize/600/fill/IzBDMjU2NA==/dissolve/100/gravity/SouthEast/dx/10/dy/10%7Cimageslim" alt=" " style="zoom:50%;">
 
 
 
@@ -862,7 +862,7 @@ node3 <span class="token keyword">:</span> 0
 node2 <span class="token keyword">:</span> 0
 
 <span class="token comment" spellcheck="true"># 表示 node3,node2 两个节点已经执行完成</span></code></pre>
-<img src="https://images.hnbian.cn/FozidBlh6reVtqrCRId4vtWGyShG" alt=" " style="zoom:50%;">
+<img src="https://images.hnbian.cn/FozidBlh6reVtqrCRId4vtWGyShG?imageView2/0/interlace/1/q/70%7Cwatermark/2/text/d3d3LmhuYmlhbi5jbg==/font/5b6u6L2v6ZuF6buR/fontsize/600/fill/IzBDMjU2NA==/dissolve/100/gravity/SouthEast/dx/10/dy/10%7Cimageslim" alt=" " style="zoom:50%;">
 
 
 
@@ -898,7 +898,7 @@ initiator: node3:9977
 <li>确认执行进度：在第一步中执行 DDL 语句后，客户端会阻塞 180 秒，以期望所有 host 执行完毕，如果等待时间大于 180 秒，则会转入后台线程继续等待，等待时间由 distributed_ddl_task_timeout 参数设置，默认 180</li>
 </ol>
 <h2 id="2-Distributed-原理解析"><a href="#2-Distributed-原理解析" class="headerlink" title="2. Distributed 原理解析"></a>2. Distributed 原理解析</h2><p>Distributed 表引擎是分布式表的代名词，他自身不存储任何数据，而是作为数据分片的代理，能够自动路由数据至集群中的各个节点，所以 DIstributed 表引擎需要和其他表引擎一起协同工作。</p>
-<img src="https://images.hnbian.cn/FhLBwYG89_GHRH_VS_6IWCf3SZk1" alt=" " style="zoom:50%;">
+<img src="https://images.hnbian.cn/FhLBwYG89_GHRH_VS_6IWCf3SZk1?imageView2/0/interlace/1/q/70%7Cwatermark/2/text/d3d3LmhuYmlhbi5jbg==/font/5b6u6L2v6ZuF6buR/fontsize/600/fill/IzBDMjU2NA==/dissolve/100/gravity/SouthEast/dx/10/dy/10%7Cimageslim" alt=" " style="zoom:50%;">
 
 <p>从上图可以看出一张表分成了两部分：</p>
 <ul>
@@ -984,7 +984,7 @@ Ok<span class="token punctuation">.</span>
 <span class="token number">0</span> <span class="token keyword">rows</span> <span class="token operator">in</span> <span class="token keyword">set</span><span class="token punctuation">.</span> Elapsed: <span class="token number">0.009</span> sec<span class="token punctuation">.</span>
 
 <span class="token comment" spellcheck="true">-- 到现在为止，拥有两个数据分配的分布式表 t_shard_2_all 就创建好了</span></code></pre>
-<img src="https://images.hnbian.cn/Fkv0DMVPYHvV1w5pAliyf0y-oC9s" alt=" " style="zoom:50%;">
+<img src="https://images.hnbian.cn/Fkv0DMVPYHvV1w5pAliyf0y-oC9s?imageView2/0/interlace/1/q/70%7Cwatermark/2/text/d3d3LmhuYmlhbi5jbg==/font/5b6u6L2v6ZuF6buR/fontsize/600/fill/IzBDMjU2NA==/dissolve/100/gravity/SouthEast/dx/10/dy/10%7Cimageslim" alt=" " style="zoom:50%;">
 
 <h3 id="2-2-查询的分类"><a href="#2-2-查询的分类" class="headerlink" title="2.2 查询的分类"></a>2.2 查询的分类</h3><p>分布式表的查询操作可以分为以下几类：</p>
 <ol>
@@ -1033,7 +1033,7 @@ Ok<span class="token punctuation">.</span>
 <ol start="2">
 <li>基于 slot 值找到对应的数据分片，当 slot 等于 10 的时候它属于 [10,20) 区间，所以这行数据会被对应到第二个分片。</li>
 </ol>
-<img src="https://images.hnbian.cn/Fg7CyWxQyvaZeMpguikkAaGNjp7Z" alt=" " style="zoom:50%;">
+<img src="https://images.hnbian.cn/Fg7CyWxQyvaZeMpguikkAaGNjp7Z?imageView2/0/interlace/1/q/70%7Cwatermark/2/text/d3d3LmhuYmlhbi5jbg==/font/5b6u6L2v6ZuF6buR/fontsize/600/fill/IzBDMjU2NA==/dissolve/100/gravity/SouthEast/dx/10/dy/10%7Cimageslim" alt=" " style="zoom:50%;">
 
 
 
@@ -1078,7 +1078,7 @@ Ok<span class="token punctuation">.</span>
 <li>同步：在执行 insert 操作之后，会等待所有分片完成写入</li>
 </ul>
 <p>由 insert_distributed_sync 参数控制使用何种模式，默认 false（异步），如果设置为 true ，还需要设置 insert_distributed_timeout 参数控制同步等待超时时间。</p>
-<h4 id="2-4-2-副本复制的流程"><a href="#2-4-2-副本复制的流程" class="headerlink" title="2.4.2 副本复制的流程"></a>2.4.2 副本复制的流程</h4><img src="https://images.hnbian.cn/FlaF2SoWO-VksoN0ifakSspviAV5" alt=" " style="zoom:50%;">
+<h4 id="2-4-2-副本复制的流程"><a href="#2-4-2-副本复制的流程" class="headerlink" title="2.4.2 副本复制的流程"></a>2.4.2 副本复制的流程</h4><img src="https://images.hnbian.cn/FlaF2SoWO-VksoN0ifakSspviAV5?imageView2/0/interlace/1/q/70%7Cwatermark/2/text/d3d3LmhuYmlhbi5jbg==/font/5b6u6L2v6ZuF6buR/fontsize/600/fill/IzBDMjU2NA==/dissolve/100/gravity/SouthEast/dx/10/dy/10%7Cimageslim" alt=" " style="zoom:50%;">
 
 <ol>
 <li><strong>通过 Distributed 复制数据</strong></li>
@@ -2010,7 +2010,7 @@ code[class*="language-"], pre[class*="language-"] { white-space: pre !important;
             <br>
             
             &nbsp;<i class="fas fa-chart-area"></i>&nbsp;站点总字数:&nbsp;<span
-                class="white-color">810.5k</span>&nbsp;字
+                class="white-color">812.8k</span>&nbsp;字
             
             
             
