@@ -361,6 +361,58 @@
             
             <div class="article col s12 m6 l4" data-aos="zoom-in">
                 <div class="card">
+                    <a href="/posts/e3f2dd8c.html">
+                        <div class="card-image">
+                            
+                            <img src="https://images.hnbian.cn/FmR6s8_bvNEgKbWJ3i9XeQxnr0uu" class="responsive-img" alt="JVM系列（七）、不同的引用类型">
+                            
+                            <span class="card-title">JVM系列（七）、不同的引用类型</span>
+                        </div>
+                    </a>
+
+                    <div class="card-content article-content">
+                        <div class="summary block-with-text">
+                            
+                                1. JVM中引用的介绍在java中，除了基本数据类型的变量外，其他所有的变量都是引用类型，指向堆中各种不同的对象。
+在jvm中，除了我们常用的强引用外，还有软引用、弱引用、虚引用，这四种引用类型的生命周期与jvm的垃圾回收过程息息相关。
+
+                            
+                        </div>
+                        <div class="publish-info">
+                            <span class="publish-date">
+                                <i class="far fa-clock fa-fw icon-date"></i>2020-03-15
+                            </span>
+                            <span class="publish-author">
+                                
+                                <i class="fas fa-bookmark fa-fw icon-category"></i>
+                                
+                                <a href="/categories/java/" class="post-category">
+                                    java
+                                </a>
+                                
+                                
+                            </span>
+                        </div>
+                    </div>
+
+                    
+                    <div class="card-action article-tags">
+                        
+                        <a href="/tags/java/">
+                            <span class="chip bg-color">java</span>
+                        </a>
+                        
+                        <a href="/tags/jvm/">
+                            <span class="chip bg-color">jvm</span>
+                        </a>
+                        
+                    </div>
+                    
+                </div>
+            </div>
+            
+            <div class="article col s12 m6 l4" data-aos="zoom-in">
+                <div class="card">
                     <a href="/posts/f09c2b77.html">
                         <div class="card-image">
                             
@@ -468,8 +520,7 @@
                                 1. 高效实用磁盘
 顺序写磁盘：顺序写磁盘，性能非常刚甚至能与随机写内存相媲美。
 Append Only：数据不更新，无记录级别的数据删除，（只会整个segment删除）
-充分利用Page Cache
-I/O Scheduler 将连续的小
+I/O Scheduler 将连续的小块写组装成大块的物理写从而提高
                             
                         </div>
                         <div class="publish-info">
@@ -906,9 +957,9 @@ latest
                     <a href="/posts/a028cfba.html">
                         <div class="card-image">
                             
-                            <img src="https://images.hnbian.cn/Fnx-u8xnFMjm2uyPIgkS8quMIty3" class="responsive-img" alt="Kafka总结（二）常见组件上 Broker、Producer和Consumer介绍">
+                            <img src="https://images.hnbian.cn/Fnx-u8xnFMjm2uyPIgkS8quMIty3" class="responsive-img" alt="Kafka总结（二）常见组件上 Broker 、Producer和 Consumer 介绍">
                             
-                            <span class="card-title">Kafka总结（二）常见组件上 Broker、Producer和Consumer介绍</span>
+                            <span class="card-title">Kafka总结（二）常见组件上 Broker 、Producer和 Consumer 介绍</span>
                         </div>
                     </a>
 
@@ -916,60 +967,14 @@ latest
                         <div class="summary block-with-text">
                             
                                 1. Broker1.1 Broker 介绍
-Broker没有副本机制，一旦Broker宕机，该Broker的消息都将不可用。
+Broker 没有副本机制，一旦 Broker 宕机，该 Broker 的消息都将不可用。
 
-Broker不会保存Consumer 消费topic partition offset的状态，订阅者自己采用不
+Broker 不会保存 Consumer 消费 topic partition offset 的状态
                             
                         </div>
                         <div class="publish-info">
                             <span class="publish-date">
                                 <i class="far fa-clock fa-fw icon-date"></i>2020-02-09
-                            </span>
-                            <span class="publish-author">
-                                
-                                <i class="fas fa-bookmark fa-fw icon-category"></i>
-                                
-                                <a href="/categories/kafka/" class="post-category">
-                                    kafka
-                                </a>
-                                
-                                
-                            </span>
-                        </div>
-                    </div>
-
-                    
-                    <div class="card-action article-tags">
-                        
-                        <a href="/tags/kafka/">
-                            <span class="chip bg-color">kafka</span>
-                        </a>
-                        
-                    </div>
-                    
-                </div>
-            </div>
-            
-            <div class="article col s12 m6 l4" data-aos="zoom-in">
-                <div class="card">
-                    <a href="/posts/6c75ec58.html">
-                        <div class="card-image">
-                            
-                            <img src="https://images.hnbian.cn/FrJEXjUsTh5thOWEEhqtH6rtasu_" class="responsive-img" alt="Kafka总结（一）kafka部署与架构介绍">
-                            
-                            <span class="card-title">Kafka总结（一）kafka部署与架构介绍</span>
-                        </div>
-                    </a>
-
-                    <div class="card-content article-content">
-                        <div class="summary block-with-text">
-                            
-                                1. Apache Kafka介绍Kafka 是最初由Linkedin公司开发，是一个分布式、支持分区（partition）、多副本的（replica），基于zookeeper协调的分布式消息系统。它的最大特性就是可以实时的处理大量数据，以
-                            
-                        </div>
-                        <div class="publish-info">
-                            <span class="publish-date">
-                                <i class="far fa-clock fa-fw icon-date"></i>2020-02-07
                             </span>
                             <span class="publish-author">
                                 
@@ -1040,7 +1045,7 @@ Broker不会保存Consumer 消费topic partition offset的状态，订阅者自�
             <br>
             
             &nbsp;<i class="fas fa-chart-area"></i>&nbsp;站点总字数:&nbsp;<span
-                class="white-color">812.8k</span>&nbsp;字
+                class="white-color">816.9k</span>&nbsp;字
             
             
             

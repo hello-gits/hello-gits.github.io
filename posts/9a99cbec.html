@@ -443,7 +443,7 @@
                 
                 <div class="info-break-policy">
                     <i class="far fa-file-word fa-fw"></i>文章字数:&nbsp;&nbsp;
-                    8.2k
+                    8.3k
                 </div>
                 
 
@@ -487,23 +487,23 @@
 </ul>
 </li>
 </ol>
-<h3 id="1-2-分布式系统中的选择："><a href="#1-2-分布式系统中的选择：" class="headerlink" title="1.2 分布式系统中的选择："></a>1.2 分布式系统中的选择：</h3><p>C-P （一致性-分区容忍性）：<br>HBase、Redis、MongoDB</p>
-<p>A-P（可用性-分区容忍性）<br>Dynamo、Cassandra、Kafka</p>
-<p>C-A (一致性-可用性)<br>RDBMS，因为像MySQL、Oracle 等关系型数据库一般不做分布式，所以不需要满足分区容忍性</p>
+<h3 id="1-2-分布式系统中的选择："><a href="#1-2-分布式系统中的选择：" class="headerlink" title="1.2 分布式系统中的选择："></a>1.2 分布式系统中的选择：</h3><p>C-P （一致性-分区容忍性）：保证数据的强一致性，如果不相同数据不返回<br>HBase、Redis、MongoDB</p>
+<p>A-P（可用性-分区容忍性）：保证在有效时间内数据返回， 数据可能会不一致<br>Dynamo、Cassandra、Kafka</p>
+<p>C-A (一致性-可用性)：保证在有效时间内返回最新数据，如果节点宕机则无法使用<br>RDBMS，因为像MySQL、Oracle 等关系型数据库一般不做分布式，所以不需要满足分区容忍性</p>
 <h3 id="1-3-一致性方案"><a href="#1-3-一致性方案" class="headerlink" title="1.3 一致性方案"></a>1.3 一致性方案</h3><ul>
-<li><p>Master-slave<br>RDBMS的读写分离即为典型的master-slave 方案<br>同步复制可保证强一致性,但可能会影响性能，需要等待所有节点写入成功才会返回写入成功。<br>异步复制可提供高可用性,但会减低一致性，数据写进master立即返回写成功</p>
+<li><p>Master-slave<br>RDBMS 的读写分离即为典型的 master-slave 方案<br>同步复制可保证强一致性,但可能会影响性能，需要等待所有节点写入成功才会返回写入成功。<br>异步复制可提供高可用性,但会减低一致性，数据写进master立即返回写成功</p>
 </li>
-<li><p>WNR<br>主要用于去中心化(P2P)的分布式系统中,DynamoDB与Cassandra即采用此方案<br>N代表副本数,W代表写操作要保证的最少写成功副本数,R代表每次读至少读取的副本数<br>当W+R&gt;N时,可保证每次读取的数据至少有一个副本具有最新的更新<br>多个写操作时的顺序难以保证,可能导致多个副本间的写操作顺序不一致,Dynamo通过向量时钟保证最终一致性</p>
+<li><p>WNR<br>主要用于去中心化(P2P)的分布式系统中，DynamoDB 与 Cassandra 即采用此方案<br>N代表副本数，W 代表写操作要保证的最少写成功副本数，R 代表每次读至少读取的副本数<br>当W+R&gt;N时,可保证每次读取的数据至少有一个副本具有最新的更新<br>多个写操作时的顺序难以保证,可能导致多个副本间的写操作顺序不一致,Dynamo通过向量时钟保证最终一致性</p>
 </li>
-<li><p>Paxos及其变重<br>Google的chubby,Zookeeper的zab,RAFT等</p>
+<li><p>Paxos 及其变重<br>Google 的 chubby，Zookeeper 的 zab，RAFT 等</p>
 </li>
 </ul>
 <h2 id="2-Topic"><a href="#2-Topic" class="headerlink" title="2. Topic"></a>2. Topic</h2><ul>
-<li>Topic（主题）是一个逻辑概念，同一个Topic的消息可分布在一个或多个节点（broker）上</li>
-<li>Topic相当于传统消息系统MQ中的一个队列queue</li>
-<li>一个Topic可以包含一个或者多个Partition</li>
-<li>每条消息都属于而且仅仅属于一个Topic</li>
-<li>producer发布数据时，必须指定将该数据发布到那个Topic，但是不需要指定发送到Topic下的哪个Partition，因为kafka会把收到的消息进行load balance，均匀的分布在这个Topic下的不同Partition上（默认hash Partitioner）。</li>
+<li>Topic（主题）是一个逻辑概念，同一个 Topic 的消息可分布在一个或多个节点（broker）上</li>
+<li>Topic 相当于传统消息系统 MQ 中的一个队列 queue</li>
+<li>一个 Topic 可以包含一个或者多个 Partition</li>
+<li>每条消息都属于而且仅仅属于一个 Topic</li>
+<li>Producer 发布数据时，必须指定将该数据发布到那个 Topic，但是不需要指定发送到 Topic 下的哪个 Partition，因为 kafka 会把收到的消息进行load balance，均匀的分布在这个Topic下的不同Partition上（默认hash Partitioner）。</li>
 <li>consumer订阅消息时，必须指定定订阅哪个Topic的消息</li>
 </ul>
 <h3 id="2-1-Topic相关操作"><a href="#2-1-Topic相关操作" class="headerlink" title="2.1 Topic相关操作"></a>2.1 Topic相关操作</h3><pre class=" language-bash"><code class="language-bash"><span class="token comment" spellcheck="true">#创建topic</span>
@@ -526,17 +526,17 @@ Topic:test1    PartitionCount:3    ReplicationFactor:1    Configs:
 Topic test1 is marked <span class="token keyword">for</span> deletion.
 </code></pre>
 <h3 id="2-2-创建和删除Topic的流程"><a href="#2-2-创建和删除Topic的流程" class="headerlink" title="2.2 创建和删除Topic的流程"></a>2.2 创建和删除Topic的流程</h3><ol>
-<li><p>Controller 在Zookeeper的/brokers/topics 节点上注册Watch，一旦某个Topic被创建或删除，则该Controller会通过Watch得到新创建/删除的Topic的Partition/replica分配情况</p>
+<li><p>Controller 在 Zookeeper 的 /brokers/topics 节点上注册Watch，一旦某个 Topic 被创建或删除，则该 Controller 会通过 Watch 得到新 创建/删除 的 Topic 的 Partition/replica 分配情况</p>
 </li>
-<li><p>对于删除操作：Topic工具会将该Topic名字保存于/admin/delete_topics，</p>
+<li><p>对于删除操作：Topic 工具会将该 Topic 名字保存于 /admin/delete_topics</p>
 <ul>
 <li>若delete.topic.enable为true，则Controller注册在/admin/delete_topics上的 Watch 被触发，Controller通过调用对应的Broker发送StopReplicaRequest</li>
 <li>若delete.topic.enable为false，则不会做任何操作。</li>
 </ul>
 </li>
-<li><p>对于创建操作：Controller从/brokers/ids 读取所有可用的Broker列表，对于 Set_p 中每个Partition：</p>
+<li><p>对于创建操作：Controller 从 /brokers/ids 读取所有可用的 Broker 列表，对于 Set_p 中每个Partition：</p>
 <ul>
-<li>从分配给该Partition中所有的Replica（All Replica, AR）中选择任意一个可用的Broker 作为Leader，并将AR设置为新的ISR，因为Topic是新创建的所以AR中所有的Replica都没有数据，也都在ISR中，都可以作为Leader。</li>
+<li>从分配给该 Partition 中所有的 Replica（All Replica, AR）中选择任意一个可用的Broker 作为Leader，并将AR设置为新的ISR，因为Topic是新创建的所以AR中所有的Replica都没有数据，也都在ISR中，都可以作为Leader。</li>
 <li>将新的Leader和ISR写入/brokers/topics/topic-name/partitions/partition-id</li>
 </ul>
 </li>
@@ -550,14 +550,14 @@ Topic test1 is marked <span class="token keyword">for</span> deletion.
 </ul>
 <p><img src="https://images.hnbian.cn/FubOFLwMcraO-Owhi8V_b5uOcQpm?imageView2/0/interlace/1/q/70%7Cwatermark/2/text/d3d3LmhuYmlhbi5jbg==/font/5b6u6L2v6ZuF6buR/fontsize/600/fill/IzBDMjU2NA==/dissolve/100/gravity/SouthEast/dx/10/dy/10%7Cimageslim" alt="Topic的Partitions图示"></p>
 <h3 id="3-1-Partition-特点"><a href="#3-1-Partition-特点" class="headerlink" title="3.1 Partition 特点"></a>3.1 Partition 特点</h3><ol>
-<li>Partition是一个物理概念，一个Partition只分布于一个broker上（不考虑备份(replica)）</li>
-<li>一个Partition物理磁盘上对应一个文件夹</li>
-<li>一个Partition包含多个Segment，一个Segment对应一个文件(Segment对用户透明，用户并不需要知道Segment的存在)</li>
-<li>Segment由一个个不可变的记录组成，记录只会append到Segment中,不会被单独删除或者修改</li>
+<li>Partition 是一个物理概念，一个Partition只分布于一个broker上（不考虑备份(replica)）</li>
+<li>一个 Partition 物理磁盘上对应一个文件夹</li>
+<li>一个 Partition 包含多个 Segment，一个 Segment 对应一个文件(Segment对用户透明，用户并不需要知道Segment的存在)</li>
+<li>Segment 由一个个不可变的记录组成，记录只会append到Segment中,不会被单独删除或者修改</li>
 <li>清理过期日志时直接删除Segment，Partition保存数据大小，后台进程周期性检查（日志默认保留168小时）</li>
 </ol>
 <p><img src="https://images.hnbian.cn/Fkzw9djRFk-cWxad7_12m_tci1F9?imageView2/0/interlace/1/q/70%7Cwatermark/2/text/d3d3LmhuYmlhbi5jbg==/font/5b6u6L2v6ZuF6buR/fontsize/600/fill/IzBDMjU2NA==/dissolve/100/gravity/SouthEast/dx/10/dy/10%7Cimageslim" alt="Partition 数据写入"></p>
-<h3 id="3-2-Partition-数量"><a href="#3-2-Partition-数量" class="headerlink" title="3.2 Partition 数量"></a>3.2 Partition 数量</h3><p>Topic的默认Partition数量在server.properties 配置文件中num.partitions参数来设置，也可以在创建Topic时指定Partition数量，如下命令，创建一个名为test2的Topic 这个Topic有2个分区。</p>
+<h3 id="3-2-Partition-数量"><a href="#3-2-Partition-数量" class="headerlink" title="3.2 Partition 数量"></a>3.2 Partition 数量</h3><p>Topic 的默认 Partition 数量在server.properties 配置文件中num.partitions参数来设置，也可以在创建Topic时指定Partition数量，如下命令，创建一个名为test2的Topic 这个Topic有2个分区。</p>
 <pre class=" language-bash"><code class="language-bash"><span class="token comment" spellcheck="true">#创建topic</span>
 <span class="token punctuation">[</span>root@node2 kafka_2.12-1.0.2<span class="token punctuation">]</span><span class="token comment" spellcheck="true"># bin/kafka-topics.sh --create --zookeeper node1:2181,node2:2181,node3:2181 --replication-factor 1 --partitions 2 --topic test2</span>
 Created topic <span class="token string">"test2"</span><span class="token keyword">.</span>
@@ -613,7 +613,7 @@ Topic:test2    PartitionCount:3    ReplicationFactor:1    Configs:
  <span class="token punctuation">[</span>root@node3 kafka-logs<span class="token punctuation">]</span><span class="token comment" spellcheck="true"># ll</span>
  drwxr-xr-x. 2 root root 4096 2月  10 16:51 test1-0</code></pre>
 <p> 从上面的代码中可以看出Topic test1数据保存在/opt/kafka_2.12-1.0.2/kafka-logs/ 路径下，共有三个Partition均匀分布在node1、node2、node3上面，Partition只有一个副本。</p>
-<h4 id="3-3-2-Partition-副本默认分布"><a href="#3-3-2-Partition-副本默认分布" class="headerlink" title="3.3.2 Partition 副本默认分布"></a>3.3.2 Partition 副本默认分布</h4><p>Kafka集群Partition replication默认自动分配分析</p>
+<h4 id="3-3-2-Partition-副本默认分布"><a href="#3-3-2-Partition-副本默认分布" class="headerlink" title="3.3.2 Partition 副本默认分布"></a>3.3.2 Partition 副本默认分布</h4><p>Kafka集群 Partition replication 默认自动分配分析</p>
 <p>下面以一个Kafka集群中3个broker举例，创建一个Topic包含3个Partition并且每个Partition有2个replication 。数据producer流动如下图所示：</p>
 <p><img src="https://images.hnbian.cn/FqQqwn17hacqFrln-uk9xJ7yZfBh?imageView2/0/interlace/1/q/70%7Cwatermark/2/text/d3d3LmhuYmlhbi5jbg==/font/5b6u6L2v6ZuF6buR/fontsize/600/fill/IzBDMjU2NA==/dissolve/100/gravity/SouthEast/dx/10/dy/10%7Cimageslim" alt="Partition 与副本分布图示"></p>
 <p>副本分配逻辑规则如下：</p>
@@ -653,11 +653,11 @@ Topic:test2    PartitionCount:3    ReplicationFactor:1    Configs:
 </tr>
 <tr>
 <td>LEO</td>
-<td>Log End Offset，Leader中最新消息的Offset。</td>
+<td>Log End Offset，Leader 中最新消息的Offset。</td>
 </tr>
 <tr>
 <td>Committed Message</td>
-<td>已提交消息，已经被所有ISR同步的消息。</td>
+<td>已提交消息，已经被所有 ISR 同步的消息。</td>
 </tr>
 <tr>
 <td>Lagging Message</td>
@@ -665,12 +665,12 @@ Topic:test2    PartitionCount:3    ReplicationFactor:1    Configs:
 </tr>
 </tbody></table>
 <p> <img src="https://images.hnbian.cn/FoZc89yaXJitwdaB2X7bC-4kI_bm?imageView2/0/interlace/1/q/70%7Cwatermark/2/text/d3d3LmhuYmlhbi5jbg==/font/5b6u6L2v6ZuF6buR/fontsize/600/fill/IzBDMjU2NA==/dissolve/100/gravity/SouthEast/dx/10/dy/10%7Cimageslim" alt="概念说明图示"></p>
-<p> 每个Partition有一个预写式日志（write-ahead log）文件，每个Partition都由一系列有序的、不可变的消息组成，这些消息被连续的追加到Partition中，Partition中的每个消息都有一个连续的序列号叫做offset， 确定它在分区日志中唯一的位置（上图中的每个数字都是一个offset都会对应Producer发送的一条数据）。</p>
+<p> 每个Partition有一个预写式日志（write-ahead log）文件，每个 Partition 都由一系列有序的、不可变的消息组成，这些消息被连续的追加到Partition中，Partition中的每个消息都有一个连续的序列号叫做offset， 确定它在分区日志中唯一的位置（上图中的每个数字都是一个offset都会对应Producer发送的一条数据）。</p>
 <p> 每个Partition都可以有多（N）个副本，N就是Topic的复制因子，在kafka中发生复制时确保Partition的预写日志都有序地写到其他节点上，N个副本中，有一个副本为Leader，其他副本都为Follower，Leader处理Partition的所有请求，同时Follower会定期的去Leader上 拉取数据。<br> 如下图有三个broker，Topic1中有三个副本，则复制因此副本个数为3。</p>
 <p> <img src="https://images.hnbian.cn/FjIdmYQ3lCdcwicFdqBKUCHp_M80?imageView2/0/interlace/1/q/70%7Cwatermark/2/text/d3d3LmhuYmlhbi5jbg==/font/5b6u6L2v6ZuF6buR/fontsize/600/fill/IzBDMjU2NA==/dissolve/100/gravity/SouthEast/dx/10/dy/10%7Cimageslim" alt="Partition 副本同步"></p>
-<p> <img src="https://images.hnbian.cn/Fp1wEAm9zyRskpDaUIBG9mMex3my?imageView2/0/interlace/1/q/70%7Cwatermark/2/text/d3d3LmhuYmlhbi5jbg==/font/5b6u6L2v6ZuF6buR/fontsize/600/fill/IzBDMjU2NA==/dissolve/100/gravity/SouthEast/dx/10/dy/10%7Cimageslim" alt="Kafka 同步数据流程"><br> 从上图可看出，leader 的 remote LEO 的值相对于 follower LEO 值，滞后一个 follower RPC 请求，remote LEO 决定 leader HW 值的大小。</p>
+<p> <img src="https://images.hnbian.cn/Fp1wEAm9zyRskpDaUIBG9mMex3my?imageView2/0/interlace/1/q/70%7Cwatermark/2/text/d3d3LmhuYmlhbi5jbg==/font/5b6u6L2v6ZuF6buR/fontsize/600/fill/IzBDMjU2NA==/dissolve/100/gravity/SouthEast/dx/10/dy/10%7Cimageslim" alt="Kafka 同步数据流程"><br> 从上图可看出，leader 的 remote LEO（Log End Offset) 的值相对于 follower LEO 值，滞后一个 follower RPC 请求，remote LEO 决定 leader HighWaterMark 值的大小。</p>
 <p> 同时，Leader 副本永远领先 Follower 副本 一个RPC请求，且各个 follower 副本之间的消息最新位移也不尽相同，Kafka 必须要定义一个落后 Leader 副本位移的范围，使得处于这个范围之内的 Follower 副本被认为与 Leader 副本是处于同步状态的，即处于 ISR 集合中。</p>
-<p> 介绍一下 LEO 和 HW 值的更新机制：</p>
+<p> 介绍一下 LEO（Log End Offset） 和 HighWaterMark 值的更新机制：</p>
 <ol>
 <li><p>LEO 更新：</p>
 <ul>
@@ -679,7 +679,7 @@ Topic:test2    PartitionCount:3    ReplicationFactor:1    Configs:
 <li>Leader 副本中的 remote LEO 值更新：每次 follower 副本发送 fetch 请求都会包含 follower 当前 LEO 值，leader 拿到该值就会尝试更新 remote LEO 值。</li>
 </ul>
 </li>
-<li><p>Leader HW 更新：</p>
+<li><p>Leader HighWaterMark 更新：</p>
 <ul>
 <li><p>正常时更新：</p>
 <ul>
@@ -719,7 +719,7 @@ Topic:test2    PartitionCount:3    ReplicationFactor:1    Configs:
 <li>OAR：分区副本的原始列表（Original list of replicas for Partition）</li>
 <li>RAR：重新分配的副本（Reassigned replicas）</li>
 </ul>
-<p>管理工具发出重新分配 Partition副本请求之后，会将相应信息写到/admin/reassign_partitions上，而且该操作会触发 ReassignedPartitionsIsrChangeListener ，从而通过执行回调函数 KafkaController.onPartitionReassignment 来完成以下操作：</p>
+<p>管理工具发出重新分配 Partition副本请求之后，会将相应信息写到 /admin/reassign_partitions上，而且该操作会触发 ReassignedPartitionsIsrChangeListener ，从而通过执行回调函数 KafkaController.onPartitionReassignment 来完成以下操作：</p>
 <ul>
 <li>Partition 重新分配的过程分析<br>某个分区有三个副本分别在broker1，2，3上面，要将这三个副本移动到 broker4，5，6上</li>
 </ul>
@@ -827,7 +827,7 @@ drwxr-xr-x. 2 root root 4096 2月  12 17:19 test3-2 </code></pre>
 <ul>
 <li>kafka内部动态维护了一个同步状态的副本的集合（a set of in-sync replicas），简称ISR。</li>
 <li>在这个集合的节点都是和leader保持高度一致的，任何一条消息必须被这个集合的每个节点读取并追加到日志了，才会通知外部这个消息已经被提交了。</li>
-<li>因此这个集合中的任何一个节都可以点随时被选为leader。ISR在zookeeper中维护。<br>如果ISR中有n+1 个节点，那么就可以允许最大n个节点宕机，而不会造成消息丢失且能够提供正常服务。<br>ISR的成员是动态的，如果一个节点被淘汰了，当它重新达到“同步中”的状态时，它可以重新加入ISR。这种leader的选择方式是非常快速的，适合kafka的场景</li>
+<li>因此这个集合中的任何一个节都可以点随时被选为leader。ISR在zookeeper中维护。<br>如果ISR中有n+1 个节点，那么就可以允许最大n个节点宕机，而不会造成消息丢失且能够提供正常服务。<br> ISR的成员是动态的，如果一个节点被淘汰了，当它重新达到“同步中”的状态时，它可以重新加入ISR。这种leader的选择方式是非常快速的，适合kafka的场景</li>
 </ul>
 <p><strong>如果所有节点都宕机了怎么办呢？</strong></p>
 <p>kafka对于数据不丢失的保证是基于至少一个节点是存活的情况下，一旦所有节点都宕机了，那么就无法保证了。</p>
@@ -861,10 +861,29 @@ drwxr-xr-x. 2 root root 4096 2月  12 17:19 test3-2 </code></pre>
 <ul>
 <li>可通过如下配置来启用和控制自动Leadership平衡</li>
 </ul>
-<p>leader.imbalance.check.interval.seconds=300 ,每个300秒检查leader的负载均衡情况<br>leader.imbalance.per.broker.percentage=10，不平衡性超过阈值就自动触发负载均衡<br>auto.leader.rebalance.enable=true ，默认是开启的</p>
+<table>
+<thead>
+<tr>
+<th>参数</th>
+<th>描述</th>
+</tr>
+</thead>
+<tbody><tr>
+<td>leader.imbalance.check.interval.seconds=300</td>
+<td>每个300秒检查leader的负载均衡情况</td>
+</tr>
+<tr>
+<td>leader.imbalance.per.broker.percentage=10</td>
+<td>不平衡性超过阈值就自动触发负载均衡</td>
+</tr>
+<tr>
+<td>auto.leader.rebalance.enable=true</td>
+<td>默认是开启的</td>
+</tr>
+</tbody></table>
 <h2 id="4-Segment"><a href="#4-Segment" class="headerlink" title="4 Segment"></a>4 Segment</h2><h3 id="4-1-Segment-介绍"><a href="#4-1-Segment-介绍" class="headerlink" title="4.1 Segment 介绍"></a>4.1 Segment 介绍</h3><ul>
 <li>Partition 是一个大文件夹，Partition的数据被平均分配到多个大小相等的小文件中，这些小文件就是Segment。</li>
-<li>Partition 相当于是一个队列，队列中的元素是Segment，消费时先从弟0个Segment，新来的message保存在队列的末尾，Partition只需要支持顺序读写就行了。</li>
+<li>Partition 相当于是一个队列，队列中的元素是Segment，消费时先从第0个Segment开始，新来的message保存在队列的末尾，Partition只需要支持顺序读写就行了。</li>
 <li>Segment也相当于一个队列，队列元素是message，由offset标识用来区分message。从第一个message开始消费，新进来的message存在于Segment的末尾。</li>
 <li>Kafka broker收到数据会向对应的Partition上的最后一个Segment上添加该消息。</li>
 <li>Segment上的消息条数达到配置值或消息发布时间超过阈值时，Segment上的消息会被flush到磁盘，只有flush到磁盘上的消息consumer才能消费。</li>
@@ -894,7 +913,7 @@ drwxr-xr-x. 2 root root 4096 2月  12 17:19 test3-2 </code></pre>
 </tr>
 </tbody></table>
 <p><img src="https://images.hnbian.cn/Fi-w9K-op4CvF52G3vUDpRhGZM6s?imageView2/0/interlace/1/q/70%7Cwatermark/2/text/d3d3LmhuYmlhbi5jbg==/font/5b6u6L2v6ZuF6buR/fontsize/600/fill/IzBDMjU2NA==/dissolve/100/gravity/SouthEast/dx/10/dy/10%7Cimageslim" alt="Segment示意图"></p>
-<p>Segment 在Partition中的结构大约如上图，这样做的好处是是在删除数据时只需删除指定的Segment文件即可，无需对数据进行删除，能够极大的提高磁盘利用率。</p>
+<p>Segment 在 Partition 中的结构大约如上图，这样做的好处是是在删除数据时只需删除指定的Segment文件即可，无需对数据进行删除，能够极大的提高磁盘利用率。</p>
 <h3 id="4-2-Segment-文件结构"><a href="#4-2-Segment-文件结构" class="headerlink" title="4.2 Segment 文件结构"></a>4.2 Segment 文件结构</h3><p>Segment File由三个部分组成：</p>
 <ul>
 <li>index file：Segment索引文件，前缀为上一个Segment的最后一个消息的偏移，后缀为 *.index</li>
@@ -1657,18 +1676,18 @@ producer<span class="token punctuation">.</span>send<span class="token punctuati
                 <a href="/posts/a028cfba.html">
                     <div class="card-image">
                         
-                        <img src="https://images.hnbian.cn/Fnx-u8xnFMjm2uyPIgkS8quMIty3" class="responsive-img" alt="Kafka总结（二）常见组件上 Broker、Producer和Consumer介绍">
+                        <img src="https://images.hnbian.cn/Fnx-u8xnFMjm2uyPIgkS8quMIty3" class="responsive-img" alt="Kafka总结（二）常见组件上 Broker 、Producer和 Consumer 介绍">
                         
-                        <span class="card-title">Kafka总结（二）常见组件上 Broker、Producer和Consumer介绍</span>
+                        <span class="card-title">Kafka总结（二）常见组件上 Broker 、Producer和 Consumer 介绍</span>
                     </div>
                 </a>
                 <div class="card-content article-content">
                     <div class="summary block-with-text">
                         
                             1. Broker1.1 Broker 介绍
-Broker没有副本机制，一旦Broker宕机，该Broker的消息都将不可用。
+Broker 没有副本机制，一旦 Broker 宕机，该 Broker 的消息都将不可用。
 
-Broker不会保存Consumer 消费topic partition offset的状态，订阅者自己采用不
+Broker 不会保存 Consumer 消费 topic partition offset 的状态
                         
                     </div>
                     <div class="publish-info">
@@ -1837,7 +1856,7 @@ code[class*="language-"], pre[class*="language-"] { white-space: pre !important;
             <br>
             
             &nbsp;<i class="fas fa-chart-area"></i>&nbsp;站点总字数:&nbsp;<span
-                class="white-color">812.8k</span>&nbsp;字
+                class="white-color">816.9k</span>&nbsp;字
             
             
             

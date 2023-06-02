@@ -608,12 +608,12 @@
 </tr>
 </tbody></table>
 <h2 id="8、-G1-收集器"><a href="#8、-G1-收集器" class="headerlink" title="8、 G1 收集器"></a>8、 G1 收集器</h2><h3 id="8-1-介绍"><a href="#8-1-介绍" class="headerlink" title="8.1 介绍"></a>8.1 介绍</h3><p>G1 收集器是一款面向服务端应用的垃圾收集器。</p>
-<h3 id="8-2-特点"><a href="#8-2-特点" class="headerlink" title="8.2 特点"></a>8.2 特点</h3><p>上面提到的垃圾收集器，收集的范围都是整个新生代或者老年代，而G1不再是这样。使用G1收集器时，Java堆的内存分布与其他收集器有很大差别，它将整个Java堆划分为多个大小相等的独立区域（Region），虽然还保留有新生代和老年代的概念，但新生代和老年代不再是物理隔阂来，他们都是一部分（可以不连续）Region的集合。</p>
-<p>G1 中每个Region 都有一个与之对应的Remembered Set，当进行内存回收时，在GC根节点的枚举范围中假如Remembered Set 即可保证不对全堆扫描也不会有遗漏，检查Reference 引用的对象是否处于不同的Region</p>
+<h3 id="8-2-特点"><a href="#8-2-特点" class="headerlink" title="8.2 特点"></a>8.2 特点</h3><p>上面提到的垃圾收集器，收集的范围都是整个新生代或者老年代，而G1不再是这样。使用G1收集器时，Java堆的内存分布与其他收集器有很大差别，它将整个 Java 堆划分为多个大小相等的独立区域（Region），虽然还保留有新生代和老年代的概念，但新生代和老年代不再是物理隔阂来，他们都是一部分（可以不连续）Region 的集合。</p>
+<p>G1 中每个 Region 都有一个与之对应的 Remembered Set，当进行内存回收时，在 GC 根节点的枚举范围中假如 Remembered Set 即可保证不对全堆扫描也不会有遗漏，检查 Reference 引用的对象是否处于不同的Region</p>
 <h3 id="8-3-收集步骤"><a href="#8-3-收集步骤" class="headerlink" title="8.3 收集步骤"></a>8.3 收集步骤</h3><p>G1收集器的运作大致可划分为以下几个步骤：</p>
 <p><img src="https://images.hnbian.cn/FmIOEWfbzz0uo8x8A1j6H6i6HOnM?imageView2/0/interlace/1/q/70%7Cwatermark/2/text/d3d3LmhuYmlhbi5jbg==/font/5b6u6L2v6ZuF6buR/fontsize/600/fill/IzBDMjU2NA==/dissolve/100/gravity/SouthEast/dx/10/dy/10%7Cimageslim" alt="G1 收集器"></p>
 <ol>
-<li>初始标记（Initial-Mark）：标记一下GC Roots 能直接关联到的对象，标记这个阶段是停顿的（Stop the Workd Event），并且会触发一次普通的Mintor GC。对应GC log：GC pause(young)(initial-mark)</li>
+<li>初始标记（Initial-Mark）：标记一下 GC Roots 能直接关联到的对象，标记这个阶段是停顿的（Stop the Workd Event），并且会触发一次普通的 Mintor GC。对应 GC log ：GC pause(young)(initial-mark)</li>
 <li>并发标记（Concurrent Marking）：从GC Root 开始对堆中对象进行可达性分析，找出存活的对象，这阶段耗时较长，但可与用户程序并发执行。</li>
 <li>最终标记（Final Marking）：为了修正在并发标记期间因用户程序继续运作而导致标记产生边栋的那一部分标记记录。虚拟机将这段时间对象变化记录在线程Remembered Set Logs 里面，最终标记阶段需要把Remembered Set Logs的数据合并到Remembered Set中。</li>
 <li>筛选回收（Live Data Counting and Evacuation）</li>
@@ -1240,7 +1240,7 @@
                 <div class="card-content article-content">
                     <div class="summary block-with-text">
                         
-                            1、介绍垃圾收集器Garbage Collection 通常被称为“GC”，它诞生于1960年 MIT 的 Lisp 语言，经过半个多世纪，目前已经十分成熟了。Jvm中，程序计数器、虚拟机栈、本地方法栈都是随线程而生随线程而灭，栈帧随着方法
+                            1. 介绍垃圾收集器（ Garbage Collection ） 通常被称为 “GC”，它诞生于1960年 MIT 的 Lisp 语言，经过半个多世纪，目前已经十分成熟了。Jvm中，程序计数器、虚拟机栈、本地方法栈都是随线程而生随线程而灭，
                         
                     </div>
                     <div class="publish-info">
@@ -1413,7 +1413,7 @@ code[class*="language-"], pre[class*="language-"] { white-space: pre !important;
             <br>
             
             &nbsp;<i class="fas fa-chart-area"></i>&nbsp;站点总字数:&nbsp;<span
-                class="white-color">812.8k</span>&nbsp;字
+                class="white-color">816.9k</span>&nbsp;字
             
             
             

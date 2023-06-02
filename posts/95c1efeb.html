@@ -8,8 +8,7 @@
     <meta name="description" content="1. 高效实用磁盘
 顺序写磁盘：顺序写磁盘，性能非常刚甚至能与随机写内存相媲美。
 Append Only：数据不更新，无记录级别的数据删除，（只会整个segment删除）
-充分利用Page Cache
-I/O Scheduler 将连续的小">
+I/O Scheduler 将连续的小块写组装成大块的物理写从而提高">
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=no">
     <meta name="renderer" content="webkit|ie-stand|ie-comp">
@@ -443,7 +442,7 @@ I/O Scheduler 将连续的小">
                 
                 <div class="info-break-policy">
                     <i class="far fa-file-word fa-fw"></i>文章字数:&nbsp;&nbsp;
-                    973
+                    988
                 </div>
                 
 
@@ -468,16 +467,15 @@ I/O Scheduler 将连续的小">
             <div id="articleContent">
                 <h2 id="1-高效实用磁盘"><a href="#1-高效实用磁盘" class="headerlink" title="1. 高效实用磁盘"></a>1. 高效实用磁盘</h2><ul>
 <li>顺序写磁盘：顺序写磁盘，性能非常刚甚至能与随机写内存相媲美。</li>
-<li>Append Only：数据不更新，无记录级别的数据删除，（只会整个segment删除）</li>
-<li>充分利用Page Cache<ul>
-<li>I/O Scheduler 将连续的小块写组装成大块的无利息额从而提高性能</li>
+<li>Append Only：数据不更新，无记录级别的数据删除，（只会整个segment删除）<ul>
+<li>I/O Scheduler 将连续的小块写组装成大块的物理写从而提高性能</li>
 <li>I/O Scheduler 会尝试将一些写操作重新按顺序排好，从而减少磁盘头的移动时间</li>
+<li>充分利用 Page Cache（ Page Cache 看下面介绍）</li>
 <li>充分利用所有空闲内存（非JVM内存)<ul>
-<li>应用层cache也会有对应page cache与之对应，直接使用page cache 可增大可用cache</li>
-<li>如使用heap内的cache会增加GC负担</li>
+<li>应用层cache也会有对应 page cache 与之对应，直接使用 page cache 来增大可用 cache，如果使用 heap 内的 cache 会增加GC 负担</li>
 </ul>
 </li>
-<li>读操作可直接在page cache内进行，如果进程重启，JVM内的cache会失效，但是page cache仍然可用</li>
+<li>读操作可直接在 page cache 内进行，如果进程重启，JVM内 的 cache 会失效，但是page cache仍然可用</li>
 <li>写磁盘时不会强制flush，如果想强制flush可使用下面参数，但是不建议这么做<ul>
 <li>log.flush.interval.messages=10000</li>
 <li>log.flush.interval.ms=1000</li>
@@ -493,7 +491,9 @@ I/O Scheduler 将连续的小">
 <h2 id="2-CPU数据零拷贝"><a href="#2-CPU数据零拷贝" class="headerlink" title="2. CPU数据零拷贝"></a>2. CPU数据零拷贝</h2><p>传统模式下，数据从文件传输到网络需要4次数据拷贝、4次上下文切换和两次系统调用</p>
 <p>file.read(fileDesc,buffer,len);<br>socket.send(socket,buffer,len);</p>
 <p><img src="https://images.hnbian.cn/FmrvsBaDzVLi6rhCefFUBc8iHGrY?imageView2/0/interlace/1/q/70%7Cwatermark/2/text/d3d3LmhuYmlhbi5jbg==/font/5b6u6L2v6ZuF6buR/fontsize/600/fill/IzBDMjU2NA==/dissolve/100/gravity/SouthEast/dx/10/dy/10%7Cimageslim" alt="传统模式"></p>
-<p>但是kafka使用的处理这方便采用的方案是通过NIO的transferTo/transferFrom调用操作系统的sendfile实现零拷贝。总共发生2次内核数据拷贝、2次上下文切换和一次系统调用，消除了CPU数据拷贝<br>public void transferTo(long position,long count,WritableByteChannel target)<br><img src="https://images.hnbian.cn/FlC2k7rp4-5PnEFYsH41ECrFBqRX?imageView2/0/interlace/1/q/70%7Cwatermark/2/text/d3d3LmhuYmlhbi5jbg==/font/5b6u6L2v6ZuF6buR/fontsize/600/fill/IzBDMjU2NA==/dissolve/100/gravity/SouthEast/dx/10/dy/10%7Cimageslim" alt="零拷贝"></p>
+<p>但是kafka使用的处理这方便采用的方案是通过 NIO 的 transferTo / transferFrom 调用操作系统的 sendfile 实现零拷贝。总共发生2次内核数据拷贝、2次上下文切换和一次系统调用，消除了CPU数据拷贝。</p>
+<pre class=" language-java"><code class="language-java"><span class="token keyword">public</span> <span class="token keyword">void</span> <span class="token function">transferTo</span><span class="token punctuation">(</span><span class="token keyword">long</span> position<span class="token punctuation">,</span><span class="token keyword">long</span> count<span class="token punctuation">,</span>WritableByteChannel target<span class="token punctuation">)</span></code></pre>
+<p><img src="https://images.hnbian.cn/FlC2k7rp4-5PnEFYsH41ECrFBqRX?imageView2/0/interlace/1/q/100%7Cwatermark/2/text/d3d3LmhuYmlhbi5jbiAgICAgICB3d3cuaG5iaWFuLmNuICAgICAgd3d3LmhuYmlhbi5jbg==/font/6buR5L2T/fontsize/800/fill/IzI1NDZDQw==/dissolve/60/gravity/Center/dx/10/dy/10" alt="零拷贝"></p>
 <h2 id="3-批处理和数据压缩"><a href="#3-批处理和数据压缩" class="headerlink" title="3. 批处理和数据压缩"></a>3. 批处理和数据压缩</h2><ul>
 <li>Producer和Consumer均支持批量处理数据，从而减少了网络传输的开销。</li>
 <li>Producer可将数据压缩后发送给broker，从而减少网络传输代价，目前支持的压缩算法有：Snappy、Gzip、LZ4</li>
@@ -1254,7 +1254,7 @@ code[class*="language-"], pre[class*="language-"] { white-space: pre !important;
             <br>
             
             &nbsp;<i class="fas fa-chart-area"></i>&nbsp;站点总字数:&nbsp;<span
-                class="white-color">812.8k</span>&nbsp;字
+                class="white-color">816.9k</span>&nbsp;字
             
             
             

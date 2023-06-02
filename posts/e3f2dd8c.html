@@ -4,8 +4,10 @@
 
 <head><meta name="generator" content="Hexo 3.9.0">
     <meta charset="utf-8">
-    <meta name="keywords" content="Hive 异常, hnbian">
-    <meta name="description" content="1. 问题描述Logging initialized using configuration in jar:file:/opt/appl/hive/lib/hive-common-2.0.0.jar!/hive-log4j2.propert">
+    <meta name="keywords" content="JVM系列（七）、不同的引用类型, hnbian">
+    <meta name="description" content="1. JVM中引用的介绍在java中，除了基本数据类型的变量外，其他所有的变量都是引用类型，指向堆中各种不同的对象。
+在jvm中，除了我们常用的强引用外，还有软引用、弱引用、虚引用，这四种引用类型的生命周期与jvm的垃圾回收过程息息相关。
+">
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=no">
     <meta name="renderer" content="webkit|ie-stand|ie-comp">
@@ -13,7 +15,7 @@
     <meta name="format-detection" content="telephone=no">
     <meta name="apple-mobile-web-app-capable" content="yes">
     <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
-    <title>Hive 异常 | hnbian</title>
+    <title>JVM系列（七）、不同的引用类型 | hnbian</title>
     <link rel="icon" type="image/png" href="https://images.hnbian.cn/FvNSAGx7xljxALFh8Fa2DPNFP-JB">
 
     <link rel="stylesheet" type="text/css" href="https://images.hnbian.cn/all.css">
@@ -283,12 +285,12 @@
 
 
 
-<div class="bg-cover pd-header post-cover" style="background-image: url('https://images.hnbian.cn/Fu3m96OuZOx9VcBIASsjX_3yVIei')">
+<div class="bg-cover pd-header post-cover" style="background-image: url('https://images.hnbian.cn/FmR6s8_bvNEgKbWJ3i9XeQxnr0uu')">
     <div class="container" style="right: 0px;left: 0px;">
         <div class="row">
             <div class="col s12 m12 l12">
                 <div class="brand">
-                    <h1 class="description center-align post-title">Hive 异常</h1>
+                    <h1 class="description center-align post-title">JVM系列（七）、不同的引用类型</h1>
                 </div>
             </div>
         </div>
@@ -405,12 +407,12 @@
                     
                     <div class="article-tag">
                         
-                            <a href="/tags/exception/">
-                                <span class="chip bg-color">exception</span>
+                            <a href="/tags/java/">
+                                <span class="chip bg-color">java</span>
                             </a>
                         
-                            <a href="/tags/hive/">
-                                <span class="chip bg-color">hive</span>
+                            <a href="/tags/jvm/">
+                                <span class="chip bg-color">jvm</span>
                             </a>
                         
                     </div>
@@ -421,8 +423,8 @@
                     <div class="post-cate">
                         <i class="fas fa-bookmark fa-fw icon-category"></i>
                         
-                            <a href="/categories/hive/" class="post-category">
-                                hive
+                            <a href="/categories/java/" class="post-category">
+                                java
                             </a>
                         
                     </div>
@@ -434,7 +436,7 @@
                 
                 <div class="post-date info-break-policy">
                     <i class="far fa-calendar-minus fa-fw"></i>发布日期:&nbsp;&nbsp;
-                    2017-05-05
+                    2020-03-15
                 </div>
                 
 
@@ -443,14 +445,14 @@
                 
                 <div class="info-break-policy">
                     <i class="far fa-file-word fa-fw"></i>文章字数:&nbsp;&nbsp;
-                    243
+                    3.1k
                 </div>
                 
 
                 
                 <div class="info-break-policy">
                     <i class="far fa-clock fa-fw"></i>阅读时长:&nbsp;&nbsp;
-                    1 分
+                    11 分
                 </div>
                 
 				
@@ -466,27 +468,148 @@
         <hr class="clearfix">
         <div class="card-content article-card-content">
             <div id="articleContent">
-                <h2 id="1-问题描述"><a href="#1-问题描述" class="headerlink" title="1. 问题描述"></a>1. 问题描述</h2><pre class=" language-bash"><code class="language-bash">Logging initialized using configuration <span class="token keyword">in</span> jar:file:/opt/appl/hive/lib/hive-common-2.0.0.jar<span class="token operator">!</span>/hive-log4j2.properties
-Exception <span class="token keyword">in</span> thread <span class="token string">"main"</span> java.lang.:$<span class="token punctuation">{</span>system:java.io.tmpdir%7D/$%7Bsystem:user.name%7D
-    at org.apache.hadoop.fs.Path.initialize<span class="token punctuation">(</span>Path.java:205<span class="token punctuation">)</span>
-    at org.apache.hadoop.fs.Path.<span class="token operator">&lt;</span>init<span class="token operator">></span><span class="token punctuation">(</span>Path.java:171<span class="token punctuation">)</span>
-    at org.apache.hadoop.hive.ql.session.SessionState.createSessionDirs<span class="token punctuation">(</span>SessionState.java:606<span class="token punctuation">)</span>
-    at org.apache.hadoop.hive.ql.session.SessionState.start<span class="token punctuation">(</span>SessionState.java:526<span class="token punctuation">)</span>
-    at org.apache.hadoop.hive.ql.session.SessionState.beginStart<span class="token punctuation">(</span>SessionState.java:494<span class="token punctuation">)</span>
-    at org.apache.hadoop.hive.cli.CliDriver.run<span class="token punctuation">(</span>CliDriver.java:709<span class="token punctuation">)</span>
-    at org.apache.hadoop.hive.cli.CliDriver.main<span class="token punctuation">(</span>CliDriver.java:645<span class="token punctuation">)</span>
-    at sun.reflect.NativeMethodAccessorImpl.invoke0<span class="token punctuation">(</span>Native Method<span class="token punctuation">)</span>
-    at sun.reflect.NativeMethodAccessorImpl.invoke<span class="token punctuation">(</span>NativeMethodAccessorImpl.java:57<span class="token punctuation">)</span>
-    at sun.reflect.DelegatingMethodAccessorImpl.invoke<span class="token punctuation">(</span>DelegatingMethodAccessorImpl.java:43<span class="token punctuation">)</span>
-    at java.lang.reflect.Method.invoke<span class="token punctuation">(</span>Method.java:606<span class="token punctuation">)</span>
-    at org.apache.hadoop.util.RunJar.run<span class="token punctuation">(</span>RunJar.java:221<span class="token punctuation">)</span>
-    at org.apache.hadoop.util.RunJar.main<span class="token punctuation">(</span>RunJar.java:136<span class="token punctuation">)</span>
-Caused by: java.net.URISyntaxException: Relative path <span class="token keyword">in</span> absolute URI: $<span class="token punctuation">{</span>system:java.io.tmpdir%7D/$%7Bsystem:user.name%7D
-    at java.net.URI.checkPath<span class="token punctuation">(</span>URI.java:1804<span class="token punctuation">)</span>
-    at java.net.URI.<span class="token operator">&lt;</span>init<span class="token operator">></span><span class="token punctuation">(</span>URI.java:752<span class="token punctuation">)</span>
-    at org.apache.hadoop.fs.Path.initialize<span class="token punctuation">(</span>Path.java:202<span class="token punctuation">)</span>
-    <span class="token punctuation">..</span>. 12 <span class="token function">more</span></code></pre>
-<h2 id="2-解决方式"><a href="#2-解决方式" class="headerlink" title="2. 解决方式"></a>2. 解决方式</h2><p>创建新的文件夹替换 <code>${system:java.io.tmpdir%7D/$%7Bsystem:user.name}</code> 即可</p>
+                <h2 id="1-JVM中引用的介绍"><a href="#1-JVM中引用的介绍" class="headerlink" title="1. JVM中引用的介绍"></a>1. JVM中引用的介绍</h2><p>在java中，除了基本数据类型的变量外，其他所有的变量都是引用类型，指向堆中各种不同的对象。</p>
+<p>在jvm中，除了我们常用的强引用外，还有软引用、弱引用、虚引用，这四种引用类型的生命周期与jvm的垃圾回收过程息息相关。</p>
+<h2 id="2-这四种引用类型有的区别"><a href="#2-这四种引用类型有的区别" class="headerlink" title="2. 这四种引用类型有的区别"></a>2. 这四种引用类型有的区别</h2><p>在Java中，引用类型是用来描述对象之间关联关系的一种方式。Java中的引用类型主要有四种：强引用、软引用、弱引用和虚引用。</p>
+<ol>
+<li><strong>强引用（Strong Reference）</strong>：这是最常见的引用类型。如果一个对象具有强引用，那么垃圾回收器绝不会回收它。当内存空间不足，Java虚拟机宁愿抛出OutOfMemoryError错误，使程序异常终止，也不会靠随意回收具有强引用的对象来解决内存不足问题。在Java中，最常见的就是通过new关键字创建一个对象，这个对象就是强引用。</li>
+</ol>
+<ol start="2">
+<li><strong>软引用（Soft Reference）</strong>：如果一个对象只具有软引用，那么在系统将要发生内存溢出异常之前，将会把这些对象列进回收范围进行第二次回收。如果这次回收还没有足够的内存，才会抛出内存溢出异常。在Java中，我们可以通过java.lang.ref.SoftReference类来实现软引用。</li>
+</ol>
+<ol start="3">
+<li><strong>弱引用（Weak Reference）</strong>：如果一个对象只具有弱引用，那么在垃圾回收器线程扫描它所管辖的内存区域的过程中，只要发现弱引用关联的对象，不管当前内存空间足够与否，都会回收它的内存。在Java中，我们可以通过java.lang.ref.WeakReference类来实现弱引用。</li>
+</ol>
+<ol start="4">
+<li><strong>虚引用（Phantom Reference）</strong>：虚引用也称为”幽灵引用”或”幻影引用”，它是最弱的一种引用关系。一个对象是否有虚引用的存在，完全不会对其生存时间构成影响，也无法通过虚引用来获取一个对象实例。为一个对象设置虚引用关联的唯一目的就是能在这个对象被收集器回收时收到一个系统通知。在Java中，我们可以通过java.lang.ref.PhantomReference类来实现虚引用。</li>
+</ol>
+<h2 id="强引用"><a href="#强引用" class="headerlink" title="强引用"></a>强引用</h2><p>强引用（Strong references）就是直接new一个普通对象，表示一种比较强的引用关系，只要还有强引用对象指向一个对象，那么表示这个对象还活着，垃圾收集器宁可抛出OOM异常，也不会回收这个对象。</p>
+<p>例如下面代码中的的引用 u 就是一个强引用。</p>
+<pre class=" language-java"><code class="language-java"><span class="token comment" spellcheck="true">// 定义一个名为StrongReferenceDemo的公共类</span>
+<span class="token keyword">public</span> <span class="token keyword">class</span> <span class="token class-name">StrongReferenceDemo</span> <span class="token punctuation">{</span>
+    <span class="token comment" spellcheck="true">// 定义主函数</span>
+    <span class="token keyword">public</span> <span class="token keyword">static</span> <span class="token keyword">void</span> <span class="token function">main</span><span class="token punctuation">(</span>String<span class="token punctuation">[</span><span class="token punctuation">]</span> args<span class="token punctuation">)</span> <span class="token keyword">throws</span> IOException <span class="token punctuation">{</span>
+        <span class="token comment" spellcheck="true">// 创建一个User对象，这是一个强引用</span>
+        User u <span class="token operator">=</span> <span class="token keyword">new</span> <span class="token class-name">User</span><span class="token punctuation">(</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+        <span class="token comment" spellcheck="true">// 打印User对象的信息</span>
+        System<span class="token punctuation">.</span>out<span class="token punctuation">.</span><span class="token function">println</span><span class="token punctuation">(</span>u<span class="token punctuation">)</span><span class="token punctuation">;</span>
+        <span class="token comment" spellcheck="true">// 将User对象的引用设置为null，这样原来的User对象就没有任何强引用指向它了</span>
+        u <span class="token operator">=</span> null<span class="token punctuation">;</span>
+        <span class="token comment" spellcheck="true">// 提示JVM的垃圾回收器运行，这将回收没有任何强引用指向的对象</span>
+        System<span class="token punctuation">.</span><span class="token function">gc</span><span class="token punctuation">(</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+        <span class="token comment" spellcheck="true">// 使程序暂停，等待用户输入，这样可以看到垃圾回收器的工作情况</span>
+        System<span class="token punctuation">.</span>in<span class="token punctuation">.</span><span class="token function">read</span><span class="token punctuation">(</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+    <span class="token punctuation">}</span>
+<span class="token punctuation">}</span>
+
+<span class="token comment" spellcheck="true">// 定义一个名为User的公共类</span>
+<span class="token keyword">public</span> <span class="token keyword">class</span> <span class="token class-name">User</span> <span class="token punctuation">{</span>
+    <span class="token comment" spellcheck="true">// 重写finalize方法，这个方法在对象被垃圾回收器回收时会被调用</span>
+    <span class="token annotation punctuation">@Override</span>
+    <span class="token keyword">protected</span> <span class="token keyword">void</span> <span class="token function">finalize</span><span class="token punctuation">(</span><span class="token punctuation">)</span> <span class="token keyword">throws</span> Throwable <span class="token punctuation">{</span>
+        <span class="token comment" spellcheck="true">// 打印一条消息，表示finalize方法被调用了</span>
+        System<span class="token punctuation">.</span>out<span class="token punctuation">.</span><span class="token function">println</span><span class="token punctuation">(</span><span class="token string">"call User finalize() method"</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+    <span class="token punctuation">}</span>
+<span class="token punctuation">}</span></code></pre>
+<p>在这段代码中，当我们创建一个User对象并将其引用设置为null后，这个User对象就没有任何强引用指向它了，所以它可能会被垃圾回收器回收。当垃圾回收器准备回收一个对象时，会调用这个对象的finalize方法。在这个例子中，我们重写了User类的finalize方法，所以当User对象被垃圾回收器回收时，我们会看到”call User finalize() method”这条消息。</p>
+<h2 id="软引用"><a href="#软引用" class="headerlink" title="软引用"></a>软引用</h2><p>软引用用于存储一些可有可无的东西，例如缓存，当系统内存充足时，这些对象不会被回收，当系统内存不足时也是GC时才会回收这些对象，如果回收完这些对象后内存还是不足，就会抛出OOM异常。</p>
+<p>下面代码主要演示了Java中的软引用和垃圾回收的基本概念。</p>
+<pre class=" language-java"><code class="language-java"><span class="token comment" spellcheck="true">// vm args: -Xmx36m -XX:+PrintGCDetails</span>
+<span class="token comment" spellcheck="true">// 定义一个名为SoftReferenceDemo的公共类</span>
+<span class="token keyword">public</span> <span class="token keyword">class</span> <span class="token class-name">SoftReferenceDemo</span> <span class="token punctuation">{</span>
+    <span class="token comment" spellcheck="true">// 定义主函数</span>
+    <span class="token keyword">public</span> <span class="token keyword">static</span> <span class="token keyword">void</span> <span class="token function">main</span><span class="token punctuation">(</span>String<span class="token punctuation">[</span><span class="token punctuation">]</span> args<span class="token punctuation">)</span> <span class="token keyword">throws</span> InterruptedException <span class="token punctuation">{</span>
+        <span class="token comment" spellcheck="true">// 创建一个User对象，并用一个软引用来引用它</span>
+        SoftReference<span class="token operator">&lt;</span>User<span class="token operator">></span> softReference <span class="token operator">=</span> <span class="token keyword">new</span> <span class="token class-name">SoftReference</span><span class="token operator">&lt;</span><span class="token operator">></span><span class="token punctuation">(</span><span class="token keyword">new</span> <span class="token class-name">User</span><span class="token punctuation">(</span><span class="token punctuation">)</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+        <span class="token comment" spellcheck="true">// 打印软引用指向的对象</span>
+        System<span class="token punctuation">.</span>out<span class="token punctuation">.</span><span class="token function">println</span><span class="token punctuation">(</span>softReference<span class="token punctuation">.</span><span class="token function">get</span><span class="token punctuation">(</span><span class="token punctuation">)</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+        <span class="token comment" spellcheck="true">// 提示JVM的垃圾回收器运行</span>
+        System<span class="token punctuation">.</span><span class="token function">gc</span><span class="token punctuation">(</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+        <span class="token comment" spellcheck="true">// 等待3秒，让垃圾回收器有时间运行</span>
+        TimeUnit<span class="token punctuation">.</span>SECONDS<span class="token punctuation">.</span><span class="token function">sleep</span><span class="token punctuation">(</span><span class="token number">3</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+        <span class="token comment" spellcheck="true">// 再次打印软引用指向的对象，因为这个对象只被软引用指向，但是内存还没有不足，所以它还没有被回收</span>
+        System<span class="token punctuation">.</span>out<span class="token punctuation">.</span><span class="token function">println</span><span class="token punctuation">(</span>softReference<span class="token punctuation">.</span><span class="token function">get</span><span class="token punctuation">(</span><span class="token punctuation">)</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+        <span class="token comment" spellcheck="true">// 创建一个大的字节数组，使得堆内存不足</span>
+        <span class="token keyword">byte</span><span class="token punctuation">[</span><span class="token punctuation">]</span> bytes <span class="token operator">=</span> <span class="token keyword">new</span> <span class="token class-name">byte</span><span class="token punctuation">[</span><span class="token number">1024</span> <span class="token operator">*</span> <span class="token number">1024</span> <span class="token operator">*</span> <span class="token number">10</span><span class="token punctuation">]</span><span class="token punctuation">;</span>
+        <span class="token comment" spellcheck="true">// 再次打印软引用指向的对象，因为内存不足，所以这个对象已经被垃圾回收器回收了</span>
+        System<span class="token punctuation">.</span>out<span class="token punctuation">.</span><span class="token function">println</span><span class="token punctuation">(</span>softReference<span class="token punctuation">.</span><span class="token function">get</span><span class="token punctuation">(</span><span class="token punctuation">)</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+    <span class="token punctuation">}</span>
+<span class="token punctuation">}</span></code></pre>
+<p>在这段代码中，我们创建了一个User对象，并用一个软引用来引用它。当我们提示垃圾回收器运行时，这个User对象并没有被回收，因为内存还没有不足。但是当我们创建一个大的字节数组，使得堆内存不足时，这个User对象就被垃圾回收器回收了，因为它只被软引用指向，而软引用指向的对象在内存不足时会被垃圾回收器回收。</p>
+<h2 id="弱引用"><a href="#弱引用" class="headerlink" title="弱引用"></a>弱引用</h2><p>弱引用（WeakReference）并不能使对象豁免垃圾回收，仅仅是提供一种访问在弱引用状态下对象的途径。只要发生gc，弱引用对象就会被回收。ThreadLocal中就使用了WeakReference来避免内存泄漏。</p>
+<pre class=" language-java"><code class="language-java"><span class="token comment" spellcheck="true">// 定义一个名为WeakReferenceDemo的公共类</span>
+<span class="token keyword">public</span> <span class="token keyword">class</span> <span class="token class-name">WeakReferenceDemo</span> <span class="token punctuation">{</span>
+    <span class="token comment" spellcheck="true">// 定义主函数</span>
+    <span class="token keyword">public</span> <span class="token keyword">static</span> <span class="token keyword">void</span> <span class="token function">main</span><span class="token punctuation">(</span>String<span class="token punctuation">[</span><span class="token punctuation">]</span> args<span class="token punctuation">)</span> <span class="token keyword">throws</span> InterruptedException <span class="token punctuation">{</span>
+        <span class="token comment" spellcheck="true">// 创建一个User对象，并用一个弱引用来引用它</span>
+        WeakReference<span class="token operator">&lt;</span>User<span class="token operator">></span> weakReference <span class="token operator">=</span> <span class="token keyword">new</span> <span class="token class-name">WeakReference</span><span class="token operator">&lt;</span><span class="token operator">></span><span class="token punctuation">(</span><span class="token keyword">new</span> <span class="token class-name">User</span><span class="token punctuation">(</span><span class="token punctuation">)</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+        <span class="token comment" spellcheck="true">// 打印弱引用指向的对象</span>
+        System<span class="token punctuation">.</span>out<span class="token punctuation">.</span><span class="token function">println</span><span class="token punctuation">(</span>weakReference<span class="token punctuation">.</span><span class="token function">get</span><span class="token punctuation">(</span><span class="token punctuation">)</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+        <span class="token comment" spellcheck="true">// 提示JVM的垃圾回收器运行</span>
+        System<span class="token punctuation">.</span><span class="token function">gc</span><span class="token punctuation">(</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+        <span class="token comment" spellcheck="true">// 等待3秒，让垃圾回收器有时间运行</span>
+        TimeUnit<span class="token punctuation">.</span>SECONDS<span class="token punctuation">.</span><span class="token function">sleep</span><span class="token punctuation">(</span><span class="token number">3</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+        <span class="token comment" spellcheck="true">// 再次打印弱引用指向的对象，因为这个对象只被弱引用指向，所以它已经被垃圾回收器回收了</span>
+        System<span class="token punctuation">.</span>out<span class="token punctuation">.</span><span class="token function">println</span><span class="token punctuation">(</span>weakReference<span class="token punctuation">.</span><span class="token function">get</span><span class="token punctuation">(</span><span class="token punctuation">)</span><span class="token punctuation">)</span><span class="token punctuation">;</span> <span class="token comment" spellcheck="true">// null</span>
+    <span class="token punctuation">}</span>
+<span class="token punctuation">}</span></code></pre>
+<p>在这段代码中，我们创建了一个User对象，并用一个弱引用来引用它。当我们提示垃圾回收器运行时，这个User对象就被垃圾回收器回收了，因为它只被弱引用指向，而弱引用指向的对象在垃圾回收器运行时会被回收。所以，当我们再次打印弱引用指向的对象时，结果是null，因为这个对象已经被回收了。</p>
+<h2 id="虚引用"><a href="#虚引用" class="headerlink" title="虚引用"></a>虚引用</h2><p>虚引用必须和引用队列（ReferenceQueue）联合使用。如果一个对象仅持有虚引用，那么它就和没有任何引用一样，在任何时候都可能被垃圾回收。</p>
+<p>虚引用主要用来跟踪对象被垃圾回收的活动。当垃圾回收器准备回收一个对象时，如果发现它还有虚引用，就会在回收对象之前，把这个虚引用加入到与之关联的引用队列中。程序如果发现某个虚引用已经被加入到引用队列，那么就可以在所引用的对象的内存被回收之前采取必要的行动。</p>
+<p>下面代码演示了Java中的虚引用和垃圾回收的基本概念。</p>
+<pre class=" language-java"><code class="language-java"><span class="token comment" spellcheck="true">// vm args: -Xms4m -XX:+PrintGC</span>
+<span class="token comment" spellcheck="true">// 定义一个名为PhantomReferenceDemo的公共类</span>
+<span class="token keyword">public</span> <span class="token keyword">class</span> <span class="token class-name">PhantomReferenceDemo</span> <span class="token punctuation">{</span>
+    <span class="token comment" spellcheck="true">// 定义主函数</span>
+    <span class="token keyword">public</span> <span class="token keyword">static</span> <span class="token keyword">void</span> <span class="token function">main</span><span class="token punctuation">(</span>String<span class="token punctuation">[</span><span class="token punctuation">]</span> args<span class="token punctuation">)</span> <span class="token keyword">throws</span> IOException<span class="token punctuation">,</span> InterruptedException <span class="token punctuation">{</span>
+        <span class="token comment" spellcheck="true">// 创建一个引用队列</span>
+        ReferenceQueue<span class="token operator">&lt;</span>User<span class="token operator">></span> referenceQueue <span class="token operator">=</span> <span class="token keyword">new</span> <span class="token class-name">ReferenceQueue</span><span class="token operator">&lt;</span><span class="token operator">></span><span class="token punctuation">(</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+        <span class="token comment" spellcheck="true">// 创建一个User对象，并用一个虚引用来引用它，这个虚引用被关联到了引用队列</span>
+        PhantomReference<span class="token operator">&lt;</span>User<span class="token operator">></span> phantomReference <span class="token operator">=</span> <span class="token keyword">new</span> <span class="token class-name">PhantomReference</span><span class="token operator">&lt;</span><span class="token operator">></span><span class="token punctuation">(</span><span class="token keyword">new</span> <span class="token class-name">User</span><span class="token punctuation">(</span><span class="token punctuation">)</span><span class="token punctuation">,</span> referenceQueue<span class="token punctuation">)</span><span class="token punctuation">;</span>
+        <span class="token comment" spellcheck="true">// 打印虚引用指向的对象，结果是null，因为不能通过虚引用来获取一个对象实例</span>
+        System<span class="token punctuation">.</span>out<span class="token punctuation">.</span><span class="token function">println</span><span class="token punctuation">(</span>phantomReference<span class="token punctuation">.</span><span class="token function">get</span><span class="token punctuation">(</span><span class="token punctuation">)</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+        <span class="token comment" spellcheck="true">// 创建一个新的线程，这个线程不断检查引用队列，看是否有被垃圾回收器回收的对象</span>
+        <span class="token keyword">new</span> <span class="token class-name">Thread</span><span class="token punctuation">(</span><span class="token punctuation">(</span><span class="token punctuation">)</span> <span class="token operator">-</span><span class="token operator">></span> <span class="token punctuation">{</span>
+            <span class="token keyword">while</span> <span class="token punctuation">(</span><span class="token boolean">true</span><span class="token punctuation">)</span> <span class="token punctuation">{</span>
+                Reference<span class="token operator">&lt;</span><span class="token operator">?</span> <span class="token keyword">extends</span> <span class="token class-name">User</span><span class="token operator">></span> poll <span class="token operator">=</span> referenceQueue<span class="token punctuation">.</span><span class="token function">poll</span><span class="token punctuation">(</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+                <span class="token keyword">if</span> <span class="token punctuation">(</span>poll <span class="token operator">!=</span> null<span class="token punctuation">)</span> <span class="token punctuation">{</span>
+                    <span class="token comment" spellcheck="true">// 如果引用队列中有被垃圾回收器回收的对象，打印一条消息</span>
+                    System<span class="token punctuation">.</span>out<span class="token punctuation">.</span><span class="token function">println</span><span class="token punctuation">(</span><span class="token string">"--- 虚引用对象被jvm回收了 ---- "</span> <span class="token operator">+</span> poll<span class="token punctuation">)</span><span class="token punctuation">;</span>
+                    <span class="token comment" spellcheck="true">// 打印被回收的对象，结果是null，因为不能通过虚引用来获取一个对象实例</span>
+                    System<span class="token punctuation">.</span>out<span class="token punctuation">.</span><span class="token function">println</span><span class="token punctuation">(</span><span class="token string">"--- 回收对象 ---- "</span> <span class="token operator">+</span> poll<span class="token punctuation">.</span><span class="token function">get</span><span class="token punctuation">(</span><span class="token punctuation">)</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+                <span class="token punctuation">}</span>
+            <span class="token punctuation">}</span>
+        <span class="token punctuation">}</span><span class="token punctuation">)</span><span class="token punctuation">.</span><span class="token function">start</span><span class="token punctuation">(</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+        <span class="token comment" spellcheck="true">// 等待1秒，让新的线程有时间运行</span>
+        TimeUnit<span class="token punctuation">.</span>SECONDS<span class="token punctuation">.</span><span class="token function">sleep</span><span class="token punctuation">(</span><span class="token number">1</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+        <span class="token comment" spellcheck="true">// 提示JVM的垃圾回收器运行</span>
+        System<span class="token punctuation">.</span><span class="token function">gc</span><span class="token punctuation">(</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+        <span class="token comment" spellcheck="true">// 使程序暂停，等待用户输入，这样可以看到垃圾回收器的工作情况</span>
+        System<span class="token punctuation">.</span>in<span class="token punctuation">.</span><span class="token function">read</span><span class="token punctuation">(</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+    <span class="token punctuation">}</span>
+    <span class="token comment" spellcheck="true">// 定义一个名为User的私有静态类</span>
+    <span class="token keyword">private</span> <span class="token keyword">static</span> <span class="token keyword">class</span> <span class="token class-name">User</span> <span class="token punctuation">{</span>
+        <span class="token comment" spellcheck="true">// User类有一个大的数组字段，使得User对象占用较多的内存</span>
+        <span class="token keyword">private</span> <span class="token keyword">int</span><span class="token punctuation">[</span><span class="token punctuation">]</span> bytes <span class="token operator">=</span> <span class="token keyword">new</span> <span class="token class-name">int</span><span class="token punctuation">[</span><span class="token number">1024</span> <span class="token operator">*</span> <span class="token number">1024</span> <span class="token operator">*</span> <span class="token number">5</span><span class="token punctuation">]</span><span class="token punctuation">;</span>
+        <span class="token comment" spellcheck="true">// 重写finalize方法，这个方法在对象被垃圾回收器回收时会被调用</span>
+        <span class="token annotation punctuation">@Override</span>
+        <span class="token keyword">protected</span> <span class="token keyword">void</span> <span class="token function">finalize</span><span class="token punctuation">(</span><span class="token punctuation">)</span> <span class="token keyword">throws</span> Throwable <span class="token punctuation">{</span>
+            <span class="token comment" spellcheck="true">// 打印一条消息，表示finalize方法被调用了</span>
+            System<span class="token punctuation">.</span>out<span class="token punctuation">.</span><span class="token function">println</span><span class="token punctuation">(</span><span class="token string">"call User finalize() method"</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+        <span class="token punctuation">}</span>
+    <span class="token punctuation">}</span>
+<span class="token punctuation">}</span>
+</code></pre>
+<p>在这段代码中，我们创建了一个User对象，并用一个虚引用来引用它。这个虚引用被关联到了一个引用队列。当这个User对象被垃圾回收器回收时，这个虚引用就会被加入到引用队列中。我们创建了一个新的线程，这个线程不断检查引用队列，看是否有被垃圾回收器回收的对象。如果有，就打印一条消息。这样，我们就可以知道何时有对象被垃圾回收器回收了。</p>
+<p>基于虚引用，有一个更加优雅的实现方式，那就是Cleaner，可以用来替代Object类的finalizer方法，在DirectByteBuffer中用来回收堆外内存。</p>
+<h2 id="使用场景"><a href="#使用场景" class="headerlink" title="使用场景"></a>使用场景</h2><p>在Java中，根据对象的生命周期和内存管理需求，我们可以选择使用不同类型的引用。以下是这四种引用类型的常见应用场景：</p>
+<ol>
+<li><strong>强引用（Strong Reference）</strong>：强引用是最常见的引用类型，我们在编程时经常使用的就是强引用。只要对象有强引用指向，垃圾回收器就不会回收这个对象。因此，强引用适用于程序运行期间始终需要的对象。</li>
+<li><strong>软引用（Soft Reference）</strong>：软引用可以用来实现内存敏感的缓存。如果一个对象只有软引用，那么它会在系统内存不足时被垃圾回收器回收。因此，我们可以把一些非必需但重建成本高的对象通过软引用存储在缓存中，如图片、视频等大文件。</li>
+<li><strong>弱引用（Weak Reference）</strong>：弱引用通常用于容器类中，用来解决循环引用的问题。如果一个对象只有弱引用，那么在垃圾回收器线程扫描时，无论内存是否足够，都会被回收。Java中的WeakHashMap就是使用弱引用来实现的。</li>
+<li><strong>虚引用（Phantom Reference）</strong>：虚引用主要用于跟踪对象被垃圾回收的活动。虚引用无法获取到对象的实例，它的唯一目的就是在对象被收集器回收时收到一个系统通知。这通常用于实现比finalize机制更灵活的回收操作，例如，DirectByteBuffer就是通过虚引用来实现内存的回收的。</li>
+</ol>
+<p>这四种引用类型提供了不同级别的对象生命周期管理，可以根据具体的应用场景和需求进行选择。</p>
 <script type="text/javascript" src="https://cdn.jsdelivr.net/npm/kity@2.0.4/dist/kity.min.js"></script><script type="text/javascript" src="https://cdn.jsdelivr.net/npm/kityminder-core@1.4.50/dist/kityminder.core.min.js"></script><script defer="true" type="text/javascript" src="https://cdn.jsdelivr.net/npm/hexo-simple-mindmap@0.2.0/dist/mindmap.min.js"></script><link rel="stylesheet" type="text/css" href="https://cdn.jsdelivr.net/npm/hexo-simple-mindmap@0.2.0/dist/mindmap.min.css">
             </div>
             <hr/>
@@ -512,7 +635,7 @@ Caused by: java.net.URISyntaxException: Relative path <span class="token keyword
                     </i>
                 </span>
                 <span class="reprint-info">
-                    <a href="https://www.hnbian.cn/posts/6c905731.html">https://www.hnbian.cn/posts/6c905731.html</a>
+                    <a href="https://www.hnbian.cn/posts/e3f2dd8c.html">https://www.hnbian.cn/posts/e3f2dd8c.html</a>
                 </span>
             </div>
             <div class="reprint__notice">
@@ -550,12 +673,12 @@ Caused by: java.net.URISyntaxException: Relative path <span class="token keyword
                     
                         <div class="article-tag">
                             
-                                <a href="/tags/exception/">
-                                    <span class="chip bg-color">exception</span>
+                                <a href="/tags/java/">
+                                    <span class="chip bg-color">java</span>
                                 </a>
                             
-                                <a href="/tags/hive/">
-                                    <span class="chip bg-color">hive</span>
+                                <a href="/tags/jvm/">
+                                    <span class="chip bg-color">jvm</span>
                                 </a>
                             
                         </div>
@@ -988,30 +1111,31 @@ Caused by: java.net.URISyntaxException: Relative path <span class="token keyword
             <div class="article-badge left-badge text-color">
                 <i class="fas fa-chevron-left"></i>&nbsp;上一篇</div>
             <div class="card">
-                <a href="/posts/e9b31b85.html">
+                <a href="/posts/eee34976.html">
                     <div class="card-image">
                         
-                        <img src="https://images.hnbian.cn/FuKOUc68mF3w-qoKriOAtfIHSOvb" class="responsive-img" alt="Flume HBase Sink 配置参数与Agent配置文件示例">
+                        <img src="https://images.hnbian.cn/FiDNJ3i2doZOUyizVFysqaqUffjE" class="responsive-img" alt="【scala系列】1、基本语法介绍">
                         
-                        <span class="card-title">Flume HBase Sink 配置参数与Agent配置文件示例</span>
+                        <span class="card-title">【scala系列】1、基本语法介绍</span>
                     </div>
                 </a>
                 <div class="card-content article-content">
                     <div class="summary block-with-text">
                         
-                            1. HBaseSink这个Sink将数据写入 HBase 。Hbase 配置是从类路径中遇到的第一个hbase-site.xml中获取的。由配置指定的 HbaseEventSerializer 的类用于将事件转换为 HBase put 或
+                            1. scala 介绍1.1 什么是ScalaScala 是一门多范式的编程语言，设计初衷是要整合面向对象编程和函数式编程的各种特性。与java类似的编程语言，也是基于 jvm 运行的一门语言，集成面向对象与函数式编程的各种特性。
+1.2 
                         
                     </div>
                     <div class="publish-info">
                         <span class="publish-date">
-                            <i class="far fa-clock fa-fw icon-date"></i>2017-05-19
+                            <i class="far fa-clock fa-fw icon-date"></i>2020-03-16
                         </span>
                         <span class="publish-author">
                             
                             <i class="fas fa-bookmark fa-fw icon-category"></i>
                             
-                            <a href="/categories/flume/" class="post-category">
-                                    flume
+                            <a href="/categories/scala/" class="post-category">
+                                    scala
                                 </a>
                             
                             
@@ -1021,12 +1145,8 @@ Caused by: java.net.URISyntaxException: Relative path <span class="token keyword
                 
                 <div class="card-action article-tags">
                     
-                    <a href="/tags/flume/">
-                        <span class="chip bg-color">flume</span>
-                    </a>
-                    
-                    <a href="/tags/hadoop/">
-                        <span class="chip bg-color">hadoop</span>
+                    <a href="/tags/scala/">
+                        <span class="chip bg-color">scala</span>
                     </a>
                     
                 </div>
@@ -1040,30 +1160,30 @@ Caused by: java.net.URISyntaxException: Relative path <span class="token keyword
                 下一篇&nbsp;<i class="fas fa-chevron-right"></i>
             </div>
             <div class="card">
-                <a href="/posts/ca67f414.html">
+                <a href="/posts/f09c2b77.html">
                     <div class="card-image">
                         
-                        <img src="http://images.hnbian.cn//FhB9bB2zGl1fZb05kgkqwdNgBsdu" class="responsive-img" alt="metadata.SessionHiveMetaStoreClient">
+                        <img src="https://images.hnbian.cn/FjyEghfHedrO-eZ5olryEvUMFXuj" class="responsive-img" alt="Ambari 介绍 一、环境安装">
                         
-                        <span class="card-title">metadata.SessionHiveMetaStoreClient</span>
+                        <span class="card-title">Ambari 介绍 一、环境安装</span>
                     </div>
                 </a>
                 <div class="card-content article-content">
                     <div class="summary block-with-text">
                         
-                            1. 异常信息Exception in thread "main" java.lang.RuntimeException: java.lang.RuntimeException: Unable to instantiate org.apac
+                            1. Ambari 介绍Ambari 是 Apache Software Foundation 中的一个顶级项目。就 Ambari 的作用来说，就是创建、管理、监视 Hadoop 的集群，但是这里的 Hadoop 是广义，指的是 Hadoo
                         
                     </div>
                     <div class="publish-info">
                             <span class="publish-date">
-                                <i class="far fa-clock fa-fw icon-date"></i>2017-05-04
+                                <i class="far fa-clock fa-fw icon-date"></i>2020-03-14
                             </span>
                         <span class="publish-author">
                             
                             <i class="fas fa-bookmark fa-fw icon-category"></i>
                             
-                            <a href="/categories/hive/" class="post-category">
-                                    hive
+                            <a href="/categories/ambari/" class="post-category">
+                                    ambari
                                 </a>
                             
                             
@@ -1073,12 +1193,8 @@ Caused by: java.net.URISyntaxException: Relative path <span class="token keyword
                 
                 <div class="card-action article-tags">
                     
-                    <a href="/tags/exception/">
-                        <span class="chip bg-color">exception</span>
-                    </a>
-                    
-                    <a href="/tags/hive/">
-                        <span class="chip bg-color">hive</span>
+                    <a href="/tags/ambari/">
+                        <span class="chip bg-color">ambari</span>
                     </a>
                     
                 </div>

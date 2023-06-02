@@ -5,9 +5,9 @@
 <head><meta name="generator" content="Hexo 3.9.0">
     <meta charset="utf-8">
     <meta name="keywords" content="Spark-源码在idea-下添加注释报错的问题, hnbian">
-    <meta name="description" content="1. 问题Spark源码用IDEA导入后，添加注释时，发现不管是//还是/**/注释符，都会报错。
+    <meta name="description" content="1. 问题Spark源码用IDEA导入后，添加注释时，发现不管是 单行注释符 // 还是 多行注释符 /**/，都会报错。
 
-Scalastyle examines your Scala code and indicates potential problems ">
+Scalastyle examines your Scala code and indicates potenti">
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=no">
     <meta name="renderer" content="webkit|ie-stand|ie-comp">
@@ -445,7 +445,7 @@ Scalastyle examines your Scala code and indicates potential problems ">
                 
                 <div class="info-break-policy">
                     <i class="far fa-file-word fa-fw"></i>文章字数:&nbsp;&nbsp;
-                    155
+                    213
                 </div>
                 
 
@@ -468,12 +468,15 @@ Scalastyle examines your Scala code and indicates potential problems ">
         <hr class="clearfix">
         <div class="card-content article-card-content">
             <div id="articleContent">
-                <h2 id="1-问题"><a href="#1-问题" class="headerlink" title="1. 问题"></a>1. 问题</h2><p>Spark源码用IDEA导入后，添加注释时，发现不管是//还是/**/注释符，都会报错。</p>
+                <h2 id="1-问题"><a href="#1-问题" class="headerlink" title="1. 问题"></a>1. 问题</h2><p>Spark源码用IDEA导入后，添加注释时，发现不管是 单行注释符 <code>//</code> 还是 多行注释符 <code>/**/</code>，都会报错。</p>
 <p><img src="https://images.hnbian.cn/FiegVxf33fAfoLC7XwdSeD9INQw7?imageView2/0/interlace/1/q/70%7Cwatermark/2/text/d3d3LmhuYmlhbi5jbg==/font/5b6u6L2v6ZuF6buR/fontsize/600/fill/IzBDMjU2NA==/dissolve/100/gravity/SouthEast/dx/10/dy/10%7Cimageslim" alt="报错截图"></p>
 <p>Scalastyle examines your Scala code and indicates potential problems with it.<br>Place scalastyle_config.xml in the <root>/.idea or <root>/project directory.<br>Full documentation is available on the Scalastyle website.</root></root></p>
-<h2 id="2-解决办法"><a href="#2-解决办法" class="headerlink" title="2. 解决办法"></a>2. 解决办法</h2><p><a href="https://www.scalastyle.org/configuration.html" target="_blank" rel="noopener">scalastyle官网</a> 上直接下载scalastyle_config.xml文件到spark 代码根目录下，重启IDEA，能够解决问题！<br><img src="https://images.hnbian.cn/FrLcV2-EOC10YXjfoI_cigVKK348?imageView2/0/interlace/1/q/70%7Cwatermark/2/text/d3d3LmhuYmlhbi5jbg==/font/5b6u6L2v6ZuF6buR/fontsize/600/fill/IzBDMjU2NA==/dissolve/100/gravity/SouthEast/dx/10/dy/10%7Cimageslim" alt="将文件放在根目录"><br><img src="https://images.hnbian.cn/FkxetsO191pCn8eqxMeG0C9HalEi?imageView2/0/interlace/1/q/70%7Cwatermark/2/text/d3d3LmhuYmlhbi5jbg==/font/5b6u6L2v6ZuF6buR/fontsize/600/fill/IzBDMjU2NA==/dissolve/100/gravity/SouthEast/dx/10/dy/10%7Cimageslim" alt="重启idea后效果"></p>
+<p>Scalastyle 检查你的 Scala 代码并指出其中可能存在的问题。 请将 scalastyle_config.xml 放置在 <root>/.idea 或 <root>/project 目录中。 完整的文档可以在 Scalastyle 网站上找到。</root></root></p>
+<h2 id="2-解决办法"><a href="#2-解决办法" class="headerlink" title="2. 解决办法"></a>2. 解决办法</h2><p><a href="https://www.scalastyle.org/configuration.html" target="_blank" rel="noopener">scalastyle官网</a> 上直接下载 scalastyle_config.xml 文件到 spark 代码根目录下，重启IDEA，能够解决问题！</p>
+<p><img src="https://images.hnbian.cn/FrLcV2-EOC10YXjfoI_cigVKK348?imageView2/0/interlace/1/q/70%7Cwatermark/2/text/d3d3LmhuYmlhbi5jbg==/font/5b6u6L2v6ZuF6buR/fontsize/600/fill/IzBDMjU2NA==/dissolve/100/gravity/SouthEast/dx/10/dy/10%7Cimageslim" alt="将文件放在根目录"></p>
+<p><img src="https://images.hnbian.cn/FkxetsO191pCn8eqxMeG0C9HalEi?imageView2/0/interlace/1/q/70%7Cwatermark/2/text/d3d3LmhuYmlhbi5jbg==/font/5b6u6L2v6ZuF6buR/fontsize/600/fill/IzBDMjU2NA==/dissolve/100/gravity/SouthEast/dx/10/dy/10%7Cimageslim" alt="重启idea后效果"></p>
 <p>刚刚报错的位置不在报错了。</p>
-<p>我们比较从scalastyle官网 下载下来的scalastyle_config.xml 文件跟spark自带的scalastyle_config.xml 文件可以发现，许多在官网上的配置文件是warning级别的配置到spark上都改成了error 。</p>
+<p>我们比较从 scalastyle 官网 下载下来的 scalastyle_config.xml 文件跟spark自带的 scalastyle_config.xml 文件可以发现，许多在官网上的配置文件是 warning 级别的配置到 spark 上都改成了error 。</p>
 <script type="text/javascript" src="https://cdn.jsdelivr.net/npm/kity@2.0.4/dist/kity.min.js"></script><script type="text/javascript" src="https://cdn.jsdelivr.net/npm/kityminder-core@1.4.50/dist/kityminder.core.min.js"></script><script defer="true" type="text/javascript" src="https://cdn.jsdelivr.net/npm/hexo-simple-mindmap@0.2.0/dist/mindmap.min.js"></script><link rel="stylesheet" type="text/css" href="https://cdn.jsdelivr.net/npm/hexo-simple-mindmap@0.2.0/dist/mindmap.min.css">
             </div>
             <hr/>
@@ -1214,7 +1217,7 @@ code[class*="language-"], pre[class*="language-"] { white-space: pre !important;
             <br>
             
             &nbsp;<i class="fas fa-chart-area"></i>&nbsp;站点总字数:&nbsp;<span
-                class="white-color">812.8k</span>&nbsp;字
+                class="white-color">816.9k</span>&nbsp;字
             
             
             

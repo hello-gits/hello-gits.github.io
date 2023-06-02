@@ -5,7 +5,7 @@
 <head><meta name="generator" content="Hexo 3.9.0">
     <meta charset="utf-8">
     <meta name="keywords" content="JVM系列（三）、GC算法, hnbian">
-    <meta name="description" content="1、介绍垃圾收集器Garbage Collection 通常被称为“GC”，它诞生于1960年 MIT 的 Lisp 语言，经过半个多世纪，目前已经十分成熟了。Jvm中，程序计数器、虚拟机栈、本地方法栈都是随线程而生随线程而灭，栈帧随着方法">
+    <meta name="description" content="1. 介绍垃圾收集器（ Garbage Collection ） 通常被称为 “GC”，它诞生于1960年 MIT 的 Lisp 语言，经过半个多世纪，目前已经十分成熟了。Jvm中，程序计数器、虚拟机栈、本地方法栈都是随线程而生随线程而灭，">
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=no">
     <meta name="renderer" content="webkit|ie-stand|ie-comp">
@@ -466,8 +466,8 @@
         <hr class="clearfix">
         <div class="card-content article-card-content">
             <div id="articleContent">
-                <h2 id="1、介绍"><a href="#1、介绍" class="headerlink" title="1、介绍"></a>1、介绍</h2><p>垃圾收集器Garbage Collection 通常被称为“GC”，它诞生于1960年 MIT 的 Lisp 语言，经过半个多世纪，目前已经十分成熟了。Jvm中，程序计数器、虚拟机栈、本地方法栈都是随线程而生随线程而灭，栈帧随着方法的进入和推出做如栈出栈操作，实现了自动的内存清理，因此，我们的内存垃圾回收主要几种于Java堆和方法区中，在程序运行期间，这部分内存的分配都是动态的。<br>打印gc日志参数：-verbose:gc -XX:+PrintGCDetails</p>
-<h2 id="2、对象存活判断"><a href="#2、对象存活判断" class="headerlink" title="2、对象存活判断"></a>2、对象存活判断</h2><p>判断对象是否存活一般有两种方式：</p>
+                <h2 id="1-介绍"><a href="#1-介绍" class="headerlink" title="1. 介绍"></a>1. 介绍</h2><p>垃圾收集器（ Garbage Collection ） 通常被称为 “GC”，它诞生于1960年 MIT 的 Lisp 语言，经过半个多世纪，目前已经十分成熟了。Jvm中，程序计数器、虚拟机栈、本地方法栈都是随线程而生随线程而灭，栈帧随着方法的进入和推出做如栈出栈操作，实现了自动的内存清理，因此，我们的内存垃圾回收主要几种于Java堆和方法区中，在程序运行期间，这部分内存的分配都是动态的。<br>打印gc日志参数：-verbose:gc -XX:+PrintGCDetails</p>
+<h2 id="2-对象存活判断"><a href="#2-对象存活判断" class="headerlink" title="2. 对象存活判断"></a>2. 对象存活判断</h2><p>判断对象是否存活一般有两种方式：</p>
 <ul>
 <li>引用计数<br>每个对象有一个引用计数属性，新增一个引用时计数+1，引用释放时计数-1，计数为0时可以回收。引用计数器可以很快的执行，交织在运行程序中，对程序需要不被长时间打断的实时环境比较有利。<br>无法检测出循环引用。如父对象有一个对子对象的引用。子对象反过来也引用父对象，这样引用计数器永远不可能为0。此方法简单但是无法解决对象互相循环引用的问题。</li>
 </ul>
@@ -1062,15 +1062,15 @@
                 <a href="/posts/d9df677f.html">
                     <div class="card-image">
                         
-                        <img src="https://images.hnbian.cn/FvmjceNdwsGr8FwkaFfmMf1GgetK" class="responsive-img" alt="JVM系列（二）、Jvm内存结构（下）方法区、栈">
+                        <img src="https://images.hnbian.cn/FvmjceNdwsGr8FwkaFfmMf1GgetK" class="responsive-img" alt="JVM 系列（二）、 JVM 内存结构（下）方法区、栈">
                         
-                        <span class="card-title">JVM系列（二）、Jvm内存结构（下）方法区、栈</span>
+                        <span class="card-title">JVM 系列（二）、 JVM 内存结构（下）方法区、栈</span>
                     </div>
                 </a>
                 <div class="card-content article-content">
                     <div class="summary block-with-text">
                         
-                            1、方法区方法区（Method Area）与Java堆一样，是各种线程共享的内存区域，它用于存储已被虚拟机加载的类的信息、常量、静态变量即时编译器编译后的代码等数据。虽然Java虚拟机规范把方法区描述为堆的一个逻辑部分，但是它却有一个别名叫
+                            1. 方法区方法区（Method Area）与Java堆一样，是各种线程共享的内存区域，它用于存储已被虚拟机加载的类的信息、常量、静态变量即时编译器编译后的代码等数据。虽然Java虚拟机规范把方法区描述为堆的一个逻辑部分，但是它却有一个别名
                         
                     </div>
                     <div class="publish-info">
@@ -1096,8 +1096,8 @@
                         <span class="chip bg-color">java</span>
                     </a>
                     
-                    <a href="/tags/jvm/">
-                        <span class="chip bg-color">jvm</span>
+                    <a href="/tags/JVM/">
+                        <span class="chip bg-color">JVM</span>
                     </a>
                     
                 </div>
@@ -1243,7 +1243,7 @@ code[class*="language-"], pre[class*="language-"] { white-space: pre !important;
             <br>
             
             &nbsp;<i class="fas fa-chart-area"></i>&nbsp;站点总字数:&nbsp;<span
-                class="white-color">812.8k</span>&nbsp;字
+                class="white-color">816.9k</span>&nbsp;字
             
             
             

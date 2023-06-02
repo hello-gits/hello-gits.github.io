@@ -478,7 +478,7 @@ latest
         <hr class="clearfix">
         <div class="card-content article-card-content">
             <div id="articleContent">
-                <h4 id="1-参数说明"><a href="#1-参数说明" class="headerlink" title="1. 参数说明"></a>1. 参数说明</h4><ul>
+                <h2 id="1-参数说明"><a href="#1-参数说明" class="headerlink" title="1. 参数说明"></a>1. 参数说明</h2><ul>
 <li>当各分区下有已提交的offset时（默认使用latest）</li>
 </ul>
 <table>
@@ -512,7 +512,7 @@ Topic:test5    PartitionCount:3    ReplicationFactor:1    Configs:
     Topic: test5    Partition: 0    Leader: 0    Replicas: 0    Isr: 0
     Topic: test5    Partition: 1    Leader: 1    Replicas: 1    Isr: 1
     Topic: test5    Partition: 2    Leader: 2    Replicas: 2    Isr: 2</code></pre>
-<h3 id="2-测试代码"><a href="#2-测试代码" class="headerlink" title="2. 测试代码"></a>2. 测试代码</h3><ul>
+<h2 id="2-测试代码"><a href="#2-测试代码" class="headerlink" title="2. 测试代码"></a>2. 测试代码</h2><ul>
 <li>发送数据代码</li>
 </ul>
 <pre class=" language-java"><code class="language-java"><span class="token keyword">import</span> org<span class="token punctuation">.</span>apache<span class="token punctuation">.</span>kafka<span class="token punctuation">.</span>clients<span class="token punctuation">.</span>producer<span class="token punctuation">.</span>KafkaProducer<span class="token punctuation">;</span>
@@ -614,7 +614,7 @@ Topic:test5    PartitionCount:3    ReplicationFactor:1    Configs:
         <span class="token punctuation">}</span>
     <span class="token punctuation">}</span>
 <span class="token punctuation">}</span></code></pre>
-<h3 id="3-测试新创建的topic"><a href="#3-测试新创建的topic" class="headerlink" title="3. 测试新创建的topic"></a>3. 测试新创建的topic</h3><p>将 enable.auto.commit 设置为false，向topic tes3中发送20条消息，分别使用修改值为none。earliest、latest运行测试代码</p>
+<h2 id="3-测试新创建的topic"><a href="#3-测试新创建的topic" class="headerlink" title="3. 测试新创建的topic"></a>3. 测试新创建的topic</h2><p>将 enable.auto.commit 设置为false，向topic tes3中发送20条消息，分别使用修改值为none。earliest、latest运行测试代码</p>
 <ul>
 <li>none</li>
 </ul>
@@ -1743,7 +1743,7 @@ code[class*="language-"], pre[class*="language-"] { white-space: pre !important;
             <br>
             
             &nbsp;<i class="fas fa-chart-area"></i>&nbsp;站点总字数:&nbsp;<span
-                class="white-color">812.8k</span>&nbsp;字
+                class="white-color">816.9k</span>&nbsp;字
             
             
             

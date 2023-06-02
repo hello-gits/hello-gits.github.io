@@ -447,14 +447,14 @@ JVM内存结构主要有三大块：堆内存、方法区和栈。
                 
                 <div class="info-break-policy">
                     <i class="far fa-file-word fa-fw"></i>文章字数:&nbsp;&nbsp;
-                    3.6k
+                    4k
                 </div>
                 
 
                 
                 <div class="info-break-policy">
                     <i class="far fa-clock fa-fw"></i>阅读时长:&nbsp;&nbsp;
-                    15 分
+                    16 分
                 </div>
                 
 				
@@ -475,7 +475,7 @@ JVM内存结构主要有三大块：堆内存、方法区和栈。
 
 <p>JVM内存结构主要有三大块：堆内存、方法区和栈。</p>
 <p><font color="red">堆</font> ：存放 new 出来的对象和数组，堆是JVM中最大的一块，由年轻代和老年代组成，而年轻代内存又被分为三部分：Eden空间、Form Survivor空间、To Survivor空间，默认情况下年轻代按照8:1:1 的比例来分配。</p>
-<p><font color="red">方法区</font>： 存储已经被虚拟机加载的类的信息、常量、静态变量、编译后的代码等数据，是线程共享的区域，与Java堆区分，方法区还有一个别名Non-Heap(非堆)。</p>
+<p><font color="red">方法区</font>：存储已经被虚拟机加载的类的信息、常量、静态变量、编译后的代码等数据，是线程共享的区域，与Java堆区分，方法区还有一个别名Non-Heap(非堆)。</p>
 <p><font color="red">栈</font>： 又分为Java虚拟机栈和本地方法栈主要用于方法的执行。</p>
 <p>Java8之后方法区发生了一些变化：</p>
 <ol>
@@ -528,7 +528,7 @@ JVM内存结构主要有三大块：堆内存、方法区和栈。
 <p>从更高的一个纬度再来看JVM和系统调用之间的关系</p>
 <img src="https://images.hnbian.cn/FhVIbP3Yjsqx2RT-ksJQGzwhhtUJ?imageView2/0/interlace/1/q/70%7Cwatermark/2/text/d3d3LmhuYmlhbi5jbg==/font/5b6u6L2v6ZuF6buR/fontsize/600/fill/IzBDMjU2NA==/dissolve/100/gravity/SouthEast/dx/10/dy/10%7Cimageslim" alt=" " style="zoom:50%;">
 
-<p>方法区和堆是所有线程共享的内存区域，而Java栈、本地方法栈和程序计数器是运行在线程私有的内存区域。</p>
+<p>方法区和堆是所有线程共享的内存区域，而 Java栈、本地方法栈 和 程序计数器是运行在线程私有的内存区域。</p>
 <p>再通过另外一张图来观察不同的内存区域抛出不同类型的异常<br><img src="https://images.hnbian.cn/FrIlvCPje3N_VMXTIXkow_gwYUDw?imageView2/0/interlace/1/q/70%7Cwatermark/2/text/d3d3LmhuYmlhbi5jbg==/font/5b6u6L2v6ZuF6buR/fontsize/600/fill/IzBDMjU2NA==/dissolve/100/gravity/SouthEast/dx/10/dy/10%7Cimageslim" alt="内存异常抛出类型 " style="zoom:50%;"></p>
 <h2 id="2-Java堆（Heap）"><a href="#2-Java堆（Heap）" class="headerlink" title="2.Java堆（Heap）"></a>2.Java堆（Heap）</h2><p>对于大多数应用来说，Java堆（Java Heap）是Java虚拟机所管理的内存中<strong><font color="red">最大</font></strong>的一块。Java堆是被所有线程共享的一块内存，在虚拟机启动时创建。此内存区域的唯一目的就是存放对象实例，<font color="red">几乎所有的对象实例都在这里分配内存</font>。</p>
 <p>Java堆是垃圾收集器管理的主要区域，因此有很多时候被称为“GC堆”。如果从内存回收的角度看，由于现在收集器基本都是采用的分代收集算法，所以Java堆中还可以细分为：年轻代和老年代，其中年轻代包括Eden空间、From Survivor空间、To Survivor空间三个部分。</p>
@@ -600,13 +600,21 @@ tenured generation: <span class="token comment" spellcheck="true"># 老年代</s
 
 14624 interned Strings occupying 1375560 bytes.
 </code></pre>
+<p>根据提供的Java堆内存信息，可以得出以下分析：</p>
+<ol>
+<li><strong>堆内存初始化配置：</strong>根据堆内存初始化配置信息，可以看到堆的最小空闲比率（MinHeapFreeRatio）设置为40%，最大空闲比率（MaxHeapFreeRatio）设置为70%，最大堆大小（MaxHeapSize）为482344960字节（460.0MB）。此外，还可以看到年轻代（New Generation）的默认大小（NewSize）为10485760字节（10.0MB），最大大小（MaxNewSize）为160759808字节（153.3MB），老年代（tenured generation）的大小（OldSize）为20971520字节（20.0MB）。</li>
+<li><strong>年轻代内存分布：</strong>根据年轻代区内存分布信息，可以看到伊甸园区（Eden Space）的容量为8454144字节（8.0625MB），已使用3302968字节（3.1MB），剩余6105536字节（5.8MB）。Survivor区的容量为1048576字节（1.0MB），已使用954360字节（0.9MB），剩余94216字节（0.1MB）。</li>
+<li><strong>老年代内存分布：</strong>老年代的容量为20971520字节（20.0MB），已使用13093296字节（12.4MB），剩余7878224字节（7.5MB）。</li>
+<li><strong>字符串池占用：</strong>有14624个字符串池对象，占用1375560字节。</li>
+</ol>
+<p>通过这些信息，可以了解到堆内存的配置和使用情况，包括年轻代和老年代的容量、使用情况，以及字符串池的占用情况。这些信息有助于分析内存使用情况和性能调优。</p>
 <h3 id="2-1-Java对象分配规则"><a href="#2-1-Java对象分配规则" class="headerlink" title="2.1 Java对象分配规则"></a>2.1 Java对象分配规则</h3><ul>
 <li>对象主要分配在新生代的Eden区上</li>
 </ul>
 <pre class=" language-java"><code class="language-java"><span class="token comment" spellcheck="true">/**
  * @Author haonan.bian
  * @Description 测试初始化类分配在Eden区
- * @Date 2020-01-28 20:36
+ * @Date 2019-12-25 20:36
  * //vm optition 参数 -verbose:gc -XX:+PrintGCDetails -XX:+UseSerialGC
  **/</span>
 <span class="token keyword">public</span> <span class="token keyword">class</span> <span class="token class-name">HeapEdenTest</span> <span class="token punctuation">{</span>
@@ -646,7 +654,7 @@ tenured generation: <span class="token comment" spellcheck="true"># 老年代</s
 <pre class=" language-java"><code class="language-java"><span class="token comment" spellcheck="true">/**
  * @Author haonan.bian
  * @Description 测试初始化大对象分配到老年代
- * @Date 2020-01-28 20:55
+ * @Date 2019-12-25 20:55
  * //vm optition 参数 -verbose:gc -XX:+PrintGCDetails -XX:+UseSerialGC -XX:PretenureSizeThreshold=3M
  **/</span>
 <span class="token keyword">public</span> <span class="token keyword">class</span> <span class="token class-name">HeapBigObjectTest</span> <span class="token punctuation">{</span>
@@ -668,10 +676,10 @@ tenured generation: <span class="token comment" spellcheck="true"># 老年代</s
     <span class="token punctuation">}</span>
 <span class="token punctuation">}</span></code></pre>
 <p>如果启动了本地线程分配缓冲，将按线程有限在TLAB上分配</p>
-<h3 id="2-2-GC参数指定垃圾回收"><a href="#2-2-GC参数指定垃圾回收" class="headerlink" title="2.2 GC参数指定垃圾回收"></a>2.2 GC参数指定垃圾回收</h3><p>-Xms20M、-Xmx20M、-Xmn10M 这三个参数限制了Java堆大小为20M,bukekuozhan ,其中 10MB分给新生代，剩下的10MB 分配给老年代，<br>-Xx:SurvivorRatio=8 配置说明新生代中Eden 区与两个Survivor的空间比例是8:1:1</p>
+<h3 id="2-2-GC参数指定垃圾回收"><a href="#2-2-GC参数指定垃圾回收" class="headerlink" title="2.2 GC参数指定垃圾回收"></a>2.2 GC参数指定垃圾回收</h3><p>-Xms20M、-Xmx20M、-Xmn10M 这三个参数限制了Java堆大小为20M，不可扩展，其中 10MB分给新生代，剩下的10MB 分配给老年代，<br>-Xx:SurvivorRatio=8 配置说明新生代中Eden 区与两个Survivor的空间比例是8:1:1</p>
 <h3 id="2-3-年轻代"><a href="#2-3-年轻代" class="headerlink" title="2.3 年轻代"></a>2.3 年轻代</h3><h4 id="2-3-1-Eden"><a href="#2-3-1-Eden" class="headerlink" title="2.3.1 Eden"></a>2.3.1 Eden</h4><p>Eden Space字面意思是伊甸园，对象被创建的时候首先放到这个区域，进行垃圾回收后，不能被回收的对象被放入到空的survivor区域。</p>
-<h4 id="2-3-2-Survivor"><a href="#2-3-2-Survivor" class="headerlink" title="2.3.2 Survivor"></a>2.3.2 Survivor</h4><p>Survivor Space幸存者区，用于保存在eden space内存区域中经过垃圾回收后没有被回收的对象。Survivor有两个，分别为 <strong>To Survivor</strong>、 <strong>From Survivor</strong>，这个两个区域的空间大小是一样的。执行垃圾回收的时候Eden区域不能被回收的对象被放入到空的survivor（也就是To Survivor，同时Eden区域的内存会在垃圾回收的过程中全部释放），另一个survivor（即From Survivor）里不能被回收的对象也会被放入这个survivor（即To Survivor），然后To Survivor 和 From Survivor的标记会互换，始终保证一个survivor是空的。<br>Eden Space和Survivor Space都属于年轻代，年轻代中执行的垃圾回收被称之为Minor GC（因为是对年轻代进行垃圾回收，所以又被称为Young GC），每一次Young GC后留下来的对象age加1。<br><img src="https://images.hnbian.cn/Fui0CpQG_OzQOTzAZok_W0r6sxvH?imageView2/0/interlace/1/q/70%7Cwatermark/2/text/d3d3LmhuYmlhbi5jbg==/font/5b6u6L2v6ZuF6buR/fontsize/600/fill/IzBDMjU2NA==/dissolve/100/gravity/SouthEast/dx/10/dy/10%7Cimageslim" alt="年轻代图示 " style="zoom:50%;"></p>
-<h3 id="2-4-老年代"><a href="#2-4-老年代" class="headerlink" title="2.4 老年代"></a>2.4 老年代</h3><p>Old Gen老年代，用于存放年轻代中经过多次垃圾回收仍然存活的对象，也有可能是年轻代分配不了内存的大对象会直接进入老年代。经过多次垃圾回收都没有被回收的对象，这些对象的年代已经足够老(old)了，就会放入到老年代。</p>
+<h4 id="2-3-2-Survivor"><a href="#2-3-2-Survivor" class="headerlink" title="2.3.2 Survivor"></a>2.3.2 Survivor</h4><p>Survivor Space幸存者区，用于保存在eden space内存区域中经过垃圾回收后没有被回收的对象。Survivor有两个，分别为 <strong>To Survivor</strong>、 <strong>From Survivor</strong>，这个两个区域的空间大小是一样的。执行垃圾回收的时候Eden区域不能被回收的对象被放入到空的survivor（也就是To Survivor，同时Eden区域的内存会在垃圾回收的过程中全部释放），另一个survivor（即From Survivor）里不能被回收的对象也会被放入这个survivor（即To Survivor），然后To Survivor 和 From Survivor的标记会互换，始终保证一个survivor是空的。<br>Eden Space 和 Survivor Space 都属于年轻代，年轻代中执行的垃圾回收被称之为Minor GC（因为是对年轻代进行垃圾回收，所以又被称为Young GC），每一次 Young GC 后留下来的对象age加1。<br><img src="https://images.hnbian.cn/Fui0CpQG_OzQOTzAZok_W0r6sxvH?imageView2/0/interlace/1/q/70%7Cwatermark/2/text/d3d3LmhuYmlhbi5jbg==/font/5b6u6L2v6ZuF6buR/fontsize/600/fill/IzBDMjU2NA==/dissolve/100/gravity/SouthEast/dx/10/dy/10%7Cimageslim" alt="年轻代内存图示 " style="zoom:50%;"></p>
+<h3 id="2-4-老年代"><a href="#2-4-老年代" class="headerlink" title="2.4 老年代"></a>2.4 老年代</h3><p>老年代 （Old Generation Space），用于存放年轻代中经过多次垃圾回收仍然存活的对象，也有可能是年轻代分配不了内存的大对象会直接进入老年代。经过多次垃圾回收都没有被回收的对象，这些对象的年代已经足够老(old)了，就会放入到老年代。</p>
 <p>当老年代被放满的之后，虚拟机会进行垃圾回收，称之为Major GC。由于Major GC除并发GC外均需对整个堆进行扫描和回收，因此又称为Full GC。</p>
 <p>heap区即堆内存，整个堆大小 = 年轻代大小 + 老年代大小。堆内存默认为物理内存的1/64(&lt;1GB)；默认空余堆内存小于40%时，JVM就会增大堆直到-Xmx的最大限制，可以通过MinHeapFreeRatio参数进行调整；默认空余堆内存大于70%时，JVM会减少堆直到-Xms的最小限制，可以通过MaxHeapFreeRatio参数进行调整。</p>
 <h3 id="2-5-GC-模式"><a href="#2-5-GC-模式" class="headerlink" title="2.5 GC 模式"></a>2.5 GC 模式</h3><p>针对HotSpot VM的实现，它里面的GC其实准确分类只有两大种：</p>
@@ -686,7 +694,7 @@ tenured generation: <span class="token comment" spellcheck="true"># 老年代</s
 </ol>
 <h4 id="2-5-1-Fulll-GC"><a href="#2-5-1-Fulll-GC" class="headerlink" title="2.5.1 Fulll GC"></a>2.5.1 Fulll GC</h4><p>又叫”Major GC”，Full GC 收集整个堆，包括young gen、old gen、perm gen（如果存在的话）等所有部分的模式。<br>当准备要触发一次Minor GC时，如果发现统计数据说之前Minor GC的平均晋升大小比目前老年代剩余的空间大，则不会触发Minor GC而是转为触发Full GC（因为HotSpot VM的GC里，除了CMS的concurrent collection之外，其它能收集老年代的GC都会同时收集整个GC堆，包括新生代n，所以不需要事先触发一次单独的Minor GC）；或者，如果有永久代的话，要在永久代分配空间但已经没有足够空间时，也要触发一次full GC；或者System.gc()、heap dump带GC，默认也是触发full GC。</p>
 <ul>
-<li><p>Major GC和Full GC的区别是什么？<br>Major GC通常是跟full GC是等价的，收集整个GC堆。但因为HotSpot VM发展了这么多年，外界对各种名词的解读已经完全混乱了，当有人说“major GC”的时候一定要问清楚他想要指的是上面的full GC还是old GC。</p>
+<li><p>Major GC和Full GC的区别是什么？<br>Major GC通常是跟full GC是等价的，收集整个GC堆。但因为HotSpot VM发展了这么多年，外界对各种名词的解读已经完全混乱了，当有人说 “Major GC”的时候一定要问清楚他想要指的是上面的Full GC还是Old GC。</p>
 </li>
 <li><p>FullGC 触发条件</p>
 <ol>
@@ -714,7 +722,7 @@ tenured generation: <span class="token comment" spellcheck="true"># 老年代</s
 <pre class=" language-java"><code class="language-java"><span class="token comment" spellcheck="true">/**
  * @Author haonan.bian
  * @Description 测试逃逸分析
- * @Date 2020-01-28 21:20
+ * @Date 2019-12-25 21:20
  **/</span>
 <span class="token keyword">public</span> <span class="token keyword">class</span> <span class="token class-name">EscapeTest</span> <span class="token punctuation">{</span>
     <span class="token keyword">public</span> <span class="token keyword">static</span> Object obj<span class="token punctuation">;</span>
@@ -1517,7 +1525,7 @@ code[class*="language-"], pre[class*="language-"] { white-space: pre !important;
             <br>
             
             &nbsp;<i class="fas fa-chart-area"></i>&nbsp;站点总字数:&nbsp;<span
-                class="white-color">812.8k</span>&nbsp;字
+                class="white-color">816.9k</span>&nbsp;字
             
             
             
