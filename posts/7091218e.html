@@ -1016,23 +1016,26 @@ hadoop-common-xxx.jar</code></pre>
             <div class="article-badge left-badge text-color">
                 <i class="fas fa-chevron-left"></i>&nbsp;上一篇</div>
             <div class="card">
-                <a href="/posts/414fb71f.html">
+                <a href="/posts/110afc.html">
                     <div class="card-image">
                         
-                        <img src="http://images.hnbian.cn//FjMkDbSF5MKMXYLw8lUBCytHdYuK" class="responsive-img" alt="Phoenix05 索引介绍">
+                        <img src="http://images.hnbian.cn//FvCsQx4J6qoOzUDNGRqY8NfLx-Ym" class="responsive-img" alt="Phoenix06 视图介绍">
                         
-                        <span class="card-title">Phoenix05 索引介绍</span>
+                        <span class="card-title">Phoenix06 视图介绍</span>
                     </div>
                 </a>
                 <div class="card-content article-content">
                     <div class="summary block-with-text">
                         
-                            1. 介绍在HBase中，只有一个单一的按照字典序排序的 rowKey 索引，当使用 rowKey 来进行数据查询的时候速度较快，但是如果不使用rowKey 来查询的话就会使用 filter 来对全表进行扫描，很大程度上降低了检索性能。而 
+                            1. 用phoenix可以创建视图假如表 t_person创建视图操作
+CREATE VIEW "t_person"  (pk VARCHAR primary key)  default_column_family = ‘FM’
+
+crea
                         
                     </div>
                     <div class="publish-info">
                         <span class="publish-date">
-                            <i class="far fa-clock fa-fw icon-date"></i>2017-03-25
+                            <i class="far fa-clock fa-fw icon-date"></i>2017-03-15
                         </span>
                         <span class="publish-author">
                             
@@ -1068,26 +1071,26 @@ hadoop-common-xxx.jar</code></pre>
                 下一篇&nbsp;<i class="fas fa-chevron-right"></i>
             </div>
             <div class="card">
-                <a href="/posts/110afc.html">
+                <a href="/posts/e84ba623.html">
                     <div class="card-image">
                         
-                        <img src="http://images.hnbian.cn//FvCsQx4J6qoOzUDNGRqY8NfLx-Ym" class="responsive-img" alt="Phoenix06 视图介绍">
+                        <img src="http://images.hnbian.cn//FmOdQb50ylBwocioqAr4ZTTXvEc6" class="responsive-img" alt="Phoenix03 的数据查询">
                         
-                        <span class="card-title">Phoenix06 视图介绍</span>
+                        <span class="card-title">Phoenix03 的数据查询</span>
                     </div>
                 </a>
                 <div class="card-content article-content">
                     <div class="summary block-with-text">
                         
-                            1. 用phoenix可以创建视图假如表 t_person创建视图操作
-CREATE VIEW "t_person"  (pk VARCHAR primary key)  default_column_family = ‘FM’
+                            1. 查看表0: jdbc:phoenix:slave1,slave2,slave3:2181> !tables
 
-crea
+2. 创建表# 创建user表
+create table user(id varchar primary key,accou
                         
                     </div>
                     <div class="publish-info">
                             <span class="publish-date">
-                                <i class="far fa-clock fa-fw icon-date"></i>2017-03-15
+                                <i class="far fa-clock fa-fw icon-date"></i>2017-03-08
                             </span>
                         <span class="publish-author">
                             
