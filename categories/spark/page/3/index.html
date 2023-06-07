@@ -372,29 +372,20 @@
                 </a>
                 
                 
-                <a href="/categories/others/" title="others: 27">
-                    <span class="chip center-align waves-effect waves-light
-                             chip-default "
-                            style="background-color: #FEF9E7;">others
-                        <span class="tag-length">27</span>
-                    </span>
-                </a>
-                
-                
                 <a href="/categories/flink/" title="flink: 20">
                     <span class="chip center-align waves-effect waves-light
                              chip-default "
-                            style="background-color: #F8F9F9;">flink
+                            style="background-color: #FEF9E7;">flink
                         <span class="tag-length">20</span>
                     </span>
                 </a>
                 
                 
-                <a href="/categories/hive/" title="hive: 22">
+                <a href="/categories/others/" title="others: 27">
                     <span class="chip center-align waves-effect waves-light
                              chip-default "
-                            style="background-color: #82E0AA;">hive
-                        <span class="tag-length">22</span>
+                            style="background-color: #F8F9F9;">others
+                        <span class="tag-length">27</span>
                     </span>
                 </a>
                 
@@ -402,8 +393,17 @@
                 <a href="/categories/clickhouse/" title="clickhouse: 37">
                     <span class="chip center-align waves-effect waves-light
                              chip-default "
-                            style="background-color: #D7BDE2;">clickhouse
+                            style="background-color: #82E0AA;">clickhouse
                         <span class="tag-length">37</span>
+                    </span>
+                </a>
+                
+                
+                <a href="/categories/hive/" title="hive: 22">
+                    <span class="chip center-align waves-effect waves-light
+                             chip-default "
+                            style="background-color: #D7BDE2;">hive
+                        <span class="tag-length">22</span>
                     </span>
                 </a>
                 
@@ -417,20 +417,20 @@
                 </a>
                 
                 
-                <a href="/categories/dolphinScheduler/" title="dolphinScheduler: 1">
+                <a href="/categories/ClickHouse/" title="ClickHouse: 2">
                     <span class="chip center-align waves-effect waves-light
                              chip-default "
-                            style="background-color: #85C1E9;">dolphinScheduler
-                        <span class="tag-length">1</span>
+                            style="background-color: #85C1E9;">ClickHouse
+                        <span class="tag-length">2</span>
                     </span>
                 </a>
                 
                 
-                <a href="/categories/ClickHouse/" title="ClickHouse: 2">
+                <a href="/categories/dolphinScheduler/" title="dolphinScheduler: 1">
                     <span class="chip center-align waves-effect waves-light
                              chip-default "
-                            style="background-color: #F8C471;">ClickHouse
-                        <span class="tag-length">2</span>
+                            style="background-color: #F8C471;">dolphinScheduler
+                        <span class="tag-length">1</span>
                     </span>
                 </a>
                 
@@ -440,6 +440,15 @@
                              chip-default "
                             style="background-color: #F9E79F;">greenplum
                         <span class="tag-length">7</span>
+                    </span>
+                </a>
+                
+                
+                <a href="/categories/sqoop/" title="sqoop: 2">
+                    <span class="chip center-align waves-effect waves-light
+                             chip-default "
+                            style="background-color: #D5F5E3;">sqoop
+                        <span class="tag-length">2</span>
                     </span>
                 </a>
                 
@@ -457,15 +466,6 @@
                     <span class="chip center-align waves-effect waves-light
                              chip-default "
                             style="background-color: #FFF;">mapreduce
-                        <span class="tag-length">2</span>
-                    </span>
-                </a>
-                
-                
-                <a href="/categories/sqoop/" title="sqoop: 2">
-                    <span class="chip center-align waves-effect waves-light
-                             chip-default "
-                            style="background-color: #D5F5E3;">sqoop
                         <span class="tag-length">2</span>
                     </span>
                 </a>
@@ -489,20 +489,20 @@
                 </a>
                 
                 
-                <a href="/categories/Java/" title="Java: 1">
-                    <span class="chip center-align waves-effect waves-light
-                             chip-default "
-                            style="background-color: #FFF;">Java
-                        <span class="tag-length">1</span>
-                    </span>
-                </a>
-                
-                
                 <a href="/categories/kafka/" title="kafka: 10">
                     <span class="chip center-align waves-effect waves-light
                              chip-default "
                             style="background-color: #85C1E9;">kafka
                         <span class="tag-length">10</span>
+                    </span>
+                </a>
+                
+                
+                <a href="/categories/Java/" title="Java: 1">
+                    <span class="chip center-align waves-effect waves-light
+                             chip-default "
+                            style="background-color: #FFF;">Java
+                        <span class="tag-length">1</span>
                     </span>
                 </a>
                 
@@ -1145,11 +1145,7 @@ Spark通过Spark-SQL使用hive 语句操作hive，底层运行的还是 spark rd
                     <div class="card-content article-content">
                         <div class="summary block-with-text">
                             
-                                1. SparkSQL 中自定义函数类型用户自定义函数类别分为以下三种：
-
-UDF：输入一行，返回一个结果(一对一)，实现上讲就是普通的Scala函数；
-
-UDTF：输入一行，返回多行(一对多)，在SparkSQL中没有，因为Spark中使
+                                1. SparkSQL 中自定义函数类型在 Spark SQL 中，用户自定义函数（User-Defined Function，简称 UDF）是一种特殊的函数，允许用户定义自己的逻辑来处理数据。这些函数可以直接在 Spark SQL 查询中
                             
                         </div>
                         <div class="publish-info">
@@ -1228,7 +1224,7 @@ UDTF：输入一行，返回多行(一对多)，在SparkSQL中没有，因为Spa
             <br>
             
             &nbsp;<i class="fas fa-chart-area"></i>&nbsp;站点总字数:&nbsp;<span
-                class="white-color">816.9k</span>&nbsp;字
+                class="white-color">818.8k</span>&nbsp;字
             
             
             

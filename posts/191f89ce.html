@@ -5,11 +5,7 @@
 <head><meta name="generator" content="Hexo 3.9.0">
     <meta charset="utf-8">
     <meta name="keywords" content="Spark SQL 2.自定义函数, hnbian">
-    <meta name="description" content="1. SparkSQL 中自定义函数类型用户自定义函数类别分为以下三种：
-
-UDF：输入一行，返回一个结果(一对一)，实现上讲就是普通的Scala函数；
-
-UDTF：输入一行，返回多行(一对多)，在SparkSQL中没有，因为Spark中使">
+    <meta name="description" content="1. SparkSQL 中自定义函数类型在 Spark SQL 中，用户自定义函数（User-Defined Function，简称 UDF）是一种特殊的函数，允许用户定义自己的逻辑来处理数据。这些函数可以直接在 Spark SQL 查询中">
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=no">
     <meta name="renderer" content="webkit|ie-stand|ie-comp">
@@ -447,14 +443,14 @@ UDTF：输入一行，返回多行(一对多)，在SparkSQL中没有，因为Spa
                 
                 <div class="info-break-policy">
                     <i class="far fa-file-word fa-fw"></i>文章字数:&nbsp;&nbsp;
-                    987
+                    2.9k
                 </div>
                 
 
                 
                 <div class="info-break-policy">
                     <i class="far fa-clock fa-fw"></i>阅读时长:&nbsp;&nbsp;
-                    4 分
+                    11 分
                 </div>
                 
 				
@@ -470,18 +466,24 @@ UDTF：输入一行，返回多行(一对多)，在SparkSQL中没有，因为Spa
         <hr class="clearfix">
         <div class="card-content article-card-content">
             <div id="articleContent">
-                <h2 id="1-SparkSQL-中自定义函数类型"><a href="#1-SparkSQL-中自定义函数类型" class="headerlink" title="1. SparkSQL 中自定义函数类型"></a>1. SparkSQL 中自定义函数类型</h2><p>用户自定义函数类别分为以下三种：</p>
+                <h2 id="1-SparkSQL-中自定义函数类型"><a href="#1-SparkSQL-中自定义函数类型" class="headerlink" title="1. SparkSQL 中自定义函数类型"></a>1. SparkSQL 中自定义函数类型</h2><p>在 Spark SQL 中，用户自定义函数（User-Defined Function，简称 UDF）是一种特殊的函数，允许用户定义自己的逻辑来处理数据。这些函数可以直接在 Spark SQL 查询中使用，就像使用内置函数一样。在Spark中，用户自定义函数可以分为以下三种类型：</p>
 <ol>
-<li><p>UDF：输入一行，返回一个结果(一对一)，实现上讲就是普通的Scala函数；</p>
-</li>
-<li><p>UDTF：输入一行，返回多行(一对多)，在SparkSQL中没有，因为Spark中使用flatMap即可实现这个功能</p>
-</li>
-<li><p>UDAF：输入多行，返回一行，这里的A是aggregate，聚合的意思，如果业务复杂，需要自己实现聚合函数</p>
-</li>
+<li>UDF（User-Defined Function）：这是最常见的用户自定义函数类型。UDF接收一行输入，返回一个结果。这种类型的函数在实现上就是普通的Scala函数。例如，你可能有一个UDF，它接收一个字符串，然后返回该字符串的长度。</li>
+<li>UDTF（User-Defined Table-Generating Functions）：这种类型的函数接收一行输入，返回多行（也就是一个表）。在SparkSQL中，这种类型的函数并没有明确的定义，因为Spark中的flatMap函数已经可以实现这个功能。例如，你可能有一个UDTF，它接收一个字符串，然后返回一个包含该字符串中每个字符的表。</li>
+<li>UDAF（User-Defined Aggregate Functions）：这种类型的函数接收多行输入，返回一行结果。这里的”A”代表的是”aggregate”，也就是聚合的意思。如果业务逻辑复杂，可能需要自己实现聚合函数。例如，你可能有一个UDAF，它接收一个包含多个数字的表，然后返回这些数字的平均值。</li>
 </ol>
-<p>实质上讲，例如说UDF会被Spark SQL中的Catalyst封装成为Expression，最终会通过eval方法来计算输入的数据Row（此处的Row和DataFrame中的Row没有任何关系）</p>
-<h2 id="2-UDF-代码示例"><a href="#2-UDF-代码示例" class="headerlink" title="2. UDF 代码示例"></a>2. UDF 代码示例</h2><pre class=" language-scala"><code class="language-scala">
-<span class="token keyword">import</span> java<span class="token punctuation">.</span>util<span class="token punctuation">.</span>regex<span class="token punctuation">.</span><span class="token punctuation">{</span>Matcher<span class="token punctuation">,</span> Pattern<span class="token punctuation">}</span>
+<p>实质上讲，例如说 UDF 会被 Spark SQL 中的 Catalyst 封装成为 Expression，最终会通过 eval 方法来计算输入的数据 Row（此处的Row和 DataFrame 中的 Row 没有任何关系）</p>
+<h2 id="2-UDF-介绍"><a href="#2-UDF-介绍" class="headerlink" title="2. UDF 介绍"></a>2. UDF 介绍</h2><p>Spark SQL 中的用户自定义函数（User-Defined Functions，简称 UDF）是一种特殊类型的函数，允许用户定义自己的逻辑来处理数据。这些函数可以直接在 Spark SQL 查询中使用，就像使用内置函数一样。</p>
+<p>UDF 是一种接收一行输入并返回一个结果的函数。这种类型的函数在实现上就是普通的 Scala 或者 Python 函数。例如，你可能有一个 UDF，它接收一个字符串，然后返回该字符串的长度。</p>
+<p>创建 Spark SQL 的 UDF 通常包含以下步骤：</p>
+<ol>
+<li>定义一个函数：这个函数包含你想要应用到数据上的逻辑。这个函数可以是任何接收适当类型的输入并返回一个结果的函数。</li>
+<li>注册函数：在你可以在 SQL 查询中使用你的 UDF 之前，你需要将其注册到 Spark SQL 的上下文中。你可以通过调用 <code>spark.udf.register</code> 方法来完成这个步骤，其中 <code>spark</code> 是你的 <code>SparkSession</code> 对象，<code>register</code> 方法接收两个参数：你的 UDF 的名称（一个字符串），以及你的函数。</li>
+<li>在 SQL 查询中使用 UDF：一旦你的 UDF 被注册，你就可以在 SQL 查询中像使用其他 SQL 函数一样使用它了。</li>
+</ol>
+<p>使用 UDF 可以让你在处理数据时有更大的灵活性，因为你可以定义自己的数据处理逻辑。这在处理复杂的数据转换或计算时特别有用。</p>
+<h3 id="代码示例"><a href="#代码示例" class="headerlink" title="代码示例"></a>代码示例</h3><p>下面是一个 UDF代码示例，主要功能是读取CSV文件中的数据，然后使用一个用户自定义函数（UDF）对数据进行处理。这个UDF会检查输入的字符串是否全为数字，如果是，则返回输入本身，否则返回”0”。</p>
+<pre class=" language-scala"><code class="language-scala"><span class="token keyword">import</span> java<span class="token punctuation">.</span>util<span class="token punctuation">.</span>regex<span class="token punctuation">.</span><span class="token punctuation">{</span>Matcher<span class="token punctuation">,</span> Pattern<span class="token punctuation">}</span>
 <span class="token keyword">import</span> org<span class="token punctuation">.</span>apache<span class="token punctuation">.</span>spark<span class="token punctuation">.</span>SparkConf
 <span class="token keyword">import</span> org<span class="token punctuation">.</span>apache<span class="token punctuation">.</span>spark<span class="token punctuation">.</span>sql<span class="token punctuation">.</span>api<span class="token punctuation">.</span>java<span class="token punctuation">.</span>UDF1
 <span class="token keyword">import</span> org<span class="token punctuation">.</span>apache<span class="token punctuation">.</span>spark<span class="token punctuation">.</span>sql<span class="token punctuation">.</span>types<span class="token punctuation">.</span>DataTypes
@@ -490,10 +492,14 @@ UDTF：输入一行，返回多行(一对多)，在SparkSQL中没有，因为Spa
 <span class="token keyword">object</span> SparkUDF <span class="token punctuation">{</span>
 
   <span class="token keyword">def</span> main<span class="token punctuation">(</span>args<span class="token operator">:</span> Array<span class="token punctuation">[</span><span class="token builtin">String</span><span class="token punctuation">]</span><span class="token punctuation">)</span><span class="token operator">:</span> <span class="token builtin">Unit</span> <span class="token operator">=</span> <span class="token punctuation">{</span>
+    <span class="token comment" spellcheck="true">// 创建一个SparkConf对象，设置Spark的运行模式和应用名称</span>
     <span class="token keyword">val</span> sparkConf<span class="token operator">:</span> SparkConf <span class="token operator">=</span> <span class="token keyword">new</span> SparkConf<span class="token punctuation">(</span><span class="token punctuation">)</span><span class="token punctuation">.</span>setMaster<span class="token punctuation">(</span><span class="token string">"local[8]"</span><span class="token punctuation">)</span><span class="token punctuation">.</span>setAppName<span class="token punctuation">(</span><span class="token string">"sparkCSV"</span><span class="token punctuation">)</span>
 
+    <span class="token comment" spellcheck="true">// 创建一个SparkSession对象，使用SparkConf对象的配置</span>
     <span class="token keyword">val</span> session<span class="token operator">:</span> SparkSession <span class="token operator">=</span> SparkSession<span class="token punctuation">.</span>builder<span class="token punctuation">(</span><span class="token punctuation">)</span><span class="token punctuation">.</span>config<span class="token punctuation">(</span>sparkConf<span class="token punctuation">)</span><span class="token punctuation">.</span>getOrCreate<span class="token punctuation">(</span><span class="token punctuation">)</span>
+    <span class="token comment" spellcheck="true">// 设置Spark的日志级别为WARN</span>
     session<span class="token punctuation">.</span>sparkContext<span class="token punctuation">.</span>setLogLevel<span class="token punctuation">(</span><span class="token string">"WARN"</span><span class="token punctuation">)</span>
+    <span class="token comment" spellcheck="true">// 读取CSV文件，将其加载为一个DataFrame对象</span>
     <span class="token keyword">val</span> frame<span class="token operator">:</span> DataFrame <span class="token operator">=</span> session
       <span class="token punctuation">.</span>read
       <span class="token punctuation">.</span>format<span class="token punctuation">(</span><span class="token string">"csv"</span><span class="token punctuation">)</span>
@@ -502,31 +508,105 @@ UDTF：输入一行，返回多行(一对多)，在SparkSQL中没有，因为Spa
       <span class="token punctuation">.</span>option<span class="token punctuation">(</span><span class="token string">"multiLine"</span><span class="token punctuation">,</span> <span class="token boolean">true</span><span class="token punctuation">)</span>
       <span class="token punctuation">.</span>load<span class="token punctuation">(</span><span class="token string">"file:///D:\\datas\\datafiles"</span><span class="token punctuation">)</span>
 
+    <span class="token comment" spellcheck="true">// 创建或替换一个临时视图，视图名为"house_sale"</span>
     frame<span class="token punctuation">.</span>createOrReplaceTempView<span class="token punctuation">(</span><span class="token string">"house_sale"</span><span class="token punctuation">)</span>
 
-
-    <span class="token comment" spellcheck="true">// 创建 UDF1 对象并注册成 udf</span>
+    <span class="token comment" spellcheck="true">// 创建一个UDF1对象，用于定义一个用户自定义函数，然后将其注册为udf</span>
     session<span class="token punctuation">.</span>udf<span class="token punctuation">.</span>register<span class="token punctuation">(</span><span class="token string">"house_udf"</span><span class="token punctuation">,</span><span class="token keyword">new</span> UDF1<span class="token punctuation">[</span><span class="token builtin">String</span><span class="token punctuation">,</span><span class="token builtin">String</span><span class="token punctuation">]</span> <span class="token punctuation">{</span>
 
+      <span class="token comment" spellcheck="true">// 定义一个正则表达式模式，用于匹配全数字的字符串</span>
       <span class="token keyword">val</span> pattern<span class="token operator">:</span> Pattern <span class="token operator">=</span> Pattern<span class="token punctuation">.</span>compile<span class="token punctuation">(</span><span class="token string">"^[0-9]*$"</span><span class="token punctuation">)</span>
+      <span class="token comment" spellcheck="true">// 定义UDF1对象的call方法，该方法接收一个字符串输入，返回一个字符串输出</span>
       <span class="token keyword">override</span> <span class="token keyword">def</span> call<span class="token punctuation">(</span>input<span class="token operator">:</span> <span class="token builtin">String</span><span class="token punctuation">)</span><span class="token operator">:</span> <span class="token builtin">String</span> <span class="token operator">=</span> <span class="token punctuation">{</span>
+        <span class="token comment" spellcheck="true">// 使用定义的正则表达式模式对输入进行匹配 </span>
         <span class="token keyword">val</span> matcher<span class="token operator">:</span> Matcher <span class="token operator">=</span> pattern<span class="token punctuation">.</span>matcher<span class="token punctuation">(</span>input<span class="token punctuation">)</span>
+        <span class="token comment" spellcheck="true">// 如果输入匹配全数字的模式，则返回输入本身，否则返回 "0"</span>
         <span class="token keyword">if</span><span class="token punctuation">(</span>matcher<span class="token punctuation">.</span>matches<span class="token punctuation">(</span><span class="token punctuation">)</span><span class="token punctuation">)</span><span class="token punctuation">{</span>
           input
         <span class="token punctuation">}</span><span class="token keyword">else</span><span class="token punctuation">{</span>
-          <span class="token string">"1990"</span>
+          <span class="token string">"0"</span>
         <span class="token punctuation">}</span>
       <span class="token punctuation">}</span>
     <span class="token punctuation">}</span><span class="token punctuation">,</span>DataTypes<span class="token punctuation">.</span>StringType<span class="token punctuation">)</span>
 
+    <span class="token comment" spellcheck="true">// 使用注册的udf对"house_sale"视图进行查询，并显示查询结果的前200行</span>
     session<span class="token punctuation">.</span>sql<span class="token punctuation">(</span><span class="token string">"select house_udf(house_age) from house_sale  limit 200"</span><span class="token punctuation">)</span><span class="token punctuation">.</span>show<span class="token punctuation">(</span><span class="token punctuation">)</span>
+    <span class="token comment" spellcheck="true">// 停止SparkSession</span>
     session<span class="token punctuation">.</span>stop<span class="token punctuation">(</span><span class="token punctuation">)</span>
   <span class="token punctuation">}</span>
-
 <span class="token punctuation">}</span></code></pre>
-<h2 id="3-UDAF-代码示例"><a href="#3-UDAF-代码示例" class="headerlink" title="3.  UDAF 代码示例"></a>3.  UDAF 代码示例</h2><pre class=" language-scala"><code class="language-scala">
-<span class="token keyword">package</span> SparkSQLByScala
-<span class="token keyword">import</span> org<span class="token punctuation">.</span>apache<span class="token punctuation">.</span>spark<span class="token punctuation">.</span>sql<span class="token punctuation">.</span>expressions<span class="token punctuation">.</span><span class="token punctuation">{</span>MutableAggregationBuffer<span class="token punctuation">,</span>UserDefinedAggregateFunction<span class="token punctuation">}</span>
+<h2 id="3-UDTF-介绍"><a href="#3-UDTF-介绍" class="headerlink" title="3. UDTF 介绍"></a>3. UDTF 介绍</h2><h3 id="3-1-UDTF-介绍"><a href="#3-1-UDTF-介绍" class="headerlink" title="3.1 UDTF 介绍"></a>3.1 UDTF 介绍</h3><p>UDTF （User-Defined Table-Generating Functions，简称 ）是用户自定义表生成函数，它可以接收一行输入并返回多行数据。</p>
+<p>在 Spark SQL 中，UDTF 的概念并没有明确的定义，因为 Spark 中的 <code>flatMap</code> 函数已经可以实现这个功能。<code>flatMap</code> 函数接收一个函数作为参数，这个函数应该接收一个输入并返回一个迭代器。<code>flatMap</code> 函数将这个函数应用到数据集中的每个元素，然后将返回的所有迭代器连接成一个新的数据集。</p>
+<p>例如，你可能有一个 UDTF，它接收一个字符串，然后返回一个包含该字符串中每个字符的表。你可以使用 <code>flatMap</code> 函数来实现这个功能。</p>
+<pre class=" language-scala"><code class="language-scala"><span class="token keyword">val</span> words <span class="token operator">=</span> Seq<span class="token punctuation">(</span><span class="token string">"hello"</span><span class="token punctuation">,</span> <span class="token string">"world"</span><span class="token punctuation">)</span><span class="token punctuation">.</span>toDF<span class="token punctuation">(</span><span class="token string">"word"</span><span class="token punctuation">)</span>
+<span class="token keyword">val</span> characters <span class="token operator">=</span> words<span class="token punctuation">.</span>flatMap<span class="token punctuation">(</span>_<span class="token punctuation">.</span>getString<span class="token punctuation">(</span><span class="token number">0</span><span class="token punctuation">)</span><span class="token punctuation">.</span>toSeq<span class="token punctuation">)</span></code></pre>
+<p>在这个例子中，<code>flatMap</code> 函数接收一个函数，这个函数将一个字符串转换为一个字符序列。然后，<code>flatMap</code> 函数将这个函数应用到 “word” 列中的每个值，生成一个新的 DataFrame，其中包含每个单词中的每个字符。</p>
+<h3 id="3-2-代码示例"><a href="#3-2-代码示例" class="headerlink" title="3.2 代码示例"></a>3.2 代码示例</h3><p>下面代码中首先创建了一个简单的 DataFrame，包含一个字符串列。然后，我们定义了一个 UDTF，它将一个字符串转换为一个字符数组。最后，我们使用 <code>flatMap</code> 函数将这个 UDTF 应用到 DataFrame 中的每一行，生成一个新的 DataFrame，其中包含每个单词中的每个字符。</p>
+<pre class=" language-scala"><code class="language-scala"><span class="token keyword">import</span> org<span class="token punctuation">.</span>apache<span class="token punctuation">.</span>spark<span class="token punctuation">.</span>sql<span class="token punctuation">.</span><span class="token punctuation">{</span>Row<span class="token punctuation">,</span> SparkSession<span class="token punctuation">}</span>
+<span class="token keyword">import</span> org<span class="token punctuation">.</span>apache<span class="token punctuation">.</span>spark<span class="token punctuation">.</span>sql<span class="token punctuation">.</span>types<span class="token punctuation">.</span><span class="token punctuation">{</span>ArrayType<span class="token punctuation">,</span> StringType<span class="token punctuation">,</span> StructField<span class="token punctuation">,</span> StructType<span class="token punctuation">}</span>
+
+<span class="token keyword">object</span> UDTFExample <span class="token punctuation">{</span>
+  <span class="token keyword">def</span> main<span class="token punctuation">(</span>args<span class="token operator">:</span> Array<span class="token punctuation">[</span><span class="token builtin">String</span><span class="token punctuation">]</span><span class="token punctuation">)</span><span class="token operator">:</span> <span class="token builtin">Unit</span> <span class="token operator">=</span> <span class="token punctuation">{</span>
+    <span class="token keyword">val</span> spark <span class="token operator">=</span> SparkSession<span class="token punctuation">.</span>builder<span class="token punctuation">(</span><span class="token punctuation">)</span><span class="token punctuation">.</span>appName<span class="token punctuation">(</span><span class="token string">"UDTF Example"</span><span class="token punctuation">)</span><span class="token punctuation">.</span>getOrCreate<span class="token punctuation">(</span><span class="token punctuation">)</span>
+
+    <span class="token comment" spellcheck="true">// 创建一个简单的 DataFrame，包含一个字符串列</span>
+    <span class="token keyword">val</span> wordsDataFrame <span class="token operator">=</span> spark<span class="token punctuation">.</span>sparkContext<span class="token punctuation">.</span>parallelize<span class="token punctuation">(</span>Seq<span class="token punctuation">(</span><span class="token string">"hello"</span><span class="token punctuation">,</span> <span class="token string">"world"</span><span class="token punctuation">)</span><span class="token punctuation">)</span><span class="token punctuation">.</span>toDF<span class="token punctuation">(</span><span class="token string">"word"</span><span class="token punctuation">)</span>
+
+    <span class="token comment" spellcheck="true">// 定义一个 UDTF，将一个字符串转换为一个字符数组</span>
+    <span class="token keyword">val</span> explode <span class="token operator">=</span> <span class="token punctuation">(</span>s<span class="token operator">:</span> <span class="token builtin">String</span><span class="token punctuation">)</span> <span class="token keyword">=></span> s<span class="token punctuation">.</span>toCharArray<span class="token punctuation">.</span>map<span class="token punctuation">(</span>_<span class="token punctuation">.</span>toString<span class="token punctuation">)</span>
+
+    <span class="token comment" spellcheck="true">// 使用 flatMap 函数应用 UDTF</span>
+    <span class="token keyword">val</span> charactersDataFrame <span class="token operator">=</span> wordsDataFrame<span class="token punctuation">.</span>flatMap<span class="token punctuation">(</span>row <span class="token keyword">=></span> explode<span class="token punctuation">(</span>row<span class="token punctuation">.</span>getAs<span class="token punctuation">[</span><span class="token builtin">String</span><span class="token punctuation">]</span><span class="token punctuation">(</span><span class="token string">"word"</span><span class="token punctuation">)</span><span class="token punctuation">)</span><span class="token punctuation">)</span>
+
+    charactersDataFrame<span class="token punctuation">.</span>show<span class="token punctuation">(</span><span class="token punctuation">)</span>
+
+    spark<span class="token punctuation">.</span>stop<span class="token punctuation">(</span><span class="token punctuation">)</span>
+  <span class="token punctuation">}</span>
+<span class="token punctuation">}</span></code></pre>
+<h2 id="4-UDAF-介绍"><a href="#4-UDAF-介绍" class="headerlink" title="4.  UDAF 介绍"></a>4.  UDAF 介绍</h2><h3 id="4-1-UserDefinedAggregateFunction"><a href="#4-1-UserDefinedAggregateFunction" class="headerlink" title="4.1 UserDefinedAggregateFunction"></a>4.1 UserDefinedAggregateFunction</h3><p>在 Spark 编写自定义的 UDAF 时需要继承  <code>UserDefinedAggregateFunction</code> 类，<code>UserDefinedAggregateFunction</code> 是 Spark SQL 中的一个抽象类，用于创建用户自定义的聚合函数（User-Defined Aggregate Functions，简称 UDAF）。UDAF 是一种特殊类型的函数，可以处理多行输入并返回一个聚合的输出结果。</p>
+<p>当你创建一个 UDAF 时，你需要继承 <code>UserDefinedAggregateFunction</code> 类，并实现以下方法：</p>
+<table>
+<thead>
+<tr>
+<th>方法名</th>
+<th>描述</th>
+</tr>
+</thead>
+<tbody><tr>
+<td>inputSchema</td>
+<td>返回一个 <code>StructType</code> 对象，表示输入数据的模式。这个模式应该匹配你的 UDAF 所期望的输入</td>
+</tr>
+<tr>
+<td>bufferSchema</td>
+<td>返回一个 <code>StructType</code> 对象，表示中间缓冲区的模式。<br>在聚合过程中，你的 UDAF 将使用这个模式来存储中间结果。</td>
+</tr>
+<tr>
+<td>dataType</td>
+<td>返回一个 <code>DataType</code> 对象，表示你的 UDAF 的返回类型。</td>
+</tr>
+<tr>
+<td>deterministic</td>
+<td>返回一个布尔值，表示你的 UDAF 是否是确定性的。<br>如果对于相同的输入，你的 UDAF 总是产生相同的输出，那么这个方法应该返回 <code>true</code>。</td>
+</tr>
+<tr>
+<td>initialize</td>
+<td>接收一个 <code>MutableAggregationBuffer</code> 对象，并将其初始化为你的 UDAF 的初始值。<br><code>MutableAggregationBuffer</code> 是一个可变的行对象，可以用来存储中间结果。</td>
+</tr>
+<tr>
+<td>update</td>
+<td>方法接收一个 <code>MutableAggregationBuffer</code> 对象和一个 <code>Row</code> 对象。<code>MutableAggregationBuffer</code> 对象用来存储中间结果，<code>Row</code> 对象表示输入的数据。这个方法应该根据输入的 <code>Row</code> 更新 <code>MutableAggregationBuffer</code>。</td>
+</tr>
+<tr>
+<td>merge</td>
+<td>这个方法接收两个 <code>MutableAggregationBuffer</code> 对象，表示两个中间结果。这个方法应该将这两个中间结果合并。</td>
+</tr>
+<tr>
+<td>evaluate</td>
+<td>这个方法接收一个 <code>Row</code> 对象，表示最终的中间结果。这个方法应该返回你的 UDAF 的最终结果。</td>
+</tr>
+</tbody></table>
+<h3 id="4-2-代码示例"><a href="#4-2-代码示例" class="headerlink" title="4.2 代码示例"></a>4.2 代码示例</h3><p>代码示例如下， 功能为计算输入数据中每个单词的出现次数。</p>
+<pre class=" language-scala"><code class="language-scala"><span class="token keyword">import</span> org<span class="token punctuation">.</span>apache<span class="token punctuation">.</span>spark<span class="token punctuation">.</span>sql<span class="token punctuation">.</span>expressions<span class="token punctuation">.</span><span class="token punctuation">{</span>MutableAggregationBuffer<span class="token punctuation">,</span>UserDefinedAggregateFunction<span class="token punctuation">}</span>
 <span class="token keyword">import</span> org<span class="token punctuation">.</span>apache<span class="token punctuation">.</span>spark<span class="token punctuation">.</span>sql<span class="token punctuation">.</span>types<span class="token punctuation">.</span>_
 <span class="token keyword">import</span> org<span class="token punctuation">.</span>apache<span class="token punctuation">.</span>spark<span class="token punctuation">.</span>sql<span class="token punctuation">.</span><span class="token punctuation">{</span>Row<span class="token punctuation">,</span> SQLContext<span class="token punctuation">}</span>
 <span class="token keyword">import</span> org<span class="token punctuation">.</span>apache<span class="token punctuation">.</span>spark<span class="token punctuation">.</span><span class="token punctuation">{</span>SparkContext<span class="token punctuation">,</span> SparkConf<span class="token punctuation">}</span>
@@ -631,15 +711,13 @@ UDTF：输入一行，返回多行(一对多)，在SparkSQL中没有，因为Spa
     buffer1<span class="token punctuation">(</span><span class="token number">0</span><span class="token punctuation">)</span> <span class="token operator">=</span> buffer1<span class="token punctuation">.</span>getAs<span class="token punctuation">[</span><span class="token builtin">Int</span><span class="token punctuation">]</span><span class="token punctuation">(</span><span class="token number">0</span><span class="token punctuation">)</span> <span class="token operator">+</span> buffer2<span class="token punctuation">.</span>getAs<span class="token punctuation">[</span><span class="token builtin">Int</span><span class="token punctuation">]</span><span class="token punctuation">(</span><span class="token number">0</span><span class="token punctuation">)</span>
   <span class="token punctuation">}</span>
 
-
   <span class="token comment" spellcheck="true">/**
     * 返回UDAF最后的计算结果
     * @param buffer
     * @return
     */</span>
   <span class="token keyword">override</span> <span class="token keyword">def</span> evaluate<span class="token punctuation">(</span>buffer<span class="token operator">:</span> Row<span class="token punctuation">)</span><span class="token operator">:</span> <span class="token builtin">Any</span> <span class="token operator">=</span> buffer<span class="token punctuation">.</span>getAs<span class="token punctuation">[</span><span class="token builtin">Int</span><span class="token punctuation">]</span><span class="token punctuation">(</span><span class="token number">0</span><span class="token punctuation">)</span>
-<span class="token punctuation">}</span>
-</code></pre>
+<span class="token punctuation">}</span></code></pre>
 <script type="text/javascript" src="https://cdn.jsdelivr.net/npm/kity@2.0.4/dist/kity.min.js"></script><script type="text/javascript" src="https://cdn.jsdelivr.net/npm/kityminder-core@1.4.50/dist/kityminder.core.min.js"></script><script defer="true" type="text/javascript" src="https://cdn.jsdelivr.net/npm/hexo-simple-mindmap@0.2.0/dist/mindmap.min.js"></script><link rel="stylesheet" type="text/css" href="https://cdn.jsdelivr.net/npm/hexo-simple-mindmap@0.2.0/dist/mindmap.min.css">
             </div>
             <hr/>
@@ -1378,7 +1456,7 @@ code[class*="language-"], pre[class*="language-"] { white-space: pre !important;
             <br>
             
             &nbsp;<i class="fas fa-chart-area"></i>&nbsp;站点总字数:&nbsp;<span
-                class="white-color">816.9k</span>&nbsp;字
+                class="white-color">818.8k</span>&nbsp;字
             
             
             
