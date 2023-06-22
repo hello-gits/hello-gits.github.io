@@ -465,9 +465,9 @@
                 <h2 id="1-共享变量"><a href="#1-共享变量" class="headerlink" title="1. 共享变量"></a>1. 共享变量</h2><p>通常，当传递给Spark操作（如map或reduce）的函数在远程集群节点上执行时，它可以在函数中使用的所有变量的单独副本上工作。这些变量被复制到每个机器，并且远程机器上的变量的更新不会传播回驱动程序。在任务之间支持一般的，读写共享的变量是低效的。然而，Spark 为两种常用的使用模式提供了两种有限类型的<em>共享变量</em>：广播变量和累加器。</p>
 <h3 id="2-广播变量-broadcast"><a href="#2-广播变量-broadcast" class="headerlink" title="2. 广播变量 broadcast"></a>2. 广播变量 broadcast</h3><p>广播变量允许程序员在每台机器上保留只读变量，而不是使用任务运送它的副本。例如，可以使用它们以有效的方式为每个节点提供大型输入数据集的副本。Spark还尝试使用高效的广播算法分发广播变量，以降低通信成本。</p>
 <p>Spark动作通过一组分阶段执行，由分散的“随机播放”操作隔开。Spark自动广播每个阶段任务所需的通用数据。以这种方式广播的数据以序列化形式进行缓存，并在运行每个任务之前进行反序列化。这意味着，显式创建广播变量仅在跨多个阶段的任务需要相同数据或者以反序列化格式缓存数据很重要时才有用。</p>
-<p>广播变量通过调用从变量创建SparkContext.broadcast(v)。广播变量是一个包装器v，它的值可以通过调用该value 方法来访问。下面的代码显示如下</p>
+<p>广播变量通过调用从变量创建SparkContext.broadcast(v)。广播变量是一个包装器 v，它的值可以通过调用该value 方法来访问。下面的代码显示如下</p>
 <ul>
-<li>BT形式的广播变量 </li>
+<li>BT 形式的广播变量 </li>
 <li>使用场景 : lookup表， mapside join </li>
 <li>注意点 : 只读，存于每台worker的cache，不随task发送 </li>
 <li>使用方式 : val     broadcastVar = sc.broadcast(Array(1, 2, 3))   broadcastVar.value </li>
@@ -489,9 +489,9 @@ scala> rdd.map(e=>{println(bc.value.name);e}).collect
 res3: Array[Int] = Array(1, 2, 3, 4, 5)
 
 scala> bc.value.name
-res4: String = tom</code></pre>
+res4: String = tom </code></pre>
 <h2 id="2-累加器"><a href="#2-累加器" class="headerlink" title="2. 累加器"></a>2. 累加器</h2><p>• 只增 </p>
-<p>• 类似与MapReduce中的counter </p>
+<p>• 类似于  MapReduce  中的 counter </p>
 <p>• 用法 : </p>
 <pre class=" language-shell"><code class="language-shell">  val accum = sc.accumulator(0) 
   sc.parallelize(Array(1, 2, 3, 4)).foreach(x => accum += x) 
@@ -588,7 +588,7 @@ res4: String = tom</code></pre>
     println<span class="token punctuation">(</span><span class="token string">"累加器的值为："</span><span class="token operator">+</span>accumulator<span class="token punctuation">.</span>value<span class="token punctuation">)</span>
   <span class="token punctuation">}</span>
 <span class="token punctuation">}</span></code></pre>
-<h2 id="2-2-Spark-Streaming-广播变量-累加器"><a href="#2-2-Spark-Streaming-广播变量-累加器" class="headerlink" title="2.2 Spark-Streaming+广播变量+累加器"></a>2.2 Spark-Streaming+广播变量+累加器</h2><pre class=" language-scala"><code class="language-scala"><span class="token keyword">package</span> com<span class="token punctuation">.</span>Streaming
+<h2 id="3-Spark-Streaming-广播变量-累加器"><a href="#3-Spark-Streaming-广播变量-累加器" class="headerlink" title="3. Spark-Streaming+广播变量+累加器"></a>3. Spark-Streaming+广播变量+累加器</h2><pre class=" language-scala"><code class="language-scala"><span class="token keyword">package</span> com<span class="token punctuation">.</span>Streaming
 
 <span class="token keyword">import</span> java<span class="token punctuation">.</span>util
 
