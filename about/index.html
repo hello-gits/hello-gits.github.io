@@ -338,7 +338,7 @@
                     <div class="post-statis col l4 hide-on-med-and-down" data-aos="zoom-in-right">
                         
 <div class="statis">
-    <span class="count"><a href="/">272</a></span>
+    <span class="count"><a href="/">273</a></span>
     <span class="name">文章</span>
 </div>
 
@@ -368,7 +368,7 @@
                                 <div class="post-statis hide-on-large-only" data-aos="zoom-in-right">
                                     
 <div class="statis">
-    <span class="count"><a href="/">272</a></span>
+    <span class="count"><a href="/">273</a></span>
     <span class="name">文章</span>
 </div>
 
@@ -510,7 +510,7 @@
                 name: '文章篇数',
                 type: 'line',
                 color: ['#6772e5'],
-                data: [1,1,0,0,0,0,0,0,4,0,0,0,1],
+                data: [1,1,0,0,0,0,0,0,4,0,0,0,2],
                 markPoint: {
                     symbolSize: 45,
                     color: ['#fa755a','#3ecf8e','#82d3f4'],
@@ -552,7 +552,7 @@
                 type: 'pie',
                 radius: '50%',
                 color: ['#6772e5', '#ff9e0f', '#fa755a', '#3ecf8e', '#82d3f4', '#ab47bc', '#525f7f', '#f51c47', '#26A69A'],
-                data: [{"name":"hbase","value":13},{"name":"dolphinScheduler","value":1},{"name":"flink","value":20},{"name":"clickhouse","value":37},{"name":"ClickHouse","value":2},{"name":"others","value":27},{"name":"ambari","value":9},{"name":"greenplum","value":7},{"name":"mapreduce","value":2},{"name":"hadoop","value":2},{"name":"sqoop","value":2},{"name":"flume","value":1},{"name":"hdfs","value":8},{"name":"kafka","value":11},{"name":"java","value":30},{"name":"Java","value":1},{"name":"zookeeper","value":2},{"name":"hive","value":22},{"name":"phoenix","value":11},{"name":"scala","value":14},{"name":"spark","value":50},{"name":"yarn","value":0}],
+                data: [{"name":"hbase","value":13},{"name":"java","value":30},{"name":"yarn","value":0},{"name":"spark","value":50},{"name":"ambari","value":15},{"name":"others","value":22},{"name":"clickhouse","value":37},{"name":"ClickHouse","value":2},{"name":"dolphinScheduler","value":1},{"name":"flink","value":20},{"name":"greenplum","value":7},{"name":"hadoop","value":2},{"name":"sqoop","value":2},{"name":"mapreduce","value":2},{"name":"flume","value":1},{"name":"hdfs","value":8},{"name":"hive","value":22},{"name":"Java","value":1},{"name":"kafka","value":11},{"name":"zookeeper","value":2},{"name":"phoenix","value":11},{"name":"scala","value":14}],
                 itemStyle: {
                     emphasis: {
                         shadowBlur: 10,
@@ -576,7 +576,7 @@
         xAxis: [
             {
                 type: 'category',
-                data: ["spark","olap","clickhouse","exception","java","hbase","hive","flink","spark ml","scala"]
+                data: ["spark","olap","exception","clickhouse","java","hbase","hive","flink","spark ml","scala"]
             }
         ],
         yAxis: [
@@ -589,7 +589,7 @@
                 type: 'bar',
                 color: ['#82d3f4'],
                 barWidth : 18,
-                data: [51,41,37,36,30,25,24,21,16,14],
+                data: [51,41,37,37,30,25,24,21,16,14],
                 markPoint: {
                     symbolSize: 45,
                     data: [{
@@ -718,32 +718,32 @@
             
             
             
-            <a href="/tags/dolphinScheduler/">
-                <span class="chip center-align waves-effect waves-light chip-default">dolphinScheduler</span>
+            <a href="/tags/java/">
+                <span class="chip center-align waves-effect waves-light chip-default">java</span>
             </a>
             
             
             
-            <a href="/tags/flink/">
-                <span class="chip center-align waves-effect waves-light chip-default">flink</span>
+            <a href="/tags/yarn/">
+                <span class="chip center-align waves-effect waves-light chip-default">yarn</span>
             </a>
             
             
             
-            <a href="/tags/clickhouse/">
-                <span class="chip center-align waves-effect waves-light chip-default">clickhouse</span>
+            <a href="/tags/hadoop/">
+                <span class="chip center-align waves-effect waves-light chip-default">hadoop</span>
             </a>
             
             
             
-            <a href="/tags/olap/">
-                <span class="chip center-align waves-effect waves-light chip-default">olap</span>
+            <a href="/tags/spark/">
+                <span class="chip center-align waves-effect waves-light chip-default">spark</span>
             </a>
             
             
             
-            <a href="/tags/ClickHouse/">
-                <span class="chip center-align waves-effect waves-light chip-default">ClickHouse</span>
+            <a href="/tags/ranger/">
+                <span class="chip center-align waves-effect waves-light chip-default">ranger</span>
             </a>
             
             
@@ -756,12 +756,6 @@
             
             <a href="/tags/hdfs/">
                 <span class="chip center-align waves-effect waves-light chip-default">hdfs</span>
-            </a>
-            
-            
-            
-            <a href="/tags/ranger/">
-                <span class="chip center-align waves-effect waves-light chip-default">ranger</span>
             </a>
             
             
@@ -784,8 +778,8 @@
             
             
             
-            <a href="/tags/spark/">
-                <span class="chip center-align waves-effect waves-light chip-default">spark</span>
+            <a href="/tags/flink/">
+                <span class="chip center-align waves-effect waves-light chip-default">flink</span>
             </a>
             
             
@@ -802,20 +796,32 @@
             
             
             
+            <a href="/tags/clickhouse/">
+                <span class="chip center-align waves-effect waves-light chip-default">clickhouse</span>
+            </a>
+            
+            
+            
+            <a href="/tags/olap/">
+                <span class="chip center-align waves-effect waves-light chip-default">olap</span>
+            </a>
+            
+            
+            
+            <a href="/tags/ClickHouse/">
+                <span class="chip center-align waves-effect waves-light chip-default">ClickHouse</span>
+            </a>
+            
+            
+            
+            <a href="/tags/dolphinScheduler/">
+                <span class="chip center-align waves-effect waves-light chip-default">dolphinScheduler</span>
+            </a>
+            
+            
+            
             <a href="/tags/greenplum/">
                 <span class="chip center-align waves-effect waves-light chip-default">greenplum</span>
-            </a>
-            
-            
-            
-            <a href="/tags/mapreduce/">
-                <span class="chip center-align waves-effect waves-light chip-default">mapreduce</span>
-            </a>
-            
-            
-            
-            <a href="/tags/hadoop/">
-                <span class="chip center-align waves-effect waves-light chip-default">hadoop</span>
             </a>
             
             
@@ -826,14 +832,20 @@
             
             
             
-            <a href="/tags/avro/">
-                <span class="chip center-align waves-effect waves-light chip-default">avro</span>
+            <a href="/tags/mapreduce/">
+                <span class="chip center-align waves-effect waves-light chip-default">mapreduce</span>
             </a>
             
             
             
-            <a href="/tags/java/">
-                <span class="chip center-align waves-effect waves-light chip-default">java</span>
+            <a href="/tags/spark-sql/">
+                <span class="chip center-align waves-effect waves-light chip-default">spark sql</span>
+            </a>
+            
+            
+            
+            <a href="/tags/azkaban/">
+                <span class="chip center-align waves-effect waves-light chip-default">azkaban</span>
             </a>
             
             
@@ -844,8 +856,8 @@
             
             
             
-            <a href="/tags/jvm/">
-                <span class="chip center-align waves-effect waves-light chip-default">jvm</span>
+            <a href="/tags/Java/">
+                <span class="chip center-align waves-effect waves-light chip-default">Java</span>
             </a>
             
             
@@ -856,14 +868,32 @@
             
             
             
-            <a href="/tags/Java/">
-                <span class="chip center-align waves-effect waves-light chip-default">Java</span>
+            <a href="/tags/jvm/">
+                <span class="chip center-align waves-effect waves-light chip-default">jvm</span>
+            </a>
+            
+            
+            
+            <a href="/tags/avro/">
+                <span class="chip center-align waves-effect waves-light chip-default">avro</span>
             </a>
             
             
             
             <a href="/tags/storm/">
                 <span class="chip center-align waves-effect waves-light chip-default">storm</span>
+            </a>
+            
+            
+            
+            <a href="/tags/cloudstack/">
+                <span class="chip center-align waves-effect waves-light chip-default">cloudstack</span>
+            </a>
+            
+            
+            
+            <a href="/tags/hexo/">
+                <span class="chip center-align waves-effect waves-light chip-default">hexo</span>
             </a>
             
             
@@ -880,26 +910,8 @@
             
             
             
-            <a href="/tags/hexo/">
-                <span class="chip center-align waves-effect waves-light chip-default">hexo</span>
-            </a>
-            
-            
-            
-            <a href="/tags/cloudstack/">
-                <span class="chip center-align waves-effect waves-light chip-default">cloudstack</span>
-            </a>
-            
-            
-            
             <a href="/tags/zookeeper/">
                 <span class="chip center-align waves-effect waves-light chip-default">zookeeper</span>
-            </a>
-            
-            
-            
-            <a href="/tags/azkaban/">
-                <span class="chip center-align waves-effect waves-light chip-default">azkaban</span>
             </a>
             
             
@@ -940,20 +952,8 @@
             
             
             
-            <a href="/tags/spark-sql/">
-                <span class="chip center-align waves-effect waves-light chip-default">spark sql</span>
-            </a>
-            
-            
-            
             <a href="/tags/spark-ml/">
                 <span class="chip center-align waves-effect waves-light chip-default">spark ml</span>
-            </a>
-            
-            
-            
-            <a href="/tags/yarn/">
-                <span class="chip center-align waves-effect waves-light chip-default">yarn</span>
             </a>
             
             
@@ -983,7 +983,7 @@
             <br>
             
             &nbsp;<i class="fas fa-chart-area"></i>&nbsp;站点总字数:&nbsp;<span
-                class="white-color">821.8k</span>&nbsp;字
+                class="white-color">824k</span>&nbsp;字
             
             
             

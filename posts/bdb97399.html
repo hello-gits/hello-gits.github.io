@@ -809,7 +809,7 @@ create<span class="token string">'copy9'</span>,<span class="token punctuation">
  hbase org.apache.hadoop.hbase.mapreduce.Import copy9 /user/root/copytable/copy3
 2019-07-16 16:45:38 - 2019-07-16 16:55:23  10'
 </code></pre>
-<h2 id="snapshot（快照）"><a href="#snapshot（快照）" class="headerlink" title="snapshot（快照）"></a>snapshot（快照）</h2><p>HBase 中的 Snapshot 是一种用于备份和恢复表数据的轻量级方法。快照能够在不影响线上服务的情况下捕捉表的某个时刻状态。快照不复制数据，而是记录 HBase 表在某个时间点的元数据和数据引用。由于只存储元数据和引用，快照操作非常快速，且占用的存储空间很小。</p>
+<h2 id="3-snapshot（快照）"><a href="#3-snapshot（快照）" class="headerlink" title="3. snapshot（快照）"></a>3. snapshot（快照）</h2><p>HBase 中的 Snapshot 是一种用于备份和恢复表数据的轻量级方法。快照能够在不影响线上服务的情况下捕捉表的某个时刻状态。快照不复制数据，而是记录 HBase 表在某个时间点的元数据和数据引用。由于只存储元数据和引用，快照操作非常快速，且占用的存储空间很小。</p>
 <pre class=" language-bash"><code class="language-bash"><span class="token comment" spellcheck="true"># 1. 新建快找</span>
 snapshot <span class="token string">'copy8'</span>, <span class="token string">'snapshot_copy8'</span>
 
@@ -897,7 +897,7 @@ restore_snapshot <span class="token string">'snapshot_copy8'</span>
   hbase snapshot <span class="token function">export</span> \
     --snapshot MySnapshot --copy-from hdfs://srv2:8082/hbase \
     --copy-to hdfs://node1:50070/hbase</code></pre>
-<h2 id="distcp"><a href="#distcp" class="headerlink" title="distcp"></a>distcp</h2><p>HBase 使用 DistCp (分布式拷贝) 工具进行数据迁移的操作步骤如下：</p>
+<h2 id="4-distcp"><a href="#4-distcp" class="headerlink" title="4. distcp"></a>4. distcp</h2><p>HBase 使用 DistCp (分布式拷贝) 工具进行数据迁移的操作步骤如下：</p>
 <ol>
 <li><p>停止 HBase： 在进行数据迁移之前，请确保 HBase 服务已经停止。这是为了确保数据迁移期间不会有新的数据写入。</p>
 </li>
@@ -1649,7 +1649,7 @@ code[class*="language-"], pre[class*="language-"] { white-space: pre !important;
             <br>
             
             &nbsp;<i class="fas fa-chart-area"></i>&nbsp;站点总字数:&nbsp;<span
-                class="white-color">821.8k</span>&nbsp;字
+                class="white-color">824k</span>&nbsp;字
             
             
             
