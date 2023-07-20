@@ -368,11 +368,11 @@
     
       <category term="exception" scheme="https://www.hnbian.cn/tags/exception/"/>
     
+      <category term="ambari" scheme="https://www.hnbian.cn/tags/ambari/"/>
+    
       <category term="spark" scheme="https://www.hnbian.cn/tags/spark/"/>
     
       <category term="hive" scheme="https://www.hnbian.cn/tags/hive/"/>
-    
-      <category term="ambari" scheme="https://www.hnbian.cn/tags/ambari/"/>
     
   </entry>
   
@@ -426,9 +426,9 @@
     
       <category term="exception" scheme="https://www.hnbian.cn/tags/exception/"/>
     
-      <category term="clickhouse" scheme="https://www.hnbian.cn/tags/clickhouse/"/>
-    
       <category term="olap" scheme="https://www.hnbian.cn/tags/olap/"/>
+    
+      <category term="clickhouse" scheme="https://www.hnbian.cn/tags/clickhouse/"/>
     
   </entry>
   
@@ -454,9 +454,9 @@
       <category term="clickhouse" scheme="https://www.hnbian.cn/categories/clickhouse/"/>
     
     
-      <category term="clickhouse" scheme="https://www.hnbian.cn/tags/clickhouse/"/>
-    
       <category term="olap" scheme="https://www.hnbian.cn/tags/olap/"/>
+    
+      <category term="clickhouse" scheme="https://www.hnbian.cn/tags/clickhouse/"/>
     
   </entry>
   
@@ -510,9 +510,9 @@
     
       <category term="exception" scheme="https://www.hnbian.cn/tags/exception/"/>
     
-      <category term="clickhouse" scheme="https://www.hnbian.cn/tags/clickhouse/"/>
-    
       <category term="olap" scheme="https://www.hnbian.cn/tags/olap/"/>
+    
+      <category term="clickhouse" scheme="https://www.hnbian.cn/tags/clickhouse/"/>
     
   </entry>
   
@@ -538,9 +538,9 @@
       <category term="hdfs" scheme="https://www.hnbian.cn/categories/hdfs/"/>
     
     
-      <category term="hadoop" scheme="https://www.hnbian.cn/tags/hadoop/"/>
-    
       <category term="hdfs" scheme="https://www.hnbian.cn/tags/hdfs/"/>
+    
+      <category term="hadoop" scheme="https://www.hnbian.cn/tags/hadoop/"/>
     
   </entry>
   
