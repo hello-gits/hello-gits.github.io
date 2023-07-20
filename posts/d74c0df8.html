@@ -5,8 +5,10 @@
 <head><meta name="generator" content="Hexo 3.9.0">
     <meta charset="utf-8">
     <meta name="keywords" content="spark-sql Required-field-&#39;filesAdded&#39;-is-unset, hnbian">
-    <meta name="description" content="1. 背景使用sparkSQL计算数据向一个已经存在数据的分区中写数据报错使用版本Spark2:2.3.2Hive:3.1.0错误信息如下：
-org.apache.spark.sql.AnalysisException: org.apach">
+    <meta name="description" content="1. 背景使用sparkSQL计算数据向一个已经存在数据的分区中写数据报错
+使用版本：  Spark2 2.3.2  Hive 3.1.0
+错误信息如下：
+org.apache.spark.sql.AnalysisException: or">
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=no">
     <meta name="renderer" content="webkit|ie-stand|ie-comp">
@@ -452,7 +454,7 @@ org.apache.spark.sql.AnalysisException: org.apach">
                 
                 <div class="info-break-policy">
                     <i class="far fa-file-word fa-fw"></i>文章字数:&nbsp;&nbsp;
-                    575
+                    620
                 </div>
                 
 
@@ -475,7 +477,9 @@ org.apache.spark.sql.AnalysisException: org.apach">
         <hr class="clearfix">
         <div class="card-content article-card-content">
             <div id="articleContent">
-                <h2 id="1-背景"><a href="#1-背景" class="headerlink" title="1. 背景"></a>1. 背景</h2><p>使用sparkSQL计算数据向一个已经存在数据的分区中写数据报错<br>使用版本<br>Spark2:2.3.2<br>Hive:3.1.0<br>错误信息如下：</p>
+                <h2 id="1-背景"><a href="#1-背景" class="headerlink" title="1. 背景"></a>1. 背景</h2><p>使用sparkSQL计算数据向一个已经存在数据的分区中写数据报错</p>
+<p>使用版本：<br>  Spark2 2.3.2<br>  Hive 3.1.0</p>
+<p>错误信息如下：</p>
 <pre class=" language-scala"><code class="language-scala">org<span class="token punctuation">.</span>apache<span class="token punctuation">.</span>spark<span class="token punctuation">.</span>sql<span class="token punctuation">.</span>AnalysisException<span class="token operator">:</span> org<span class="token punctuation">.</span>apache<span class="token punctuation">.</span>hadoop<span class="token punctuation">.</span>hive<span class="token punctuation">.</span>ql<span class="token punctuation">.</span>metadata<span class="token punctuation">.</span>HiveException<span class="token operator">:</span> org<span class="token punctuation">.</span>apache<span class="token punctuation">.</span>hadoop<span class="token punctuation">.</span>hive<span class="token punctuation">.</span>ql<span class="token punctuation">.</span>metadata<span class="token punctuation">.</span>HiveException<span class="token operator">:</span> org<span class="token punctuation">.</span>apache<span class="token punctuation">.</span>thrift<span class="token punctuation">.</span>TApplicationException<span class="token operator">:</span> Required field <span class="token string">'filesAdded'</span> is unset<span class="token operator">!</span> Struct<span class="token operator">:</span>InsertEventRequestData<span class="token punctuation">(</span>filesAdded<span class="token operator">:</span><span class="token keyword">null</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
     at org<span class="token punctuation">.</span>apache<span class="token punctuation">.</span>spark<span class="token punctuation">.</span>sql<span class="token punctuation">.</span>hive<span class="token punctuation">.</span>HiveExternalCatalog<span class="token punctuation">.</span>withClient<span class="token punctuation">(</span>HiveExternalCatalog<span class="token punctuation">.</span>scala<span class="token operator">:</span><span class="token number">106</span><span class="token punctuation">)</span>
     at org<span class="token punctuation">.</span>apache<span class="token punctuation">.</span>spark<span class="token punctuation">.</span>sql<span class="token punctuation">.</span>hive<span class="token punctuation">.</span>HiveExternalCatalog<span class="token punctuation">.</span>loadDynamicPartitions<span class="token punctuation">(</span>HiveExternalCatalog<span class="token punctuation">.</span>scala<span class="token operator">:</span><span class="token number">871</span><span class="token punctuation">)</span>
@@ -511,8 +515,13 @@ Caused by<span class="token operator">:</span> org<span class="token punctuation
     at org<span class="token punctuation">.</span>apache<span class="token punctuation">.</span>hadoop<span class="token punctuation">.</span>hive<span class="token punctuation">.</span>ql<span class="token punctuation">.</span>metadata<span class="token punctuation">.</span>Hive<span class="token punctuation">.</span>fireInsertEvent<span class="token punctuation">(</span>Hive<span class="token punctuation">.</span>java<span class="token operator">:</span><span class="token number">1947</span><span class="token punctuation">)</span>
     <span class="token punctuation">.</span><span class="token punctuation">.</span><span class="token punctuation">.</span> <span class="token number">38</span> more
 </code></pre>
-<h2 id="2-原因分析"><a href="#2-原因分析" class="headerlink" title="2. 原因分析"></a>2. 原因分析</h2><p>这个错误通常是由于Spark SQL中的查询操作无法正确连接到Hive Metastore，导致在执行INSERT INTO语句时出现异常。这可能是因为您的Hive版本与Spark SQL不兼容，或者Hive Metastore配置不正确。</p>
-<h2 id="3-解决办法"><a href="#3-解决办法" class="headerlink" title="3. 解决办法"></a>3. 解决办法</h2><p>检查Hive Metastore的配置是否正确。<br>确保在Spark SQL配置文件中指定了正确的Hive Metastore URI，并且具有执行插入操作所需的权限<br>修改配置以后，重启Hive服务和Spark应用程序，以确保所有配置更改和依赖项更新都已生效。</p>
+<h2 id="2-解决问题"><a href="#2-解决问题" class="headerlink" title="2. 解决问题"></a>2. 解决问题</h2><p>这是hive的一个bug ， 可以修改 hive-site.xml 配置文件中的 <code>hive.metastore.dml.events</code> 为 <code>false</code> 来解决此问题。</p>
+<p>如果修改配置没有解决还可能是下面的原因</p>
+<p>由于Spark SQL中的查询操作无法正确连接到Hive Metastore，导致在执行INSERT INTO语句时出现异常。这可能是因为您的Hive版本与Spark SQL不兼容，或者Hive Metastore配置不正确。</p>
+<ul>
+<li>解决办法： </li>
+</ul>
+<p>检查 Hive Metastore 的配置是否正确。<br>确保在 Spark SQL 配置文件中指定了正确的 Hive Metastore URI，并且具有执行插入操作所需的权限<br>修改配置以后，重启Hive服务和Spark应用程序，以确保所有配置更改和依赖项更新都已生效。</p>
 <script type="text/javascript" src="https://cdn.jsdelivr.net/npm/kity@2.0.4/dist/kity.min.js"></script><script type="text/javascript" src="https://cdn.jsdelivr.net/npm/kityminder-core@1.4.50/dist/kityminder.core.min.js"></script><script defer="true" type="text/javascript" src="https://cdn.jsdelivr.net/npm/hexo-simple-mindmap@0.2.0/dist/mindmap.min.js"></script><link rel="stylesheet" type="text/css" href="https://cdn.jsdelivr.net/npm/hexo-simple-mindmap@0.2.0/dist/mindmap.min.css">
             </div>
             <hr/>
@@ -1262,7 +1271,7 @@ code[class*="language-"], pre[class*="language-"] { white-space: pre !important;
             <br>
             
             &nbsp;<i class="fas fa-chart-area"></i>&nbsp;站点总字数:&nbsp;<span
-                class="white-color">824k</span>&nbsp;字
+                class="white-color">824.1k</span>&nbsp;字
             
             
             
