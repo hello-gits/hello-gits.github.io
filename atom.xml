@@ -6,7 +6,7 @@
   <link href="/atom.xml" rel="self"/>
   
   <link href="https://www.hnbian.cn/"/>
-  <updated>2023-07-19T15:52:09.087Z</updated>
+  <updated>2023-08-12T15:36:33.121Z</updated>
   <id>https://www.hnbian.cn/</id>
   
   <author>
@@ -15,6 +15,34 @@
   </author>
   
   <generator uri="https://hexo.io/">Hexo</generator>
+  
+  <entry>
+    <title>Spark 操作ES报错 Failed to find data source</title>
+    <link href="https://www.hnbian.cn/posts/6cbf7445.html"/>
+    <id>https://www.hnbian.cn/posts/6cbf7445.html</id>
+    <published>2023-08-10T09:58:48.000Z</published>
+    <updated>2023-08-12T15:36:33.121Z</updated>
+    
+    <content type="html"><![CDATA[<h2 id="1-异常描述"><a href="#1-异常描述" class="headerlink" title="1. 异常描述"></a>1. 异常描述</h2><p>将服务部署到一个新的服务器上抛出了一个关于 ES的 ClassNotFoundException 异常</p><pre class=" language-bash"><code class="language-bash">java.lang.ClassNotFoundException: Failed to <span class="token function">find</span> data source: es. Please <span class="token function">find</span> packages at http://spark.apache.org/third-party-projects.html    at org.apache.spark.sql.execution.datasources.DataSource$.lookupDataSource<span class="token punctuation">(</span>DataSource.scala:639<span class="token punctuation">)</span>    at org.apache.spark.sql.DataFrameReader.load<span class="token punctuation">(</span>DataFrameReader.scala:190<span class="token punctuation">)</span>    at org.apache.spark.sql.DataFrameReader.load<span class="token punctuation">(</span>DataFrameReader.scala:174<span class="token punctuation">)</span>    at com.surfilter.task.archival.service.LoadData.loadAbnormalUrlData<span class="token punctuation">(</span>LoadData.scala:21<span class="token punctuation">)</span>    at com.surfilter.task.archival.ArchivalServlet$.main<span class="token punctuation">(</span>ArchivalServlet.scala:16<span class="token punctuation">)</span>    at com.surfilter.task.archival.ArchivalServlet.main<span class="token punctuation">(</span>ArchivalServlet.scala<span class="token punctuation">)</span>    at sun.reflect.NativeMethodAccessorImpl.invoke0<span class="token punctuation">(</span>Native Method<span class="token punctuation">)</span>    at sun.reflect.NativeMethodAccessorImpl.invoke<span class="token punctuation">(</span>NativeMethodAccessorImpl.java:62<span class="token punctuation">)</span>    at sun.reflect.DelegatingMethodAccessorImpl.invoke<span class="token punctuation">(</span>DelegatingMethodAccessorImpl.java:43<span class="token punctuation">)</span>    at java.lang.reflect.Method.invoke<span class="token punctuation">(</span>Method.java:498<span class="token punctuation">)</span>    at org.apache.spark.deploy.JavaMainApplication.start<span class="token punctuation">(</span>SparkApplication.scala:52<span class="token punctuation">)</span>    at org.apache.spark.deploy.SparkSubmit$.org<span class="token variable">$apache</span><span class="token variable">$spark</span><span class="token variable">$deploy</span><span class="token variable">$SparkSubmit</span>$<span class="token variable">$runMain</span><span class="token punctuation">(</span>SparkSubmit.scala:904<span class="token punctuation">)</span>    at org.apache.spark.deploy.SparkSubmit$.doRunMain<span class="token variable">$1</span><span class="token punctuation">(</span>SparkSubmit.scala:198<span class="token punctuation">)</span>    at org.apache.spark.deploy.SparkSubmit$.submit<span class="token punctuation">(</span>SparkSubmit.scala:228<span class="token punctuation">)</span>    at org.apache.spark.deploy.SparkSubmit$.main<span class="token punctuation">(</span>SparkSubmit.scala:137<span class="token punctuation">)</span>    at org.apache.spark.deploy.SparkSubmit.main<span class="token punctuation">(</span>SparkSubmit.scala<span class="token punctuation">)</span>Caused by: java.lang.ClassNotFoundException: es.DefaultSource    at java.net.URLClassLoader.findClass<span class="token punctuation">(</span>URLClassLoader.java:382<span class="token punctuation">)</span>    at java.lang.ClassLoader.loadClass<span class="token punctuation">(</span>ClassLoader.java:424<span class="token punctuation">)</span>    at java.lang.ClassLoader.loadClass<span class="token punctuation">(</span>ClassLoader.java:357<span class="token punctuation">)</span>    at org.apache.spark.sql.execution.datasources.DataSource$<span class="token variable">$anonfun</span><span class="token variable">$23</span>$<span class="token variable">$anonfun</span><span class="token variable">$apply</span><span class="token variable">$15</span>.apply<span class="token punctuation">(</span>DataSource.scala:622<span class="token punctuation">)</span>    at org.apache.spark.sql.execution.datasources.DataSource$<span class="token variable">$anonfun</span><span class="token variable">$23</span>$<span class="token variable">$anonfun</span><span class="token variable">$apply</span><span class="token variable">$15</span>.apply<span class="token punctuation">(</span>DataSource.scala:622<span class="token punctuation">)</span>    at scala.util.Try$.apply<span class="token punctuation">(</span>Try.scala:192<span class="token punctuation">)</span>    at org.apache.spark.sql.execution.datasources.DataSource$<span class="token variable">$anonfun</span><span class="token variable">$23</span>.apply<span class="token punctuation">(</span>DataSource.scala:622<span class="token punctuation">)</span>    at org.apache.spark.sql.execution.datasources.DataSource$<span class="token variable">$anonfun</span><span class="token variable">$23</span>.apply<span class="token punctuation">(</span>DataSource.scala:622<span class="token punctuation">)</span>    at scala.util.Try.orElse<span class="token punctuation">(</span>Try.scala:84<span class="token punctuation">)</span>    at org.apache.spark.sql.execution.datasources.DataSource$.lookupDataSource<span class="token punctuation">(</span>DataSource.scala:622<span class="token punctuation">)</span>    <span class="token punctuation">..</span>. 15 <span class="token function">more</span></code></pre><h2 id="2-解决"><a href="#2-解决" class="headerlink" title="2. 解决"></a>2. 解决</h2><p>原因是 spark 上面有es的相关jar包</p><p>将 代码中依赖的  elasticsearch-spark-xx_x.xx-x.xx.x.jar 放到每个spark 节点的 jars 下即可， 这里测试没有重启服务即可生效</p><p>我这里用的是 elasticsearch-spark-20_2.11-7.16.3.jar </p><script type="text/javascript" src="https://cdn.jsdelivr.net/npm/kity@2.0.4/dist/kity.min.js"></script><script type="text/javascript" src="https://cdn.jsdelivr.net/npm/kityminder-core@1.4.50/dist/kityminder.core.min.js"></script><script defer="true" type="text/javascript" src="https://cdn.jsdelivr.net/npm/hexo-simple-mindmap@0.2.0/dist/mindmap.min.js"></script><link rel="stylesheet" type="text/css" href="https://cdn.jsdelivr.net/npm/hexo-simple-mindmap@0.2.0/dist/mindmap.min.css">]]></content>
+    
+    <summary type="html">
+    
+      
+      
+        &lt;h2 id=&quot;1-异常描述&quot;&gt;&lt;a href=&quot;#1-异常描述&quot; class=&quot;headerlink&quot; title=&quot;1. 异常描述&quot;&gt;&lt;/a&gt;1. 异常描述&lt;/h2&gt;&lt;p&gt;将服务部署到一个新的服务器上抛出了一个关于 ES的 ClassNotFoundException 异常&lt;
+      
+    
+    </summary>
+    
+    
+      <category term="spark" scheme="https://www.hnbian.cn/categories/spark/"/>
+    
+    
+      <category term="exception" scheme="https://www.hnbian.cn/tags/exception/"/>
+    
+      <category term="spark" scheme="https://www.hnbian.cn/tags/spark/"/>
+    
+  </entry>
   
   <entry>
     <title>华为云编译好的 arm 架构Ambari 下载地址</title>
@@ -368,11 +396,11 @@
     
       <category term="exception" scheme="https://www.hnbian.cn/tags/exception/"/>
     
-      <category term="ambari" scheme="https://www.hnbian.cn/tags/ambari/"/>
-    
       <category term="spark" scheme="https://www.hnbian.cn/tags/spark/"/>
     
       <category term="hive" scheme="https://www.hnbian.cn/tags/hive/"/>
+    
+      <category term="ambari" scheme="https://www.hnbian.cn/tags/ambari/"/>
     
   </entry>
   
@@ -538,9 +566,9 @@
       <category term="hdfs" scheme="https://www.hnbian.cn/categories/hdfs/"/>
     
     
-      <category term="hdfs" scheme="https://www.hnbian.cn/tags/hdfs/"/>
-    
       <category term="hadoop" scheme="https://www.hnbian.cn/tags/hadoop/"/>
+    
+      <category term="hdfs" scheme="https://www.hnbian.cn/tags/hdfs/"/>
     
   </entry>
   
@@ -558,32 +586,6 @@
       
       
         &lt;h2 id=&quot;1-导入hive元数据&quot;&gt;&lt;a href=&quot;#1-导入hive元数据&quot; class=&quot;headerlink&quot; title=&quot;1. 导入hive元数据&quot;&gt;&lt;/a&gt;1. 导入hive元数据&lt;/h2&gt;&lt;pre class=&quot; language-bash&quot;&gt;&lt;code c
-      
-    
-    </summary>
-    
-    
-      <category term="ambari" scheme="https://www.hnbian.cn/categories/ambari/"/>
-    
-    
-      <category term="atlas" scheme="https://www.hnbian.cn/tags/atlas/"/>
-    
-  </entry>
-  
-  <entry>
-    <title>Atlas 架构与组件介绍</title>
-    <link href="https://www.hnbian.cn/posts/1b46dd17.html"/>
-    <id>https://www.hnbian.cn/posts/1b46dd17.html</id>
-    <published>2021-10-24T08:15:51.000Z</published>
-    <updated>2023-07-19T15:15:18.902Z</updated>
-    
-    <content type="html"><![CDATA[<h2 id="1-Atlas-概述"><a href="#1-Atlas-概述" class="headerlink" title="1. Atlas 概述"></a>1. Atlas 概述</h2><p><a href="http://atlas.apache.org/" target="_blank" rel="noopener">Apache Atlas</a> 是Hadoop社区为解决Hadoop生态系统的元数据治理问题而产生的开源项目，它为Hadoop集群提供了包括数据分类、集中策略引擎、数据血缘、安全和生命周期管理在内的元数据治理核心能力。用以构建其数据资源目录，对这些资产进行分类和管理，并为数据分析师和数据治理团队提供围绕这些数据资产的协作的功能。</p><p>Atlas 是一个可伸缩和可扩展的核心基础治理服务集合 ，使企业能够有效地和高效地满足 Hadoop 中的合规性要求，并允许与整个企业数据生态系统的集成。</p><p>Atlas支持各种Hadoop和非Hadoop元数据类型，并提供了丰富的REST API进行集成，对数据血缘的追溯达到了字段级别。</p><h2 id="2-Atlas-架构原理"><a href="#2-Atlas-架构原理" class="headerlink" title="2. Atlas 架构原理"></a>2. Atlas 架构原理</h2><p><img src="https://images.hnbian.cn/FquinYWJ3Y5fiFktlPY5BtNpqXQX?imageView2/0/interlace/1/q/70%7Cwatermark/2/text/d3d3LmhuYmlhbi5jbg==/font/5b6u6L2v6ZuF6buR/fontsize/600/fill/IzBDMjU2NA==/dissolve/100/gravity/SouthEast/dx/10/dy/10%7Cimageslim" alt="Atlas 架构图"></p><h3 id="2-1-Metatada-Sources"><a href="#2-1-Metatada-Sources" class="headerlink" title="2.1 Metatada Sources"></a>2.1 Metatada Sources</h3><p>Atlas支持与许多元数据源的集成，将来还会添加更多集成。目前，Atlas 支持从以下数据源获取和管理元数据：</p><table><thead><tr><th></th><th></th></tr></thead><tbody><tr><td>Hive</td><td>通过hive bridge，atlas可以接入Hive的元数据，包括hive_db/hive_table/hive_column/hive_process</td></tr><tr><td>Sqoop</td><td>通过sqoop bridge，atlas可以接入关系型数据库的元数据，包括sqoop_operation_type/ sqoop_dbstore_usage/sqoop_process/sqoop_dbdatastore</td></tr><tr><td>Falcon</td><td>通过falcon bridge，atlas可以接入Falcon的元数据，包括falcon_cluster/falcon_feed/falcon_feed_creation/falcon_feed_replication/ falcon_process</td></tr><tr><td>Storm</td><td>通过storm bridge，atlas可以接入流式处理的元数据，包括storm_topology/storm_spout/storm_bolt</td></tr></tbody></table><p>Atlas集成大数据组件的元数据源需要实现以下两点：</p><ol><li>需要基于atlas的类型系统定义能够表达大数据组件元数据对象的元数据模型(例如Hive的元数据模型实现在org.apache.atlas.hive.model.HiveDataModelGenerator)</li><li>需要提供hook组件去从大数据组件的元数据源中提取元数据对象，实时侦听元数据的变更并反馈给atlas；</li></ol><h3 id="2-2-Apps"><a href="#2-2-Apps" class="headerlink" title="2.2 Apps"></a>2.2 Apps</h3><h4 id="2-2-1-Ranger-Tag-Based-Policies"><a href="#2-2-1-Ranger-Tag-Based-Policies" class="headerlink" title="2.2.1 Ranger Tag Based Policies"></a>2.2.1 Ranger Tag Based Policies</h4><p>Apache Ranger 是针对 Hadoop 生态系统的高级安全管理解决方案，与各种 Hadoop 组件具有广泛的集成。通过与 Atlas 集成，Ranger 允许安全管理员定义元数据驱动的安全策略，以实现有效的治理。 Ranger 是由 Atlas 通知的元数据更改事件的消费者。</p><h4 id="2-2-2-Admin-UI"><a href="#2-2-2-Admin-UI" class="headerlink" title="2.2.2 Admin UI"></a>2.2.2 Admin UI</h4><p>该组件是一个基于 Web 的应用程序，允许数据管理员和科学家发现和注释元数据。Admin UI提供了搜索界面和 类SQL的查询语言，可以用来查询由 Atlas 管理的元数据类型和对象。Admin UI 使用 Atlas 的 REST API 来构建其功能。</p><h4 id="2-2-3-Business-Taxonomy"><a href="#2-2-3-Business-Taxonomy" class="headerlink" title="2.2.3 Business Taxonomy"></a>2.2.3 Business Taxonomy</h4><p>从元数据源获取到 Atlas 的元数据对象主要是一种技术形式的元数据。为了增强可发现性和治理能力，Atlas 提供了一个业务分类界面，允许用户首先定义一组代表其业务域的业务术语，并将其与 Atlas 管理的元数据实体相关联。业务分类法是一种 Web 应用程序，目前是 Atlas Admin UI 的一部分，并且使用 REST API 与 Atlas 集成。<br>在HDP2.5中，Business Taxonomy是提供了Technical Preview版本，需要在Atlas &gt; Configs &gt; Advanced &gt; Custom application-properties中添加atlas.feature.taxonomy.enable=true并重启atlas服务来开启</p><h3 id="2-3-Intergration"><a href="#2-3-Intergration" class="headerlink" title="2.3 Intergration"></a>2.3 Intergration</h3><p>用户可以使用两种方法管理 Atlas 中的元数据：</p><h4 id="2-3-1-Messaging"><a href="#2-3-1-Messaging" class="headerlink" title="2.3.1 Messaging"></a>2.3.1 Messaging</h4><p>除了API之外，用户还可以选择使用基于Kafka的消息接口与Atlas集成。这对于将元数据对象传输到 Atlas 以及从 Atlas 使用可以构建应用程序的元数据更改事件都非常有用。如果希望使用与Atlas更松散耦合的集成，这可以允许更好的可扩展性、可靠性等，消息传递接口是特别有用的。Atlas 使用 Apache Kafka 作为通知服务器用于钩子和元数据通知事件的下游消费者之间的通信。事件由钩子(hook)和 Atlas 写到不同的 Kafka 主题。</p><p>ATLAS_HOOK: 来自各个组件的Hook的元数据通知事件通过写入到名为 ATLAS_HOOK的Kafka topic 发送到 Atlas.<br>ATLAS_ENTITIES：从Atlas到其他集成组件（如Ranger）的事件写入到名为ATLAS_ENTITIES的 Kafka topic</p><h4 id="2-3-2-API"><a href="#2-3-2-API" class="headerlink" title="2.3.2 API"></a>2.3.2 API</h4><p>Atlas的所有功能都可以通过REST API提供给最终用户，允许创建、更新和删除类型和实体。它也是查询和发现通过 Atlas 管理的类型和实体的主要方法。</p><h3 id="2-4-Core"><a href="#2-4-Core" class="headerlink" title="2.4 Core"></a>2.4 Core</h3><h4 id="2-4-1-Ingest-Export"><a href="#2-4-1-Ingest-Export" class="headerlink" title="2.4.1 Ingest/Export"></a>2.4.1 Ingest/Export</h4><p>Ingest 组件允许将元数据添加到Atlas。类似地，Export 组件暴露由 Atlas 检测到的元数据更改，以作为事件引发，消费者可以使用这些更改事件来实时响应元数据更改。</p><h4 id="2-4-2-Type-System"><a href="#2-4-2-Type-System" class="headerlink" title="2.4.2 Type System"></a>2.4.2 Type System</h4><p>Atlas 允许用户为他们想要管理的元数据对象定义一个模型。该模型由称为“类型” 的定义组成。“类型” （类）的实例被称为 “实体” 表示被管理的实际元数据对象。类型系统是一个组件，允许用户定义和管理类型和实体。由Atlas管理的所有元数据对象（例如Hive表）都使用类型进行建模，并表示为实体(类对象，一条数据)。</p><h4 id="2-4-3-Graph-Engine"><a href="#2-4-3-Graph-Engine" class="headerlink" title="2.4.3 Graph Engine"></a>2.4.3 Graph Engine</h4><p>在内部，Atlas 通过使用图形模型管理元数据对象。以实现元数据对象之间的巨大灵活性和丰富的关系。图形引擎是负责在类型系统的类型和实体之间进行转换的组件，以及基础图形模型。除了管理图形对象之外，图形引擎还为元数据对象创建适当的索引，以便有效地搜索它们。</p><h4 id="2-4-4-JanusGraph"><a href="#2-4-4-JanusGraph" class="headerlink" title="2.4.4 JanusGraph"></a>2.4.4 JanusGraph</h4><p>图数据库，持久化的数据会保存在JanusGraph中。</p><h3 id="2-5-Medatada-Store"><a href="#2-5-Medatada-Store" class="headerlink" title="2.5 Medatada Store"></a>2.5 Medatada Store</h3><p>采用HBASE存储元数据。</p><h3 id="2-6-Index-Store"><a href="#2-6-Index-Store" class="headerlink" title="2.6 Index Store"></a>2.6 Index Store</h3><p>使用Solr 来创建索引。</p><h2 id="3-核心特性"><a href="#3-核心特性" class="headerlink" title="3. 核心特性"></a>3. 核心特性</h2><p>Apache Atlas为Hadoop的元数据治理提供了以下特性：</p><h3 id="3-1-数据分类"><a href="#3-1-数据分类" class="headerlink" title="3.1    数据分类"></a>3.1    数据分类</h3><p>为元数据导入或定义业务导向的分类注释<br>定义，注释，以及自动捕获数据集和底层元素之间的关系<br>导出元数据到第三方系统</p><h3 id="3-2-集中审计"><a href="#3-2-集中审计" class="headerlink" title="3.2    集中审计"></a>3.2    集中审计</h3><p>捕获与所有应用，过程以及与数据交互的安全访问信息<br>捕获执行，步骤，活动等操作的信息</p><h3 id="3-3-搜索与血缘"><a href="#3-3-搜索与血缘" class="headerlink" title="3.3    搜索与血缘"></a>3.3    搜索与血缘</h3><p>预定义的导航路径用来探索数据分类以及审计信息<br>基于文本的搜索特性来快速和准确的定位相关联的数据和审计事件<br>对数据集血缘关系的可视化浏览使用户可以下钻到操作，安全以及数据起源相关的信息</p><h3 id="3-4-安全与策略引擎"><a href="#3-4-安全与策略引擎" class="headerlink" title="3.4    安全与策略引擎"></a>3.4    安全与策略引擎</h3><p>基于数据分类模式，属性以及角色的运行时合理合规策略<br>基于分类-预测的高级策略定义以防止数据推导<br>基于cell的属性和值的行/列级别的masking</p><script type="text/javascript" src="https://cdn.jsdelivr.net/npm/kity@2.0.4/dist/kity.min.js"></script><script type="text/javascript" src="https://cdn.jsdelivr.net/npm/kityminder-core@1.4.50/dist/kityminder.core.min.js"></script><script defer="true" type="text/javascript" src="https://cdn.jsdelivr.net/npm/hexo-simple-mindmap@0.2.0/dist/mindmap.min.js"></script><link rel="stylesheet" type="text/css" href="https://cdn.jsdelivr.net/npm/hexo-simple-mindmap@0.2.0/dist/mindmap.min.css">]]></content>
-    
-    <summary type="html">
-    
-      
-      
-        &lt;h2 id=&quot;1-Atlas-概述&quot;&gt;&lt;a href=&quot;#1-Atlas-概述&quot; class=&quot;headerlink&quot; title=&quot;1. Atlas 概述&quot;&gt;&lt;/a&gt;1. Atlas 概述&lt;/h2&gt;&lt;p&gt;&lt;a href=&quot;http://atlas.apache.org/&quot; t
       
     
     </summary>
