@@ -6,7 +6,7 @@
   <link href="/atom.xml" rel="self"/>
   
   <link href="https://www.hnbian.cn/"/>
-  <updated>2023-08-12T15:36:33.121Z</updated>
+  <updated>2023-08-12T15:40:12.458Z</updated>
   <id>https://www.hnbian.cn/</id>
   
   <author>
@@ -21,7 +21,7 @@
     <link href="https://www.hnbian.cn/posts/6cbf7445.html"/>
     <id>https://www.hnbian.cn/posts/6cbf7445.html</id>
     <published>2023-08-10T09:58:48.000Z</published>
-    <updated>2023-08-12T15:36:33.121Z</updated>
+    <updated>2023-08-12T15:40:12.458Z</updated>
     
     <content type="html"><![CDATA[<h2 id="1-异常描述"><a href="#1-异常描述" class="headerlink" title="1. 异常描述"></a>1. 异常描述</h2><p>将服务部署到一个新的服务器上抛出了一个关于 ES的 ClassNotFoundException 异常</p><pre class=" language-bash"><code class="language-bash">java.lang.ClassNotFoundException: Failed to <span class="token function">find</span> data source: es. Please <span class="token function">find</span> packages at http://spark.apache.org/third-party-projects.html    at org.apache.spark.sql.execution.datasources.DataSource$.lookupDataSource<span class="token punctuation">(</span>DataSource.scala:639<span class="token punctuation">)</span>    at org.apache.spark.sql.DataFrameReader.load<span class="token punctuation">(</span>DataFrameReader.scala:190<span class="token punctuation">)</span>    at org.apache.spark.sql.DataFrameReader.load<span class="token punctuation">(</span>DataFrameReader.scala:174<span class="token punctuation">)</span>    at com.surfilter.task.archival.service.LoadData.loadAbnormalUrlData<span class="token punctuation">(</span>LoadData.scala:21<span class="token punctuation">)</span>    at com.surfilter.task.archival.ArchivalServlet$.main<span class="token punctuation">(</span>ArchivalServlet.scala:16<span class="token punctuation">)</span>    at com.surfilter.task.archival.ArchivalServlet.main<span class="token punctuation">(</span>ArchivalServlet.scala<span class="token punctuation">)</span>    at sun.reflect.NativeMethodAccessorImpl.invoke0<span class="token punctuation">(</span>Native Method<span class="token punctuation">)</span>    at sun.reflect.NativeMethodAccessorImpl.invoke<span class="token punctuation">(</span>NativeMethodAccessorImpl.java:62<span class="token punctuation">)</span>    at sun.reflect.DelegatingMethodAccessorImpl.invoke<span class="token punctuation">(</span>DelegatingMethodAccessorImpl.java:43<span class="token punctuation">)</span>    at java.lang.reflect.Method.invoke<span class="token punctuation">(</span>Method.java:498<span class="token punctuation">)</span>    at org.apache.spark.deploy.JavaMainApplication.start<span class="token punctuation">(</span>SparkApplication.scala:52<span class="token punctuation">)</span>    at org.apache.spark.deploy.SparkSubmit$.org<span class="token variable">$apache</span><span class="token variable">$spark</span><span class="token variable">$deploy</span><span class="token variable">$SparkSubmit</span>$<span class="token variable">$runMain</span><span class="token punctuation">(</span>SparkSubmit.scala:904<span class="token punctuation">)</span>    at org.apache.spark.deploy.SparkSubmit$.doRunMain<span class="token variable">$1</span><span class="token punctuation">(</span>SparkSubmit.scala:198<span class="token punctuation">)</span>    at org.apache.spark.deploy.SparkSubmit$.submit<span class="token punctuation">(</span>SparkSubmit.scala:228<span class="token punctuation">)</span>    at org.apache.spark.deploy.SparkSubmit$.main<span class="token punctuation">(</span>SparkSubmit.scala:137<span class="token punctuation">)</span>    at org.apache.spark.deploy.SparkSubmit.main<span class="token punctuation">(</span>SparkSubmit.scala<span class="token punctuation">)</span>Caused by: java.lang.ClassNotFoundException: es.DefaultSource    at java.net.URLClassLoader.findClass<span class="token punctuation">(</span>URLClassLoader.java:382<span class="token punctuation">)</span>    at java.lang.ClassLoader.loadClass<span class="token punctuation">(</span>ClassLoader.java:424<span class="token punctuation">)</span>    at java.lang.ClassLoader.loadClass<span class="token punctuation">(</span>ClassLoader.java:357<span class="token punctuation">)</span>    at org.apache.spark.sql.execution.datasources.DataSource$<span class="token variable">$anonfun</span><span class="token variable">$23</span>$<span class="token variable">$anonfun</span><span class="token variable">$apply</span><span class="token variable">$15</span>.apply<span class="token punctuation">(</span>DataSource.scala:622<span class="token punctuation">)</span>    at org.apache.spark.sql.execution.datasources.DataSource$<span class="token variable">$anonfun</span><span class="token variable">$23</span>$<span class="token variable">$anonfun</span><span class="token variable">$apply</span><span class="token variable">$15</span>.apply<span class="token punctuation">(</span>DataSource.scala:622<span class="token punctuation">)</span>    at scala.util.Try$.apply<span class="token punctuation">(</span>Try.scala:192<span class="token punctuation">)</span>    at org.apache.spark.sql.execution.datasources.DataSource$<span class="token variable">$anonfun</span><span class="token variable">$23</span>.apply<span class="token punctuation">(</span>DataSource.scala:622<span class="token punctuation">)</span>    at org.apache.spark.sql.execution.datasources.DataSource$<span class="token variable">$anonfun</span><span class="token variable">$23</span>.apply<span class="token punctuation">(</span>DataSource.scala:622<span class="token punctuation">)</span>    at scala.util.Try.orElse<span class="token punctuation">(</span>Try.scala:84<span class="token punctuation">)</span>    at org.apache.spark.sql.execution.datasources.DataSource$.lookupDataSource<span class="token punctuation">(</span>DataSource.scala:622<span class="token punctuation">)</span>    <span class="token punctuation">..</span>. 15 <span class="token function">more</span></code></pre><h2 id="2-解决"><a href="#2-解决" class="headerlink" title="2. 解决"></a>2. 解决</h2><p>原因是 spark 上面有es的相关jar包</p><p>将 代码中依赖的  elasticsearch-spark-xx_x.xx-x.xx.x.jar 放到每个spark 节点的 jars 下即可， 这里测试没有重启服务即可生效</p><p>我这里用的是 elasticsearch-spark-20_2.11-7.16.3.jar </p><script type="text/javascript" src="https://cdn.jsdelivr.net/npm/kity@2.0.4/dist/kity.min.js"></script><script type="text/javascript" src="https://cdn.jsdelivr.net/npm/kityminder-core@1.4.50/dist/kityminder.core.min.js"></script><script defer="true" type="text/javascript" src="https://cdn.jsdelivr.net/npm/hexo-simple-mindmap@0.2.0/dist/mindmap.min.js"></script><link rel="stylesheet" type="text/css" href="https://cdn.jsdelivr.net/npm/hexo-simple-mindmap@0.2.0/dist/mindmap.min.css">]]></content>
     
@@ -396,11 +396,11 @@
     
       <category term="exception" scheme="https://www.hnbian.cn/tags/exception/"/>
     
+      <category term="ambari" scheme="https://www.hnbian.cn/tags/ambari/"/>
+    
       <category term="spark" scheme="https://www.hnbian.cn/tags/spark/"/>
     
       <category term="hive" scheme="https://www.hnbian.cn/tags/hive/"/>
-    
-      <category term="ambari" scheme="https://www.hnbian.cn/tags/ambari/"/>
     
   </entry>
   
@@ -454,9 +454,9 @@
     
       <category term="exception" scheme="https://www.hnbian.cn/tags/exception/"/>
     
-      <category term="clickhouse" scheme="https://www.hnbian.cn/tags/clickhouse/"/>
-    
       <category term="olap" scheme="https://www.hnbian.cn/tags/olap/"/>
+    
+      <category term="clickhouse" scheme="https://www.hnbian.cn/tags/clickhouse/"/>
     
   </entry>
   
@@ -482,9 +482,9 @@
       <category term="clickhouse" scheme="https://www.hnbian.cn/categories/clickhouse/"/>
     
     
-      <category term="clickhouse" scheme="https://www.hnbian.cn/tags/clickhouse/"/>
-    
       <category term="olap" scheme="https://www.hnbian.cn/tags/olap/"/>
+    
+      <category term="clickhouse" scheme="https://www.hnbian.cn/tags/clickhouse/"/>
     
   </entry>
   
@@ -538,9 +538,9 @@
     
       <category term="exception" scheme="https://www.hnbian.cn/tags/exception/"/>
     
-      <category term="clickhouse" scheme="https://www.hnbian.cn/tags/clickhouse/"/>
-    
       <category term="olap" scheme="https://www.hnbian.cn/tags/olap/"/>
+    
+      <category term="clickhouse" scheme="https://www.hnbian.cn/tags/clickhouse/"/>
     
   </entry>
   
@@ -566,9 +566,9 @@
       <category term="hdfs" scheme="https://www.hnbian.cn/categories/hdfs/"/>
     
     
-      <category term="hadoop" scheme="https://www.hnbian.cn/tags/hadoop/"/>
-    
       <category term="hdfs" scheme="https://www.hnbian.cn/tags/hdfs/"/>
+    
+      <category term="hadoop" scheme="https://www.hnbian.cn/tags/hadoop/"/>
     
   </entry>
   
