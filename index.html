@@ -479,6 +479,41 @@
     
 
     
+        
+
+<link rel="stylesheet" href="https://images.hnbian.cn/APlayer.min.css">
+<div class="">
+    
+    <div class="title center-align">
+        <i class="fas fa-music"></i>&nbsp;&nbsp;听听音乐
+    </div>
+    
+    <div class="row">
+        <div class="col l8 offset-l2 m10 offset-m1 s12">
+            <div id="aplayer" class="music"></div>
+        </div>
+    </div>
+</div>
+
+<script src="https://images.hnbian.cn/APlayer.min.js"></script>
+<script>
+$(function () {
+    new APlayer({
+        container: document.getElementById('aplayer'),
+        fixed: 'true' === 'true',
+        autoplay: 'false' === 'true',
+        theme: '#42b983',
+        loop: 'all',
+        order: 'list',
+        preload: 'auto',
+        volume: Number('0.7'),
+        listFolded: 'false' === 'true',
+        listMaxHeight: '',
+        audio: eval([{"name":"望","artist":"小时","url":"https://raw.githubusercontent.com/hnbian/www.hnbian.cn/master/music/%E6%9C%9B.mp3","cover":"http://images.hnbian.cn/FhYQmaCIvuEMJus3rngwkkpW29h5"}])
+    });
+});
+</script>
+    
 
     
 
