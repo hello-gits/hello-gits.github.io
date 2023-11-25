@@ -443,7 +443,7 @@
                 
                 <div class="info-break-policy">
                     <i class="far fa-file-word fa-fw"></i>文章字数:&nbsp;&nbsp;
-                    5k
+                    5.1k
                 </div>
                 
 
@@ -584,7 +584,8 @@
 </ul>
 <p>综合起来，这个命令的作用是从指定的fsimage文件中提取元数据信息，并将元数据以分隔符分隔的格式输出到指定的输出文件中（使用竖线作为分隔符）。输出文件的路径和名称是”fsimage.out”，临时文件将存储在”/tmp/tmpdir/“目录中。</p>
 <p>请注意，此命令需要在Hadoop集群的环境中运行，并且需要适当的权限才能访问和处理HDFS的元数据。</p>
-<p>更多关于 hdfs oiv 命令的使用，可以查看 useage。</p>
+<p>通过上面的命令可以将 hdfs 中的元数据信息输出到一个文件上, 我们还需要对元数据进行分析, 来找出小文件, 比如像找出小于 100M 的文件: </p>
+<pre class=" language-bash"><code class="language-bash"><span class="token function">awk</span> -F<span class="token string">'|'</span> <span class="token string">'{if (<span class="token variable">$5</span> &lt; 100000000) print <span class="token variable">$0</span>}'</span> fsimage.out <span class="token operator">></span> small_files_list.txt</code></pre>
 <h3 id="6-2-fsck"><a href="#6-2-fsck" class="headerlink" title="6.2 fsck"></a>6.2 fsck</h3><p>使用 fsck 命令扫描当前的 HDFS 目录并保存扫描后的信息可以查看当前 HDFS 中的小文件</p>
 <pre class=" language-bash"><code class="language-bash">hdfs <span class="token function">fsck</span> / -files -blocks -locations <span class="token operator">></span> fsck_output.txt</code></pre>
 <p> <code>/</code> 是要扫描的HDFS目录的路径，这里使用根目录 <code>/</code> 作为示例，您可以根据实际情况替换为其他目录路径。<br><code>-files</code> 参数用于打印文件的详细信息。<br><code>-blocks</code> 参数用于打印数据块的详细信息。<br><code>-locations</code> 参数用于打印数据块的位置信息。<br><code>fsck_output.txt</code> 是保存扫描结果的输出文件名，您可以根据需要自定义输出文件的路径和名称。</p>
@@ -621,7 +622,7 @@
 <pre class=" language-bash"><code class="language-bash">hadoop fs -getmerge /user/hadoop/input /home/user/mergedfile <span class="token boolean">true</span></code></pre>
 <p>该命令将目录<code>/user/hadoop/input</code>下的所有文件合并为一个文件，并在合并后的文件中保留源文件的边界。</p>
 <p>使用<code>merge</code>命令可以方便地将多个小文件合并成一个更大的文件，有助于提高Hadoop文件系统的性能和效率。</p>
-<h3 id="7-5-使用-Hive-对数据进行压缩"><a href="#7-5-使用-Hive-对数据进行压缩" class="headerlink" title="7.5 使用 Hive 对数据进行压缩"></a>7.5 使用 Hive 对数据进行压缩</h3><p>如果你有一个现有的 Hive 表有大量的小文件，那么可以通过以下设置来重写这个表（parquet 格式）。关于 Hive 压缩可以查阅其他文档获取更详细的信息。</p>
+<h2 id="8-Hive-中的小文件"><a href="#8-Hive-中的小文件" class="headerlink" title="8.  Hive 中的小文件"></a>8.  Hive 中的小文件</h2><p>如果你有一个现有的 Hive 表有大量的小文件，那么可以通过以下设置来重写这个表（parquet 格式）。</p>
 <pre class=" language-bash"><code class="language-bash"><span class="token comment" spellcheck="true"># 启用对输出结果进行压缩。当查询产生输出结果时，将使用压缩算法对结果进行压缩，以减少存储空间。</span>
 <span class="token keyword">set</span> hive.exec.compress.output<span class="token operator">=</span>true<span class="token punctuation">;</span>
 <span class="token comment" spellcheck="true"># 设置Parquet文件的压缩算法为Snappy。Parquet是一种列式存储格式，该参数指定使用Snappy算法对Parquet文件进行压缩。</span>
@@ -1189,12 +1190,12 @@ Nested type Array(String) cannot be inside Nullable type
                         <span class="chip bg-color">exception</span>
                     </a>
                     
-                    <a href="/tags/olap/">
-                        <span class="chip bg-color">olap</span>
-                    </a>
-                    
                     <a href="/tags/clickhouse/">
                         <span class="chip bg-color">clickhouse</span>
+                    </a>
+                    
+                    <a href="/tags/olap/">
+                        <span class="chip bg-color">olap</span>
                     </a>
                     
                 </div>
@@ -1392,7 +1393,7 @@ code[class*="language-"], pre[class*="language-"] { white-space: pre !important;
             <br>
             
             &nbsp;<i class="fas fa-chart-area"></i>&nbsp;站点总字数:&nbsp;<span
-                class="white-color">834.2k</span>&nbsp;字
+                class="white-color">840.3k</span>&nbsp;字
             
             
             

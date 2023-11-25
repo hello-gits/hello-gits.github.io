@@ -489,7 +489,7 @@
 <p>如果使用yarn-cluster模式提交作业，可以通过Spark Web UI查看当前运行到了哪个stage。</p>
 <p>此外，无论使用哪种提交模式，都可以在Spark Web UI上查看当前stage的各个task分配的数据量。通过这种方式，可以进一步确定是否是数据分配不均匀导致的数据倾斜。</p>
 <p>如下图所示，我们可以从倒数第三列观察到每个task的运行时间。某些task执行非常快，仅需几秒钟即可完成；另一些task执行速度较慢，需要几分钟才能完成。仅从运行时间上看，我们已经可以确定出现了数据倾斜。此外，倒数第一列展示了每个task处理的数据量。可以明显看到，运行时间短的task仅需处理几百KB的数据，而运行时间长的task需要处理几千KB的数据，数据处理量相差10倍。这进一步确认了数据倾斜的发生。</p>
-<p><img src="https://images.hnbian.cn/202305041743977.png?imageView2/0/interlace/1/q/70%7Cwatermark/2/text/d3d3LmhuYmlhbi5jbg==/font/5b6u6L2v6ZuF6buR/fontsize/600/fill/IzBDMjU2NA==/dissolve/100/gravity/SouthEast/dx/10/dy/10%7Cimageslim" alt="52sYt1c8t_EHnt_UWj-UU-transformed"></p>
+<p><img src="https://images.hnbian.cn/202305041743977.png?imageView2/0/interlace/1/q/70%7Cwatermark/2/text/d3d3LmhuYmlhbi5jbg==/font/5b6u6L2v6ZuF6buR/fontsize/600/fill/IzBDMjU2NA==/dissolve/100/gravity/SouthEast/dx/10/dy/10%7Cimageslim" alt></p>
 <p>在确定数据倾斜发生在哪个stage之后，我们需要根据 stage 划分原理推算出倾斜的那个 stage 对应代码中的哪一部分。这部分代码中肯定会包含一个shuffle类算子。</p>
 <p>要精确推算 stage 与代码之间的对应关系，需要对 Spark 源码有深入理解。但在此，我们可以介绍一个相对简单且实用的推算方法：只需观察 Spark 代码中出现的 shuffle 类算子或 Spark SQL 中出现的可能导致 shuffle 的语句（如group by语句），就可以判断，以这个地方为界限，划分出了前后两个stage。</p>
 <p>以 Spark 最基础的入门程序 WordCount 为例，说明如何用最简单的方法大致推算出一个stage对应的代码。在下面的示例中，整个代码里只有一个<code>reduceByKey</code>算子会发生shuffle。因此，我们可以认为，以这个算子为界限，将划分出前后两个stage。</p>
@@ -1606,26 +1606,40 @@ JavaPairRDD<span class="token operator">&lt;</span>String<span class="token punc
             <div class="article-badge left-badge text-color">
                 <i class="fas fa-chevron-left"></i>&nbsp;上一篇</div>
             <div class="card">
-                <a href="/posts/e33b82cd.html">
+                <a href="/posts/c86ae59.html">
                     <div class="card-image">
                         
-                        <img src="http://images.hnbian.cn//Fkd7u2yNU8geCwrErPBpPiMiXnCQ" class="responsive-img" alt="安装 Ambari 时遇到的异常记录">
+                        <img src="https://images.hnbian.cn/FlU0heRQpxXpyu2wIgTWGNfUfvaZ" class="responsive-img" alt="2.7.3 - Ambari 告警信息总结">
                         
-                        <span class="card-title">安装 Ambari 时遇到的异常记录</span>
+                        <span class="card-title">2.7.3 - Ambari 告警信息总结</span>
                     </div>
                 </a>
                 <div class="card-content article-content">
                     <div class="summary block-with-text">
                         
-                            
-由于最近公司机房断电，导致几台测试环境 Ambari 服务器损坏， 所以对 Ambari服务进行了重装， 下面对此次安装过程中遇见的问题与解决办法进行记录
+                            此文档真对 spark 2.7.3 版本的 ambari 告警信息进行总结:
+1. 告警级别
 
-1. 安装 unzipTraceback (most recent call l
+
+告警级别
+解释
+说明
+
+
+
+OK
+ok
+集群运行良好
+
+
+WARNING
+警告
+集群指标到了一定阈值，需关注 The cluster indi
                         
                     </div>
                     <div class="publish-info">
                         <span class="publish-date">
-                            <i class="far fa-clock fa-fw icon-date"></i>2023-03-08
+                            <i class="far fa-clock fa-fw icon-date"></i>2023-01-05
                         </span>
                         <span class="publish-author">
                             
@@ -1847,7 +1861,7 @@ code[class*="language-"], pre[class*="language-"] { white-space: pre !important;
             <br>
             
             &nbsp;<i class="fas fa-chart-area"></i>&nbsp;站点总字数:&nbsp;<span
-                class="white-color">834.2k</span>&nbsp;字
+                class="white-color">840.3k</span>&nbsp;字
             
             
             
