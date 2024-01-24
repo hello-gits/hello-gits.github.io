@@ -1854,7 +1854,7 @@
 <h3 id="2-13-transient"><a href="#2-13-transient" class="headerlink" title="2.13 transient"></a>2.13 transient</h3><p>transient 关键字可以应用于类的成员变量，以便指出该成员变量不应在包含它的类实例已序列化时被序列化。</p>
 <p>Java 的 serialization 提供了一种持久化对象实例的机制。当持久化对象时，可能有一个特殊的对象数据成员，如果不想用 serialization 机制来保存它。为了在一个特定对象的一个域上关闭 serialization，就可以在这个域前加上关键字transient。</p>
 <p>当一个对象被序列化的时候，transient 型变量的值不包括在序列化的表示中，然而非 transient 型的变量是被包括进去的。</p>
-<h2 id="关于访问控制的关键字"><a href="#关于访问控制的关键字" class="headerlink" title="关于访问控制的关键字"></a>关于访问控制的关键字</h2><h3 id="3-1-private-私有的"><a href="#3-1-private-私有的" class="headerlink" title="3.1 private 私有的"></a>3.1 private 私有的</h3><p>private 关键字是访问控制修饰符，可以应用于类、方法或变量。 只能在声明 private（内部）类、方法或变量的类中引用这些类、方法或字段。在类的外部或者对于子类而言，它们是不可见的。</p>
+<h2 id="3-关于访问控制的关键字"><a href="#3-关于访问控制的关键字" class="headerlink" title="3. 关于访问控制的关键字"></a>3. 关于访问控制的关键字</h2><h3 id="3-1-private-私有的"><a href="#3-1-private-私有的" class="headerlink" title="3.1 private 私有的"></a>3.1 private 私有的</h3><p>private 关键字是访问控制修饰符，可以应用于类、方法或变量。 只能在声明 private（内部）类、方法或变量的类中引用这些类、方法或字段。在类的外部或者对于子类而言，它们是不可见的。</p>
 <h3 id="3-2-protected-受保护的"><a href="#3-2-protected-受保护的" class="headerlink" title="3.2 protected 受保护的"></a>3.2 protected 受保护的</h3><p>protected 关键字是访问控制修饰符, 可以应用于类、方法或变量, 可以在声明 protected 类、方法或变量, 同一个包中的其他任何类以及任何子类中引用这些类、方法或变量。</p>
 <h3 id="3-3-public-公共的"><a href="#3-3-public-公共的" class="headerlink" title="3.3 public 公共的"></a>3.3 public 公共的</h3><p>public 关键字是访问控制修饰符, 可以应用于类、方法或变量的访问控制修饰符。 可能只会在其他任何类或包中引用 public 类、方法或变量。</p>
 <table>
@@ -1896,7 +1896,7 @@
 <td>❌</td>
 </tr>
 </tbody></table>
-<h2 id="关于程序控制的关键字"><a href="#关于程序控制的关键字" class="headerlink" title="关于程序控制的关键字"></a>关于程序控制的关键字</h2><h3 id="4-1-if"><a href="#4-1-if" class="headerlink" title="4.1 if"></a>4.1 if</h3><p>if 关键字指示有条件地执行代码块。条件的计算结果必须是布尔值。</p>
+<h2 id="4-关于程序控制的关键字"><a href="#4-关于程序控制的关键字" class="headerlink" title="4. 关于程序控制的关键字"></a>4. 关于程序控制的关键字</h2><h3 id="4-1-if"><a href="#4-1-if" class="headerlink" title="4.1 if"></a>4.1 if</h3><p>if 关键字指示有条件地执行代码块。条件的计算结果必须是布尔值。</p>
 <p>if 语句可以有可选的 else 子句，该子句包含条件为 false 时将执行的代码。</p>
 <p>包含 boolean 操作数的表达式只能包含 boolean 操作数。</p>
 <h3 id="4-2-else"><a href="#4-2-else" class="headerlink" title="4.2 else"></a>4.2 else</h3><p>else 关键字总是在 if-else 语句中与 if 关键字结合使用。else 子句是可选的，如果 if 条件为 false，则执行该子句。</p>
@@ -1922,7 +1922,7 @@
 <p>continue 总是跳到最深层 while、for 或 do 语句的下一个迭代。</p>
 <h3 id="4-11-return"><a href="#4-11-return" class="headerlink" title="4.11 return"></a>4.11 return</h3><p>return 关键字会导致方法返回到调用它的方法，从而传递与返回方法的返回类型匹配的值。 如果方法具有非 void 的返回类型，return 语句必须具有相同或兼容类型的参数。 返回值两侧的括号是可选的。</p>
 <h3 id="4-12-instanceof"><a href="#4-12-instanceof" class="headerlink" title="4.12 instanceof"></a>4.12 instanceof</h3><p>instanceof 关键字用来确定对象所属的类。</p>
-<h2 id="关于错误处理的关键字"><a href="#关于错误处理的关键字" class="headerlink" title="关于错误处理的关键字"></a>关于错误处理的关键字</h2><h3 id="5-1-try"><a href="#5-1-try" class="headerlink" title="5.1 try"></a>5.1 try</h3><p>try 关键字用于包含可能引发异常的语句块。</p>
+<h2 id="5-关于错误处理的关键字"><a href="#5-关于错误处理的关键字" class="headerlink" title="5. 关于错误处理的关键字"></a>5. 关于错误处理的关键字</h2><h3 id="5-1-try"><a href="#5-1-try" class="headerlink" title="5.1 try"></a>5.1 try</h3><p>try 关键字用于包含可能引发异常的语句块。</p>
 <p>每个 try 块都必须至少有一个 catch 或 finally 子句。</p>
 <p>如果某个特定异常类未被任何 catch 子句处理，该异常将沿着调用栈递归地传播到下一个封闭 try 块。如果任何封闭 try 块都未捕获到异常，Java 解释器将退出，并显示错误消息和堆栈跟踪信息。</p>
 <h3 id="5-2-catch"><a href="#5-2-catch" class="headerlink" title="5.2 catch"></a>5.2 catch</h3><p>catch 关键字用来在 try-catch 或 try-catch-finally 语句中定义异常处理块。</p>
@@ -1942,7 +1942,7 @@
 <h3 id="7-2-package"><a href="#7-2-package" class="headerlink" title="7.2 package"></a>7.2 package</h3><p>package 关键字指定在 Java 源文件中声明的类所驻留的 Java 包。</p>
 <p>package 语句（如果出现）必须是 Java 源文件中的第一个非注释性文本。 例:java.lang.Object。 </p>
 <p>如果 Java 源文件不包含 package 语句，在该文件中定义的类将位于 “默认包” 中。请注意，不能从非默认包中的类引用默认包中的类。</p>
-<h2 id="5-7-关于变量引用的关键字"><a href="#5-7-关于变量引用的关键字" class="headerlink" title="5.7 关于变量引用的关键字"></a>5.7 关于变量引用的关键字</h2><h3 id="8-1-super"><a href="#8-1-super" class="headerlink" title="8.1 super"></a>8.1 super</h3><p>super 关键字用于引用使用该关键字的类的超类。</p>
+<h2 id="8-关于变量引用的关键字"><a href="#8-关于变量引用的关键字" class="headerlink" title="8. 关于变量引用的关键字"></a>8. 关于变量引用的关键字</h2><h3 id="8-1-super"><a href="#8-1-super" class="headerlink" title="8.1 super"></a>8.1 super</h3><p>super 关键字用于引用使用该关键字的类的超类。</p>
 <p>作为独立语句出现的 super 表示调用超类的构造方法。 super.() 表示调用超类的方法。</p>
 <p>只有在如下情况中才需要采用这种用法：要调用在该类中被重写的方法，以便指定应当调用在超类中的该方法。</p>
 <h3 id="8-2-this"><a href="#8-2-this" class="headerlink" title="8.2 this"></a>8.2 this</h3><p>this 关键字用于引用当前实例。 当引用可能不明确时，可以使用 this 关键字来引用当前的实例。</p>
@@ -1951,7 +1951,7 @@
 <h3 id="9-1-goto"><a href="#9-1-goto" class="headerlink" title="9.1 goto"></a>9.1 goto</h3><p>goto 保留关键字，但无任何作用。结构化程序设计完全不需要 goto 语句即可完成各种流程，而 goto 语句的使用往往会使程序的可读性降低，所以 Java 不允许 goto 跳转。</p>
 <h3 id="9-2-const"><a href="#9-2-const" class="headerlink" title="9.2 const"></a>9.2 const</h3><p>const 保留字，是一个类型修饰符，使用const声明的对象不能更新。与final某些类似。</p>
 <h2 id="其它关键字"><a href="#其它关键字" class="headerlink" title="其它关键字"></a>其它关键字</h2><h3 id="10-1-下划线"><a href="#10-1-下划线" class="headerlink" title="10.1 _(下划线)"></a>10.1 _(下划线)</h3><p>从Java 9开始，<code>_</code> 不允许将其用作任何合法标识符名称，而不仅限于lambda参数名称。</p>
-<h3 id="10-2-assert"><a href="#10-2-assert" class="headerlink" title="10.2 assert"></a>10.2 assert</h3><p>assert意为断言的意思，这个关键字可以判断布尔值的结果是否和预期的一样，如果一样就正常执行，否则会抛出AssertionError。</p>
+<h3 id="10-2-assert"><a href="#10-2-assert" class="headerlink" title="10.2 assert"></a>10.2 assert</h3><p>assert 意为断言的意思，这个关键字可以判断布尔值的结果是否和预期的一样，如果一样就正常执行，否则会抛出AssertionError。</p>
 <script type="text/javascript" src="https://cdn.jsdelivr.net/npm/kity@2.0.4/dist/kity.min.js"></script><script type="text/javascript" src="https://cdn.jsdelivr.net/npm/kityminder-core@1.4.50/dist/kityminder.core.min.js"></script><script defer="true" type="text/javascript" src="https://cdn.jsdelivr.net/npm/hexo-simple-mindmap@0.2.0/dist/mindmap.min.js"></script><link rel="stylesheet" type="text/css" href="https://cdn.jsdelivr.net/npm/hexo-simple-mindmap@0.2.0/dist/mindmap.min.css">
             </div>
             <hr/>
